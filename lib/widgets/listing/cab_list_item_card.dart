@@ -7,7 +7,7 @@ class CabListItemCard extends StatelessWidget {
     required this.carModel,
     required this.fare,
     required this.eta,
-    this.width = 300,
+    this.width = 334,
     this.margin = const EdgeInsets.only(right: 12),
     this.onAccept,
     this.acceptLabel = 'Accept',
@@ -29,11 +29,17 @@ class CabListItemCard extends StatelessWidget {
     return Container(
       width: width,
       margin: margin,
+      // height: 1000,
+
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
       decoration: BoxDecoration(
         color: const Color(0xFFF4E5B0),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: const Color(0xFF2D2F35), width: 1),
+        boxShadow: const [
+          BoxShadow(color: Color(0xFF4D4D4D), offset: Offset(3, 4)),
+        ],
+        
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

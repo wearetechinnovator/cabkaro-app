@@ -20,8 +20,8 @@ class OTPField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: screenHeight * 0.065,
-      height: screenHeight * 0.065,
+      width: 45.35,
+      height: 46.74,
       child: TextField(
         controller: controller,
         focusNode: focusNode,
@@ -37,26 +37,28 @@ class OTPField extends StatelessWidget {
           filled: true,
           fillColor: const Color(0x33FFFFFF),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(5),
             borderSide: const BorderSide(
               color: Color(0xFF5E5951),
               width: 1.5,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(5),
             borderSide: const BorderSide(
               color: Color(0xFFF8C100),
               width: 1.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(5),
             borderSide: const BorderSide(
               color: Color(0xFF5E5951),
               width: 2,
             ),
           ),
+          contentPadding: EdgeInsets.zero, 
+            // isDense: true, 
         ),
         style: TextStyle(
           fontSize: screenHeight * 0.03,

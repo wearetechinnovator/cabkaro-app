@@ -1,7 +1,6 @@
 import 'package:cabkaro/screens/user/OTPScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'OTPScreen.dart';
 import '../../widgets/ActionButton.dart';
 import '../../widgets/GradientBackground.dart';
 import '../../widgets/SignupInput.dart';
@@ -21,15 +20,34 @@ class SigninScreen extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       body: GradientBackground(
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: verticalPadding,
+            ),
+
+            child: ListView(
               children: [
-                SvgPicture.asset(
-                  'assets/icons/cabkaroLogo.svg',
-                  width: screenWidth * 0.35,
-                  height: screenHeight * 0.06,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 1),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.black, width: 3),
+                          right: BorderSide.none,
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+
+                      child: SvgPicture.asset(
+                        'assets/icons/cabkaroLogoNormal.svg',
+                        width: 133,
+                        height: 40,
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Center(
@@ -50,10 +68,7 @@ class SigninScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
-                SignupInput(
-                  hint: 'Name',
-                  icon: Icons.person,
-                ),
+                SignupInput(hint: 'Name', icon: Icons.person),
                 SizedBox(height: screenHeight * 0.015),
                 SignupInput(
                   hint: 'Phone',
@@ -63,13 +78,16 @@ class SigninScreen extends StatelessWidget {
                 SizedBox(height: screenHeight * 0.15),
                 ActionButton(
                   label: 'Submit',
-                  backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const OTPScreen(email: "sayan@gmail.com")),
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const OTPScreen(email: "sayan@gmail.com"),
+                      ),
                     );
                   },
                 ),
@@ -82,7 +100,9 @@ class SigninScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const SignupScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const SignupScreen(),
+                      ),
                     );
                   },
                 ),
@@ -90,6 +110,7 @@ class SigninScreen extends StatelessWidget {
               ],
             ),
           ),
+          // ),
         ),
       ),
     );

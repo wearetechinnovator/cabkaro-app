@@ -2,7 +2,7 @@
 //  widget.swift
 //  widget
 //
-//  Created by Sayan  Maity  on 31/03/26.
+//  Created by Sayan Maity on 31/03/26.
 //
 
 import WidgetKit
@@ -10,75 +10,109 @@ import SwiftUI
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "😀")
+        SimpleEntry(date: Date())
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), emoji: "😀")
-        completion(entry)
+        completion(SimpleEntry(date: Date()))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "😀")
-            entries.append(entry)
-        }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
+        let entry = SimpleEntry(date: Date())
+        let timeline = Timeline(entries: [entry], policy: .atEnd)
         completion(timeline)
     }
-
-//    func relevances() async -> WidgetRelevances<Void> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let emoji: String
 }
 
-struct widgetEntryView : View {
+struct WidgetEntryView: View {
     var entry: Provider.Entry
+    @Environment(\.widgetFamily) var family
 
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
+        switch family {
+        case .systemSmall:
+            ZStack{
+                VStack{
+                    HStack{
+                        Text("Username")
+                            .foregroundStyle(.white)
+                            .frame(width: 90)
+                        Spacer()
+                        Image("male_avatar")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                        
+                    }
+                    Spacer()
+                    HStack{
+                        Text("No Ride Avaiable")
+                            .foregroundStyle(.white)
+                    }
+                    Spacer()
+                    Button{
+                        
+                    }label: {
+                        Text("Book Ride")
+                            .foregroundStyle(.black)
+                            .padding(10)
+                            .background(Color.yellow)
+                            .cornerRadius(20)
+                    }.buttonStyle(.plain)
+                        
+                }
+                    
+            }.containerBackground(Color.black, for: .widget)
+            
+            
 
-            Text("Emoji:")
-            Text(entry.emoji)
+        case .systemMedium:
+            Text("Medium")
+                .containerBackground(.fill, for: .widget)
+
+        case .systemLarge:
+            Text("Large")
+                .containerBackground(.fill, for: .widget)
+
+        default:
+            Text("Default")
+                .containerBackground(.fill, for: .widget)
         }
     }
 }
 
 struct widget: Widget {
-    let kind: String = "widget"
+    let kind: String = "MyWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            if #available(iOS 17.0, *) {
-                widgetEntryView(entry: entry)
-                    .containerBackground(.fill.tertiary, for: .widget)
-            } else {
-                widgetEntryView(entry: entry)
-                    .padding()
-                    .background()
-            }
+            WidgetEntryView(entry: entry)
         }
         .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .description("Shows useful info.")
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
-#Preview(as: .systemSmall) {
+#Preview("Small", as: .systemSmall) {
     widget()
 } timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
+    SimpleEntry(date: .now)
+}
+
+#Preview("Medium", as: .systemMedium) {
+    widget()
+} timeline: {
+    SimpleEntry(date: .now)
+}
+
+#Preview("Large", as: .systemLarge) {
+    widget()
+} timeline: {
+    SimpleEntry(date: .now)
 }

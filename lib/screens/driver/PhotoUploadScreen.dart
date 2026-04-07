@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'DriverHomeScreen.dart';
 import '../../widgets/ActionButton.dart';
 import '../../widgets/GradientBackground.dart';
-import 'package:dashed_border/dashed_border.dart';
 
 class PhotoUploadScreen extends StatelessWidget {
   const PhotoUploadScreen({super.key});

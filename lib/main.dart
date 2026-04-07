@@ -5,7 +5,6 @@ import 'package:cabkaro/screens/driver/DriverHomeScreen.dart';
 import 'package:cabkaro/screens/driver/GOVDetailsScreen.dart';
 import 'package:cabkaro/screens/driver/PhotoUploadScreen.dart';
 import 'package:cabkaro/screens/user/CarListingScreen.dart';
-import 'package:cabkaro/screens/user/AvailableCabsScreen.dart';
 import 'package:cabkaro/screens/user/NotificationsScreen.dart';
 import 'package:cabkaro/screens/user/UserDashboardScreen.dart';
 import 'package:cabkaro/screens/user/SignupScreen.dart';
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
         '/gov-details': (context) => const GOVDetailsScreen(),
         '/photo-upload': (context) => const PhotoUploadScreen(),
         '/listing': (context) => const CarListingScreen(),
-        '/available-cabs': (context) => const AvailableCabsScreen(),
+        // '/available-cabs': (context) => const AvailableCabsScreen(),
         '/notifications': (context) => const NotificationsScreen(),
         '/dashboard': (context) => const UserDashboardScreen(),
         '/signin': (context) => const SigninScreen(),

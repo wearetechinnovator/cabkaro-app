@@ -7,13 +7,15 @@ class ReviewCard extends StatelessWidget {
     required this.role,
     required this.rating,
     required this.comment,
+    required this.image,
+
   });
 
   final String name;
   final String role;
   final String rating;
   final String comment;
-
+  final String image;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,16 +23,21 @@ class ReviewCard extends StatelessWidget {
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF4E5B0),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF2D2F35), width: 1),
+        color: Color(0xFFF4E5B0),
+        borderRadius: BorderRadius.circular(25),
+        border: Border(
+          bottom: BorderSide(color: Color(0xFF4D4D4D), width: 4),
+          right: BorderSide(color: Color(0xFF4D4D4D), width: 4),
+          top: BorderSide(color: Color(0xFF4D4D4D), width: 2),
+          left: BorderSide(color: Color(0xFF4D4D4D), width: 2),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const _Avatar(),
+              _Avatar(image: image),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -71,7 +78,9 @@ class ReviewCard extends StatelessWidget {
 }
 
 class _Avatar extends StatelessWidget {
-  const _Avatar();
+  final String image; // add this
+
+  const _Avatar({required this.image}); 
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +92,7 @@ class _Avatar extends StatelessWidget {
         color: Color(0xFFF39A47),
       ),
       alignment: Alignment.center,
-      child: const Text(
-        'M',
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-      ),
+      child: Image(image: AssetImage(image)),
     );
   }
 }

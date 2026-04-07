@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SectionTitle extends StatelessWidget {
   const SectionTitle({
@@ -12,7 +13,7 @@ class SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
+      style: GoogleFonts.oswald(
         fontSize: 30,
         fontWeight: FontWeight.w500,
         color: Color(0xFF1F1F1F),

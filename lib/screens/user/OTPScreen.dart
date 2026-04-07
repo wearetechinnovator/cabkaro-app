@@ -82,126 +82,141 @@ class _OTPScreenState extends State<OTPScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                // Back button
-                
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(
-                      Icons.arrow_back,
-                      size: screenHeight * 0.04,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.03),
-
-                // Logo
-
-                 Align(
-                    alignment: Alignment.centerRight,
-                    child: Transform.translate(
-                      // dx: -20 moves it 20 pixels away from the right edge
-                      // dy: 0 keeps it vertically centered
-                      offset: const Offset(12, -70), 
-                        child: SvgPicture.asset(
-                        'assets/icons/cabkaroLogo.svg',
-                        width: screenWidth * 0.35,
-                        height: screenHeight * 0.06,
+                    // Back button
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: screenHeight * 0.04,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                
 
-                SizedBox(height: screenHeight * 0.04),
+                    SizedBox(height: screenHeight * 0.03),
 
-                // OTP Icon
-                Container(
-                  width: screenHeight * 0.15,
-                  height: screenHeight * 0.15,
-                  child: Center(
-                    child: Image.asset("assets/icons/inboxIcon.png"),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.03),
-
-                // Title
-                Text(
-                  'Verification Code',
-                  style: TextStyle(
-                    fontSize: screenHeight * 0.03,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF2F2F2F),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.01),
-
-                // Subtitle
-                Text(
-                  'Enter the 5-digit code we\'ve sent to $maskedEmail',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: screenHeight * 0.016,
-                    color: const Color(0xFF6F6F6F),
-                  ),
-                ),
-
-                SizedBox(height: screenHeight * 0.04),
-
-                // OTP Input Fields
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(
-                    5,
-                    (index) => OTPField(
-                      controller: _controllers[index],
-                      focusNode: _focusNodes[index],
-                      screenHeight: screenHeight,
-                      onChanged: (value) => _handleInput(value, index),
-                      onBackspace: () => _handleBackspace(index),
+                    // Logo
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Transform.translate(
+                        offset: const Offset(12, -70),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(color: Colors.black, width: 3),
+                              right: BorderSide.none,
+                            ),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/icons/cabkaroLogoNormal.svg',
+                            width: 133,
+                            height: 40,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
 
-                SizedBox(height: screenHeight * 0.03),
+                    SizedBox(height: screenHeight * 0.04),
 
-                // Resend OTP
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                    // OTP Icon
+                    SizedBox(
+                      width: screenHeight * 0.15,
+                      height: screenHeight * 0.15,
+                      child: Center(
+                        child: Image.asset("assets/icons/inboxIcon.png"),
+                      ),
+                    ),
+
+                    SizedBox(height: screenHeight * 0.03),
+
+                    // Title
                     Text(
-                      'Didn\'t receive the OTP?',
+                      'Verification Code',
+                      style: TextStyle(
+                        fontSize: screenHeight * 0.03,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF2F2F2F),
+                      ),
+                    ),
+
+                    SizedBox(height: screenHeight * 0.01),
+
+                    // Subtitle
+                    Text(
+                      'Enter the 5-digit code we\'ve sent to $maskedEmail',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: screenHeight * 0.016,
                         color: const Color(0xFF6F6F6F),
                       ),
                     ),
-                    SizedBox(width: screenWidth * 0.32),
-                    GestureDetector(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('OTP resent'),
-                            duration: const Duration(seconds: 2),
+
+                    SizedBox(height: screenHeight * 0.04),
+
+                    // OTP Input Fields
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: List.generate(
+                          5,
+                          (index) => OTPField(
+                            controller: _controllers[index],
+                            focusNode: _focusNodes[index],
+                            screenHeight: screenHeight,
+                            onChanged: (value) => _handleInput(value, index),
+                            onBackspace: () => _handleBackspace(index),
                           ),
-                        );
-                      },
-                      child: Text(
-                        'Resend',
-                        style: TextStyle(
-                          fontSize: screenHeight * 0.016,
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
-                  ],
-                ),
+
+                    SizedBox(height: screenHeight * 0.03),
+
+                    // Resend OTP
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Didn\'t receive the OTP?',
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.016,
+                              color: const Color(0xFF6F6F6F),
+                            ),
+                          ),
+                          SizedBox(width: screenWidth * 0.172),
+                          GestureDetector(
+                            onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text('OTP resent'),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Resend',
+                              style: TextStyle(
+                                fontSize: screenHeight * 0.016,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                     SizedBox(height: screenHeight * 0.14),
                   ],
@@ -216,7 +231,12 @@ class _OTPScreenState extends State<OTPScreen> {
                     Expanded(
                       child: ActionButton(
                         label: 'Cancel',
-                        backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+                        backgroundColor: const Color.fromARGB(
+                          255,
+                          242,
+                          202,
+                          42,
+                        ),
                         textColor: const Color(0xFF2D2F35),
                         borderColor: const Color(0xFF2D2F35),
                         onTap: () => Navigator.pop(context),
@@ -232,7 +252,9 @@ class _OTPScreenState extends State<OTPScreen> {
                         onTap: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const CarListingScreen()),
+                            MaterialPageRoute(
+                              builder: (context) => const CarListingScreen(),
+                            ),
                           );
                         },
                       ),
@@ -241,11 +263,9 @@ class _OTPScreenState extends State<OTPScreen> {
                 ),
               ),
             ],
-            
           ),
         ),
       ),
     );
   }
 }
-

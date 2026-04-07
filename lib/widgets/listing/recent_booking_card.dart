@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RecentBookingCard extends StatelessWidget {
   const RecentBookingCard({
@@ -16,77 +17,103 @@ class RecentBookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      width: 360,
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      width: screenWidth - 30,
+      height: 220,
       decoration: BoxDecoration(
-        color: const Color(0xFFF4E5B0),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF2D2F35), width: 1),
+        color: Color(0xFFF4E5B0),
+        borderRadius: BorderRadius.circular(25),
+        border: Border(
+          bottom: BorderSide(color: Color(0xFF4D4D4D), width: 4),
+          right: BorderSide(color: Color(0xFF4D4D4D), width: 4),
+          top: BorderSide(color: Color(0xFF4D4D4D), width: 2),
+          left: BorderSide(color: Color(0xFF4D4D4D), width: 2),
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Row(
-            children: [
-              const _SmallAvatar(initials: 'N'),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  customer,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          Positioned(
+            top: 0, right: 0,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: Color(0xFFF8C100),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(22),
+                  bottomLeft: Radius.circular(18),
                 ),
               ),
-              const Icon(Icons.access_time_rounded, size: 16),
-              const SizedBox(width: 6),
-              const Text('8 min', style: TextStyle(fontWeight: FontWeight.w600)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              const SizedBox(width: 4),
-              const Icon(Icons.radio_button_checked, size: 12),
-              const SizedBox(width: 8),
-              Expanded(child: Text(pickup, style: const TextStyle(fontSize: 13))),
-            ],
-          ),
-          const SizedBox(height: 1),
-          const Padding(
-            padding: EdgeInsets.only(left: 3),
-            child: SizedBox(
-              height: 16,
-              child: VerticalDivider(color: Color(0xFF2D2F35), thickness: 1),
+              child: Row(
+                children: [
+                  Icon(Icons.access_time_rounded, size: 18),
+                  SizedBox(width: 6),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("30 Mins", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          Row(
-            children: [
-              const SizedBox(width: 4),
-              const Icon(Icons.location_on_rounded, size: 14),
-              const SizedBox(width: 8),
-              Expanded(child: Text(drop, style: const TextStyle(fontSize: 13))),
-            ],
+
+          Positioned(
+            top: 12, left: 12,
+            child: Row(
+              children: [
+                ClipOval(
+                  child: Image.asset("assets/images/avatarimg.png", width: 52, height: 52, fit: BoxFit.cover),
+                ),
+                SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Mark", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                    Text("Sedan A1234XG", style: TextStyle(fontSize: 13, color: Color(0xFF3E3E3E))),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8C100),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  'Drive Complete',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
+
+          Positioned(
+            bottom: 7, left: 12,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 10),
+              decoration: BoxDecoration(
+                color: Color(0xFFF8C100),
+                borderRadius: BorderRadius.circular(20),
               ),
-              const Spacer(),
-              Text(
-                fare,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-              ),
-            ],
+              child: Text('Drive Complete ₹800 /-', style: GoogleFonts.oswald(fontWeight: FontWeight.w700, fontSize: 16)),
+            ),
+          ),
+          Positioned(
+            top: 77, left: 49,
+            child: Text("Contai", style: TextStyle(fontWeight: FontWeight.w700))
+          ),
+          Positioned(
+            top: 137, left: 49,
+            child: Text("Digha", style: TextStyle(fontWeight: FontWeight.w700))
+          ),
+          Positioned(
+            top: 80, left: 30,
+            child: Image.asset("assets/icons/Ellipse.png", width: 14, fit: BoxFit.contain),
+          ),
+          Positioned(
+            top: 92, left: 30,
+            child: Image.asset("assets/icons/Line.png", width: 14, height: 49, fit: BoxFit.contain),
+          ),
+          Positioned(
+            top: 140, left: 30,
+            child: Image.asset("assets/icons/Ellipse.png", width: 14, fit: BoxFit.contain),
+          ),
+          Positioned(
+            top: 70, right: 0,
+            child: Image.asset("assets/images/carimg.png", width: 174, fit: BoxFit.contain),
           ),
         ],
       ),

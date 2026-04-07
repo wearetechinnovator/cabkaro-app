@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dashed_border/dashed_border.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ActionButton extends StatelessWidget {
-	const ActionButton({
+	const ActionButton({super.key, 
 		required this.label,
 		required this.backgroundColor,
 		required this.textColor,
@@ -19,34 +19,39 @@ class ActionButton extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		final screenHeight = MediaQuery.of(context).size.height;
-		final buttonHeight = screenHeight * 0.065;
+		// final buttonHeight = screenHeight * 0.065;
 		final fontSize = (screenHeight * 0.025).clamp(18.0, 24.0);
 
 		return SizedBox(
 			width: double.infinity,
 			height: 50,
-			child: ElevatedButton(
-				onPressed: onTap,
-				style: ElevatedButton.styleFrom(
-					elevation: 0.0,
-					backgroundColor: backgroundColor,
-					shape: RoundedRectangleBorder(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.black, width: 1.5)
+          ),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: ElevatedButton(
+          onPressed: onTap,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: backgroundColor,
+            shape: RoundedRectangleBorder(
 						borderRadius: BorderRadius.circular(30),
 						side: BorderSide(color: borderColor, width: 2),
-
 					),
-
-				),
-				child: Text(
-					label,
-					style: TextStyle(
-						color: textColor,
-						fontSize: fontSize,
-						fontWeight: FontWeight.w500,
-						height: 1,
-					),
-				),
-			),
+          ),
+          child: Text(
+            label,
+            style: GoogleFonts.oswald(
+              color: textColor,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w500,
+              height: 1,
+            ),
+          ),
+          ),
+      ),
 		);
 	}
 }

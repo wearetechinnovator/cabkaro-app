@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dashed_border/dashed_border.dart';
 
 class SignupInput extends StatelessWidget {
-  const SignupInput({
+  const SignupInput({super.key, 
     required this.hint,
     required this.icon,
     this.keyboardType,
@@ -16,7 +16,7 @@ class SignupInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final fontSize = screenHeight * 0.015;
-    final inputHeight = screenHeight * 0.055;
+    final inputHeight = 30.0;
     final iconSize = screenHeight * 0.025;
 
     return Container(
@@ -32,7 +32,7 @@ class SignupInput extends StatelessWidget {
       ),
       child: SizedBox(
         width: double.infinity,
-        height: 40,
+        height: inputHeight,
         child: TextField(
           textAlignVertical: TextAlignVertical.center,
           keyboardType: keyboardType,
@@ -53,6 +53,8 @@ class SignupInput extends StatelessWidget {
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
+            contentPadding: EdgeInsets.zero, 
+            isDense: true, 
           ),
           style: TextStyle(
             fontSize: fontSize * 1.1,
