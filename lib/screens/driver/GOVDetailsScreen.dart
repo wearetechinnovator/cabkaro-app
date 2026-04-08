@@ -1,75 +1,184 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:file_picker/file_picker.dart';
 import 'PhotoUploadScreen.dart';
-
 import '../../widgets/ActionButton.dart';
 import '../../widgets/GradientBackground.dart';
 
-class GOVDetailsScreen extends StatelessWidget {
+class GOVDetailsScreen extends StatefulWidget {
   const GOVDetailsScreen({super.key});
+
+  @override
+  State<GOVDetailsScreen> createState() => _GOVDetailsScreenState();
+}
+
+class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
+  String? aadharFile;
+  String? licenseFile;
+  String? carProofFile;
+
+  Future<void> _pickFile(String documentType) async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        
+        if (!mounted) return;
+        
+        setState(() {
+          switch (documentType) {
+            case 'Aadhar Card':
+              aadharFile = file.name;
+              break;
+            case 'Driving License':
+              licenseFile = file.name;
+              break;
+            case 'Commercial Car Proof':
+              carProofFile = file.name;
+              break;
+          }
+        });
+
+        if (!mounted) return;
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: const Color(0xFF2D2F35),
+            content: Text('$documentType uploaded successfully'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error picking file: $e');
+      if (!mounted) return;
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Error uploading file. Please try again.'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: GradientBackground(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: SvgPicture.asset(
-                    'assets/icons/cabkaroLogo.svg',
-                    width: 205,
-                    height: 86,
-                    fit: BoxFit.contain,
+          child: ListView(
+            children: [
+              SizedBox(height: 10),
+
+              // Logo
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.black, width: 3),
+                      ),
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/icons/cabkaroLogoNormal.svg',
+                      width: 10,
+                      height: 90,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 28),
-                const _TopDashedCurve(),
-                const SizedBox(height: 40),
-                Text(
+              ),
+
+              // Full width pattern image
+              Image.asset(
+                "assets/images/Pattern.png",
+                width: double.infinity,
+                fit: BoxFit.fitWidth,
+              ),
+
+              SizedBox(height: screenHeight * 0.03),
+
+              // Title
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Text(
                   'Document Upload',
                   style: TextStyle(
-                    fontSize: screenHeight * 0.056,
+                    fontSize: screenHeight * 0.04,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF2D2F35),
-                    height: 1,
+                    height: 1.0,
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text(
+              ),
+
+              SizedBox(height: screenHeight * 0.01),
+
+              // Subtitle
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Text(
                   'Attach the following details',
                   style: TextStyle(
-                    fontSize: screenHeight * 0.03,
+                    fontSize: screenHeight * 0.02,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF3C3D42),
                   ),
                 ),
-                const SizedBox(height: 14),
-                _DocumentTile(
+              ),
+
+              SizedBox(height: screenHeight * 0.02),
+
+              // Document tiles
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: _DocumentTile(
                   title: 'Aadhar Card',
-                  onTap: () => _showUploadHint(context, 'Aadhar Card'),
+                  isUploaded: aadharFile != null,
+                  onTap: () => _pickFile('Aadhar Card'),
                 ),
-                const SizedBox(height: 10),
-                _DocumentTile(
+              ),
+              SizedBox(height: screenHeight * 0.014),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: _DocumentTile(
                   title: 'Driving License',
-                  onTap: () => _showUploadHint(context, 'Driving License'),
+                  isUploaded: licenseFile != null,
+                  onTap: () => _pickFile('Driving License'),
                 ),
-                const SizedBox(height: 10),
-                _DocumentTile(
+              ),
+              SizedBox(height: screenHeight * 0.014),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: _DocumentTile(
                   title: 'Commercial Car Proof',
-                  onTap: () => _showUploadHint(context, 'Commercial Car Proof'),
+                  isUploaded: carProofFile != null,
+                  onTap: () => _pickFile('Commercial Car Proof'),
                 ),
-                const Spacer(),
-                ActionButton(
+              ),
+
+              SizedBox(height: screenHeight * 0.12),
+
+              // Submit button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: ActionButton(
                   label: 'Submit',
-                  backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () {
@@ -81,33 +190,31 @@ class GOVDetailsScreen extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(height: screenHeight * 0.02),
-              ],
-            ),
+              ),
+
+              SizedBox(height: screenHeight * 0.05),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  static void _showUploadHint(BuildContext context, String label) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: const Color(0xFF2D2F35),
-        content: Text('Upload $label'),
       ),
     );
   }
 }
 
 class _DocumentTile extends StatelessWidget {
-  const _DocumentTile({required this.title, required this.onTap});
+  const _DocumentTile({
+    required this.title,
+    required this.onTap,
+    required this.isUploaded,
+  });
 
   final String title;
   final VoidCallback onTap;
+  final bool isUploaded;
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return InkWell(
       borderRadius: BorderRadius.circular(24),
       onTap: onTap,
@@ -124,20 +231,24 @@ class _DocumentTile extends StatelessWidget {
             Container(
               width: 24,
               height: 24,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFFF0EFE9),
+                color: isUploaded ? Colors.green : const Color(0xFFF0EFE9),
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.add, size: 17, color: Color(0xFF2D2F35)),
+              child: Icon(
+                isUploaded ? Icons.check : Icons.add,
+                size: 17,
+                color: isUploaded ? Colors.white : const Color(0xFF2D2F35),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
-                  color: Color(0xFFF8F7F3),
-                  fontSize: 28,
+                style: TextStyle(
+                  color: const Color(0xFFF8F7F3),
+                  fontSize: screenHeight * 0.025,
                   fontWeight: FontWeight.w500,
                   height: 1,
                 ),
@@ -148,48 +259,4 @@ class _DocumentTile extends StatelessWidget {
       ),
     );
   }
-}
-
-class _TopDashedCurve extends StatelessWidget {
-  const _TopDashedCurve();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 60,
-      child: CustomPaint(painter: _DashedWavePainter()),
-    );
-  }
-}
-
-class _DashedWavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = const Color(0x6B9FB2BA)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    final Path path = Path()
-      ..moveTo(0, 45)
-      ..quadraticBezierTo(size.width * 0.15, 28, size.width * 0.28, 42)
-      ..quadraticBezierTo(size.width * 0.42, 56, size.width * 0.58, 38)
-      ..quadraticBezierTo(size.width * 0.72, 25, size.width * 0.86, 36)
-      ..quadraticBezierTo(size.width * 0.93, 42, size.width, 20);
-
-    const double dashWidth = 5;
-    const double dashSpace = 4;
-    for (final metric in path.computeMetrics()) {
-      double distance = 0;
-      while (distance < metric.length) {
-        final double end = (distance + dashWidth).clamp(0, metric.length);
-        canvas.drawPath(metric.extractPath(distance, end), paint);
-        distance += dashWidth + dashSpace;
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
