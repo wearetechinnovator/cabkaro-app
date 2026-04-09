@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:dashed_border/dashed_border.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:cabkaro/screens/user/AvailableCabsScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:cabkaro/providers/location_provider.dart';
+import 'location_picker_modal.dart';
+
 class Searchcard extends StatelessWidget {
   const Searchcard({
     super.key,
     required this.onSubmit,
   });
+
   final GestureTapCallback onSubmit;
+
+  void _openModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => const LocationPickerModal(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final locationProvider = context.watch<LocationProvider>();
+
     return Stack(
       children: [
         Container(
           width: double.infinity,
-
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Color.fromARGB(255, 248, 182, 0),
             borderRadius: BorderRadius.all(Radius.circular(25)),
             border: Border(
@@ -26,193 +43,62 @@ class Searchcard extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0),
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: 35),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                const SizedBox(height: 35),
 
+                // Pickup field
+                _LocationField(
+                  hint: "Pickup Location",
+                  value: locationProvider.pickupLocation,
+                  onTap: () => _openModal(context),
                   height: 45,
-                  decoration: BoxDecoration(
-                    border: DashedBorder(
-                      color: const Color(0xFF5E5951),
-                      width: 1.1,
-                      dashLength: 4.0,
-                      dashGap: 4.0,
-                    ),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      hintStyle: GoogleFonts.oswald(),
-                      hintText: "Pickup Location",
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      // contentPadding: EdgeInsets.zero,
-                      isDense: true,
-                      prefixIcon: Icon(Icons.my_location_outlined),
-                      prefixIconConstraints: BoxConstraints(
-                        minWidth: 5,
-                        minHeight: 0,
-                      ),
-                    ),
-                  ),
                 ),
-                SizedBox(height: 10),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                const SizedBox(height: 10),
 
+                // Drop field
+                _LocationField(
+                  hint: "Drop Location",
+                  value: locationProvider.dropLocation,
+                  onTap: () => _openModal(context),
                   height: 40,
-                  decoration: BoxDecoration(
-                    border: DashedBorder(
-                      color: const Color(0xFF5E5951),
-                      width: 1.1,
-                      dashLength: 4.0,
-                      dashGap: 4.0,
-                    ),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      hintStyle: GoogleFonts.oswald(),
-                      hintText: "Drop Location",
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      // contentPadding: EdgeInsets.zero,
-                      isDense: true,
-                      prefixIcon: Icon(Icons.my_location_outlined),
-                      prefixIconConstraints: BoxConstraints(
-                        minWidth: 5,
-                        minHeight: 0,
-                      ),
-                    ),
-                  ),
                 ),
-                SizedBox(height: 10),
 
+                const SizedBox(height: 10),
+
+                // Price / Date / Time row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 2,
-                        ),
-
-                        height: 40,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          border: DashedBorder(
-                            color: const Color(0xFF5E5951),
-                            width: 1.1,
-                            dashLength: 4.0,
-                            dashGap: 4.0,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            hintStyle: GoogleFonts.oswald(),
-                            hintText: "Price",
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            // contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                            prefixIcon: Icon(Icons.currency_rupee_outlined),
-                            prefixIconConstraints: BoxConstraints(
-                              minWidth: 5,
-                              minHeight: 0,
-                            ),
-                          ),
-                        ),
+                      child: _InputField(
+                        hint: "Price",
+                        icon: Icons.currency_rupee_outlined,
                       ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 2,
-                        ),
-
-                        height: 40,
-                        // width: 100,
-                        decoration: BoxDecoration(
-                          border: DashedBorder(
-                            color: const Color(0xFF5E5951),
-                            width: 1.1,
-                            dashLength: 4.0,
-                            dashGap: 4.0,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            hintStyle: GoogleFonts.oswald(),
-                            hintText: "Date",
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            // contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                            prefixIcon: Icon(Icons.date_range_outlined),
-                            prefixIconConstraints: BoxConstraints(
-                              minWidth: 5,
-                              minHeight: 0,
-                            ),
-
-                            // contentPadding: EdgeInsets.zero,
-                          ),
-                        ),
+                      child: _InputField(
+                        hint: "Date",
+                        icon: Icons.date_range_outlined,
                       ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 2,
-                        ),
-                        height: 40,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          border: DashedBorder(
-                            color: const Color(0xFF5E5951),
-                            width: 1.1,
-                            dashLength: 4.0,
-                            dashGap: 4.0,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            hintText: "Time",
-                            hintStyle: GoogleFonts.oswald(),
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            // contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                            prefixIcon: Icon(Icons.access_time),
-                            prefixIconConstraints: BoxConstraints(
-                              minWidth: 5,
-                              minHeight: 0,
-                            ),
-                          ),
-                        ),
+                      child: _InputField(
+                        hint: "Time",
+                        icon: Icons.access_time,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+
+                const SizedBox(height: 16),
+
+                // Submit button
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   width: double.infinity,
                   height: 40,
                   decoration: BoxDecoration(
@@ -232,13 +118,11 @@ class Searchcard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
               ],
             ),
           ),
         ),
-
-        // three lines
         Positioned(
           left: -3,
           child: Image.asset('assets/images/Rectangle8.png', width: 74),
@@ -257,6 +141,99 @@ class Searchcard extends StatelessWidget {
           child: Image.asset('assets/icons/upndownicon.png', width: 30),
         ),
       ],
+    );
+  }
+}
+
+// Tappable location display field (reads from provider)
+class _LocationField extends StatelessWidget {
+  const _LocationField({
+    required this.hint,
+    required this.value,
+    required this.onTap,
+    required this.height,
+  });
+
+  final String hint;
+  final String? value;
+  final VoidCallback onTap;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        height: height,
+        decoration: BoxDecoration(
+          border: const DashedBorder(
+            color: Color(0xFF5E5951),
+            width: 1.1,
+            dashLength: 4.0,
+            dashGap: 4.0,
+          ),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.my_location_outlined, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                value ?? hint,
+                style: GoogleFonts.oswald(
+                  color: value != null
+                      ? const Color(0xFF2C2C2A)
+                      : const Color(0xFF888780),
+                  fontSize: 14,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Non-tappable input field (Price / Date / Time)
+class _InputField extends StatelessWidget {
+  const _InputField({required this.hint, required this.icon});
+
+  final String hint;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      height: 40,
+      decoration: BoxDecoration(
+        border: const DashedBorder(
+          color: Color(0xFF5E5951),
+          width: 1.1,
+          dashLength: 4.0,
+          dashGap: 4.0,
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: TextField(
+        textAlignVertical: TextAlignVertical.center,
+        decoration: InputDecoration(
+          hintStyle: GoogleFonts.oswald(),
+          hintText: hint,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          isDense: true,
+          prefixIcon: Icon(icon),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 5,
+            minHeight: 0,
+          ),
+        ),
+      ),
     );
   }
 }

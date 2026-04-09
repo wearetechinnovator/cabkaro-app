@@ -30,6 +30,7 @@ class CarListingScreen extends StatelessWidget {
                 GreetingBlock(),
                 SizedBox(height: 14),
                 // _ListingSearchCard(),
+                
                 Searchcard(
                   onSubmit: () {
                     Navigator.push(
@@ -39,6 +40,7 @@ class CarListingScreen extends StatelessWidget {
                       ),
                     );
                   },
+                  
                 ),
                 SizedBox(height: 26),
                 SectionTitle(title: 'Available Cabs'),

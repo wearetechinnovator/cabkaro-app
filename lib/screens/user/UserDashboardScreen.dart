@@ -29,12 +29,7 @@ class UserDashboardScreen extends StatelessWidget {
                 DashboardActionCard(
                   userName: 'User1257',
                   onEditProfileTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const EditProfileScreen(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, '/edit-profile');
                   },
                 ),
               ],

@@ -3,6 +3,9 @@
         android:label="cabkaro"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="AIzaSyA4kAo0bO3uY38TPL6OQ2MAu_pa2RxNFmE"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -37,6 +40,9 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/> -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.INTERNET"/>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
