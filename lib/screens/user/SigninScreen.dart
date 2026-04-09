@@ -1,4 +1,5 @@
 import 'package:cabkaro/screens/user/OTPScreen.dart';
+import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../widgets/ActionButton.dart';
@@ -6,8 +7,22 @@ import '../../widgets/GradientBackground.dart';
 import '../../widgets/SignupInput.dart';
 import 'SignupScreen.dart';
 
-class SigninScreen extends StatelessWidget {
+class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
+
+  @override
+  State<SigninScreen> createState() => _SigninScreenState();
+}
+
+class _SigninScreenState extends State<SigninScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,22 +40,19 @@ class SigninScreen extends StatelessWidget {
               horizontal: horizontalPadding,
               vertical: verticalPadding,
             ),
-
             child: ListView(
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 1),
+                    padding: const EdgeInsets.only(left: 1),
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(color: Colors.black, width: 3),
-                          right: BorderSide.none,
                         ),
                         borderRadius: BorderRadius.circular(30),
                       ),
-
                       child: SvgPicture.asset(
                         'assets/icons/cabkaroLogoNormal.svg',
                         width: 133,
@@ -68,27 +80,86 @@ class SigninScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
-                SignupInput(hint: 'Name', icon: Icons.person),
-                SizedBox(height: screenHeight * 0.015),
-                SignupInput(
-                  hint: 'Phone',
-                  icon: Icons.call,
-                  keyboardType: TextInputType.phone,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      SignupInput(
+                        hint: 'Phone',
+                        icon: Icons.call,
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Phone is required',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          if (value.length != 10) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Enter a valid 10-digit number',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16,),
+                      SignupInput(
+                        hint: 'Password',
+                        icon: Icons.password_rounded,
+                        controller: _passwordController,
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Password is required',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: screenHeight * 0.15),
+                
+                SizedBox(height: screenHeight * 0.18),
                 ActionButton(
                   label: 'Submit',
                   backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const OTPScreen(email: "sayan@gmail.com"),
-                      ),
-                    );
+                    if (_formKey.currentState!.validate()) {
+                      ToastWidget.show(
+                        context,
+                        message: 'OTP sent to ${_phoneController.text}',
+                        type: ToastType.success,
+                      );
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const OTPScreen(email: "sayan@gmail.com"),
+                          ),
+                        );
+                      });
+                    } else {
+                      // ToastWidget.show(
+                      //   context,
+                      //   message: 'Please fix the errors before continuing.',
+                      //   type: ToastType.error,
+                      // );
+                    }
                   },
                 ),
                 SizedBox(height: screenHeight * 0.015),
@@ -110,7 +181,6 @@ class SigninScreen extends StatelessWidget {
               ],
             ),
           ),
-          // ),
         ),
       ),
     );

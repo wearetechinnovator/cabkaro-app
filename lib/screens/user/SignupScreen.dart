@@ -1,4 +1,5 @@
 import 'package:cabkaro/screens/user/OTPScreen.dart';
+import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'SigninScreen.dart';
@@ -6,8 +7,27 @@ import '../../widgets/ActionButton.dart';
 import '../../widgets/GradientBackground.dart';
 import '../../widgets/SignupInput.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -29,16 +49,14 @@ class SignupScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 1),
+                    padding: const EdgeInsets.only(left: 1),
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(color: Colors.black, width: 3),
-                          right: BorderSide.none,
                         ),
                         borderRadius: BorderRadius.circular(30),
                       ),
-
                       child: SvgPicture.asset(
                         'assets/icons/cabkaroLogoNormal.svg',
                         width: 133,
@@ -47,7 +65,6 @@ class SignupScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 SizedBox(height: screenHeight * 0.02),
                 Center(
                   child: Image.asset(
@@ -67,29 +84,114 @@ class SignupScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
-                SignupInput(hint: 'Name', icon: Icons.person),
-                SizedBox(height: screenHeight * 0.015),
-                SignupInput(hint: 'Email', icon: Icons.email),
-                SizedBox(height: screenHeight * 0.015),
-                SignupInput(
-                  hint: 'Phone',
-                  icon: Icons.call,
-                  keyboardType: TextInputType.phone,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      SignupInput(
+                        hint: 'Name',
+                        icon: Icons.person,
+                        controller: _nameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Name is required',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: screenHeight * 0.015),
+                      SignupInput(
+                        hint: 'Email',
+                        icon: Icons.email,
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Email is required',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          final emailRegex = RegExp(
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                          );
+                          if (!emailRegex.hasMatch(value)) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Enter a valid email address',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: screenHeight * 0.015),
+                      SignupInput(
+                        hint: 'Phone',
+                        icon: Icons.call,
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Phone is required',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          if (value.length != 10) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Enter a valid 10-digit number',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: screenHeight * 0.149),
+                SizedBox(height: screenHeight * 0.1),
                 ActionButton(
                   label: 'Submit',
                   backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const OTPScreen(email: "sayan@gmail.com"),
-                      ),
-                    );
+                    if (_formKey.currentState!.validate()) {
+                      ToastWidget.show(
+                        context,
+                        message:'Account created! OTP sent to ${_phoneController.text}',
+                        type: ToastType.success,
+                      );
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                OTPScreen(email: _emailController.text),
+                          ),
+                        );
+                      });
+                    } else {
+                      // ToastWidget.show(
+                      //   context,
+                      //   message: 'Please fill all fields correctly.',
+                      //   type: ToastType.error,
+                      // );
+                    }
                   },
                 ),
                 SizedBox(height: screenHeight * 0.019),
@@ -107,6 +209,7 @@ class SignupScreen extends StatelessWidget {
                     );
                   },
                 ),
+                SizedBox(height: screenHeight * 0.03),
               ],
             ),
           ),

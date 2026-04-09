@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         // '/available-cabs': (context) => const AvailableCabsScreen(),
         '/notifications': (context) => const NotificationsScreen(),
         '/dashboard': (context) => const UserDashboardScreen(),
-        '/signin': (context) => const SigninScreen(),
+        '/signin': (context) =>  SigninScreen(),
         '/edit-profile': (context) => const EditProfileScreen(),
       },
     );
