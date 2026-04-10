@@ -6,10 +6,7 @@ import 'package:cabkaro/providers/location_provider.dart';
 import 'location_picker_modal.dart';
 
 class Searchcard extends StatelessWidget {
-  const Searchcard({
-    super.key,
-    required this.onSubmit,
-  });
+  const Searchcard({super.key, required this.onSubmit});
 
   final GestureTapCallback onSubmit;
 
@@ -86,10 +83,7 @@ class Searchcard extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Expanded(
-                      child: _InputField(
-                        hint: "Time",
-                        icon: Icons.access_time,
-                      ),
+                      child: _InputField(hint: "Time", icon: Icons.access_time),
                     ),
                   ],
                 ),
@@ -138,7 +132,19 @@ class Searchcard extends StatelessWidget {
         Positioned(
           right: 45,
           top: 72,
-          child: Image.asset('assets/icons/upndownicon.png', width: 30),
+          child: GestureDetector(
+            onTap: () {
+              final provider = context.read<LocationProvider>();
+              final pickup = provider.pickupLocation;
+              final drop = provider.dropLocation;
+              // Only swap if at least one has a value
+              if (pickup != null || drop != null) {
+                provider.setPickupLocation(drop ?? '');
+                provider.setDropLocation(pickup ?? '');
+              }
+            },
+            child: Image.asset('assets/icons/upndownicon.png', width: 30),
+          ),
         ),
       ],
     );

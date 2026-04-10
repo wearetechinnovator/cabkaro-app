@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:cabkaro/screens/driver/DriverHomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'PhotoUploadScreen.dart';
 import '../../widgets/ActionButton.dart';
 import '../../widgets/GradientBackground.dart';
@@ -16,6 +19,26 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
   String? aadharFile;
   String? licenseFile;
   String? carProofFile;
+  File? _carPhoto;
+
+  Future<void> _pickCarPhoto() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      if (result != null && result.files.single.path != null) {
+        setState(() {
+          _carPhoto = File(result.files.single.path!);
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ToastWidget.show(context,
+          message: 'Error uploading photo. Try again.',
+          type: ToastType.error);
+    }
+  }
 
   Future<void> _pickFile(String documentType) async {
     try {
@@ -27,9 +50,7 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
 
       if (result != null && result.files.isNotEmpty) {
         final file = result.files.first;
-        
         if (!mounted) return;
-        
         setState(() {
           switch (documentType) {
             case 'Aadhar Card':
@@ -43,28 +64,16 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
               break;
           }
         });
-
         if (!mounted) return;
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: const Color(0xFF2D2F35),
-            content: Text('$documentType uploaded successfully'),
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        ToastWidget.show(context,
+            message: '$documentType uploaded successfully',
+            type: ToastType.success);
       }
     } catch (e) {
-      debugPrint('Error picking file: $e');
       if (!mounted) return;
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Error uploading file. Please try again.'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      ToastWidget.show(context,
+          message: 'Error uploading file. Please try again.',
+          type: ToastType.error);
     }
   }
 
@@ -78,16 +87,17 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
         child: SafeArea(
           child: ListView(
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Logo
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                 child: Align(
                   alignment: Alignment.center,
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border(
+                      border: const Border(
                         bottom: BorderSide(color: Colors.black, width: 3),
                       ),
                       borderRadius: BorderRadius.circular(60),
@@ -101,7 +111,6 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
                 ),
               ),
 
-              // Full width pattern image
               Image.asset(
                 "assets/images/Pattern.png",
                 width: double.infinity,
@@ -110,7 +119,6 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
 
               SizedBox(height: screenHeight * 0.03),
 
-              // Title
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Text(
@@ -126,7 +134,6 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
 
               SizedBox(height: screenHeight * 0.01),
 
-              // Subtitle
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Text(
@@ -139,9 +146,120 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
                 ),
               ),
 
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.025),
 
-              // Document tiles
+              // ── Car Photo Picker (square) ──────────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Car Photo',
+                      style: TextStyle(
+                        fontSize: screenHeight * 0.018,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF3C3D42),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: _pickCarPhoto,
+                      child: _carPhoto == null
+                          // Empty state
+                          ? Container(
+                              width: double.infinity,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                color: const Color(0x102D2F35),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(0x8F2D2F35),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF2D2F35),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.directions_car_outlined,
+                                      color: Color(0xFFF2F2F2),
+                                      size: 26,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Tap to add car photo',
+                                    style: TextStyle(
+                                      fontSize: screenHeight * 0.015,
+                                      color: const Color(0xFF3C3D42),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          // Filled state — square preview
+                          : Stack(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  height: 160,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.amber,
+                                      width: 2,
+                                    ),
+                                    image: DecorationImage(
+                                      image: FileImage(_carPhoto!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                // Overlay
+                                Positioned.fill(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: Colors.black.withOpacity(0.3),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.edit,
+                                            color: Colors.white, size: 16),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Change Photo',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: screenHeight * 0.015,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.025),
+
+              // ── Document tiles ─────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: _DocumentTile(
@@ -173,7 +291,6 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
 
               SizedBox(height: screenHeight * 0.12),
 
-              // Submit button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: ActionButton(
@@ -182,10 +299,17 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () {
+                    // Validate car photo
+                    if (_carPhoto == null) {
+                      ToastWidget.show(context,
+                          message: 'Please upload a car photo',
+                          type: ToastType.error);
+                      return;
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const PhotoUploadScreen(),
+                        builder: (context) => const DriverHomeScreen(),
                       ),
                     );
                   },

@@ -8,12 +8,12 @@ class LocationProvider extends ChangeNotifier {
   String? get dropLocation => _dropLocation;
 
   void setPickupLocation(String location) {
-    _pickupLocation = location;
+    _pickupLocation = location.isEmpty ? null : location;
     notifyListeners();
   }
 
   void setDropLocation(String location) {
-    _dropLocation = location;
+    _dropLocation = location.isEmpty ? null : location;
     notifyListeners();
   }
 
