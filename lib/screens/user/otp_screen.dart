@@ -1,9 +1,9 @@
-import 'package:cabkaro/screens/user/CarListingScreen.dart';
-import 'package:cabkaro/widgets/OTPField.dart';
+import 'package:cabkaro/screens/user/car_listing_screen.dart';
+import 'package:cabkaro/widgets/otp_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../widgets/GradientBackground.dart';
-import '../../widgets/ActionButton.dart';
+import '../../widgets/gradient_background.dart';
+import '../../widgets/action_button.dart';
 
 class OTPScreen extends StatefulWidget {
   final String email;

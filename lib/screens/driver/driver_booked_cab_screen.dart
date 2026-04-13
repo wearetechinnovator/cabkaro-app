@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
 
-import 'DriverBookedCabScreen.dart';
 import '../../widgets/listing/listing_bottom_dock.dart';
 
-class DriverHomeScreen extends StatelessWidget {
-  const DriverHomeScreen({super.key});
+class DriverBookedCabScreen extends StatefulWidget {
+  const DriverBookedCabScreen({super.key});
+
+  @override
+  State<DriverBookedCabScreen> createState() => _DriverBookedCabScreenState();
+}
+
+class _DriverBookedCabScreenState extends State<DriverBookedCabScreen> {
+  String? _decision;
+
+  void _handleAccept() {
+    setState(() {
+      _decision = 'accepted';
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Ride request accepted')),
+    );
+  }
+
+  void _handleReject() {
+    setState(() {
+      _decision = 'rejected';
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Ride request rejected')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
@@ -17,26 +41,52 @@ class DriverHomeScreen extends StatelessWidget {
           children: [
             ListView(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
-              children: const [
-                _DriverHeader(),
-                SizedBox(height: 24),
-                Text(
+              children: [
+                const _DriverHeader(),
+                const SizedBox(height: 24),
+                const Text(
                   'Driver Dashboard',
                   style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 38,
+                    fontWeight: FontWeight.w500,
                     color: Color(0xFF1F1F1F),
                     height: 1,
                   ),
                 ),
-                SizedBox(height: 16),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
+                const SizedBox(height: 14),
+                _DriverBookedCard(
+                  userName: 'Jeena',
+                  fareText: '800',
+                  estimateText: '2Hrs.',
+                  isPrimary: true,
+                  decision: _decision,
+                  onAccept: _handleAccept,
+                  onReject: _handleReject,
+                ),
+                const SizedBox(height: 14),
+                const _DriverBookedCard(
+                  userName: 'Jeena',
+                  fareText: 'Price',
+                  estimateText: 'Estimate Time',
+                  waitText: 'Accept',
+                  isPrimary: false,
+                ),
+                const SizedBox(height: 14),
+                const _DriverBookedCard(
+                  userName: 'Jeena',
+                  fareText: 'Price',
+                  estimateText: 'Estimate Time',
+                  waitText: 'Accept',
+                  isPrimary: false,
+                ),
+                const SizedBox(height: 14),
+                const _DriverBookedCard(
+                  userName: 'Jeena',
+                  fareText: 'Price',
+                  estimateText: 'Estimate Time',
+                  waitText: 'Accept',
+                  isPrimary: false,
+                ),
               ],
             ),
             Positioned(
@@ -61,17 +111,24 @@ class _DriverHeader extends StatelessWidget {
       children: [
         const _HeaderCircle(icon: Icons.grid_view_rounded),
         const Spacer(),
-        _HeaderCircle(
-          icon: Icons.notifications_none_rounded,
-          onTap: () => Navigator.pushNamed(context, '/notifications'),
-        ),
+        const _HeaderCircle(icon: Icons.notifications_none_rounded),
         const SizedBox(width: 12),
-        const CircleAvatar(
-          radius: 20,
-          backgroundColor: Color(0xFFD24A61),
-          child: Text(
+        Container(
+          width: 40,
+          height: 40,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              colors: [Color(0xFFF8C100), Color(0xFFD24A61)],
+            ),
+          ),
+          alignment: Alignment.center,
+          child: const Text(
             'M',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ],
@@ -80,39 +137,53 @@ class _DriverHeader extends StatelessWidget {
 }
 
 class _HeaderCircle extends StatelessWidget {
-  const _HeaderCircle({required this.icon, this.onTap});
+  const _HeaderCircle({required this.icon});
 
   final IconData icon;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(20),
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
-        ),
-        child: Icon(icon, size: 20, color: const Color(0xFF2D2F35)),
-      ),
-    );
-  }
-}
-
-class _RequestCard extends StatelessWidget {
-  const _RequestCard();
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
+      ),
+      alignment: Alignment.center,
+      child: Icon(icon, size: 20, color: const Color(0xFF2D2F35)),
+    );
+  }
+}
+
+class _DriverBookedCard extends StatelessWidget {
+  const _DriverBookedCard({
+    required this.userName,
+    required this.fareText,
+    required this.estimateText,
+    this.waitText,
+    required this.isPrimary,
+    this.decision,
+    this.onAccept,
+    this.onReject,
+  });
+
+  final String userName;
+  final String fareText;
+  final String estimateText;
+  final String? waitText;
+  final bool isPrimary;
+  final String? decision;
+  final VoidCallback? onAccept;
+  final VoidCallback? onReject;
+
+  @override
+  Widget build(BuildContext context) {
+    final card = Container(
       decoration: BoxDecoration(
         color: const Color(0xFFF4E5B0),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
+        border: Border.all(color: const Color.fromARGB(255, 23, 25, 32), width: 1.2),
         boxShadow: const [
           BoxShadow(color: Color(0xFF4D4D4D), offset: Offset(2, 3)),
         ],
@@ -143,9 +214,9 @@ class _RequestCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      const Text(
-                        'Jeena',
-                        style: TextStyle(
+                      Text(
+                        userName,
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
                           color: Color(0xFF1F1F1F),
@@ -157,15 +228,12 @@ class _RequestCard extends StatelessWidget {
               ),
               Container(
                 width: 126,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8C100),
-                  borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(22),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF8C100),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(22),
                   ),
                 ),
                 transform: Matrix4.translationValues(0, -9, 0),
@@ -195,18 +263,24 @@ class _RequestCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Column(
-                    children: const [
+                    children: [
                       _ChipInput(
                         icon: Icons.currency_rupee_rounded,
-                        text: 'Price',
+                        text: fareText,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       _ChipInput(
                         icon: Icons.access_time_rounded,
-                        text: 'Estimate Time',
+                        text: estimateText,
                       ),
-                      SizedBox(height: 10),
-                      _AcceptButton(),
+                      const SizedBox(height: 10),
+                      isPrimary
+                          ? _DecisionButtons(
+                              decision: decision,
+                              onAccept: onAccept,
+                              onReject: onReject,
+                            )
+                          : _StateButton(text: waitText ?? 'Accept'),
                     ],
                   ),
                 ),
@@ -221,9 +295,25 @@ class _RequestCard extends StatelessWidget {
                 ),
               ],
             ),
+            
           ),
+          
         ],
       ),
+    );
+
+    if (isPrimary) {
+      return card;
+    }
+
+    return ColorFiltered(
+      colorFilter: const ColorFilter.matrix([
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0, 0, 0, 1, 0,
+      ]),
+      child: card,
     );
   }
 }
@@ -266,34 +356,106 @@ class _ChipInput extends StatelessWidget {
   }
 }
 
-class _AcceptButton extends StatelessWidget {
-  const _AcceptButton();
+class _StateButton extends StatelessWidget {
+  const _StateButton({required this.text});
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const DriverBookedCabScreen(),
-            ),
-          );
-        },
-        child: Container(
-          height: 36,
-          width: 86,
-          decoration: BoxDecoration(
+      child: Container(
+        height: 36,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8C100),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+        ),
+      ),
+    );
+  }
+}
+
+class _DecisionButtons extends StatelessWidget {
+  const _DecisionButtons({
+    required this.decision,
+    this.onAccept,
+    this.onReject,
+  });
+
+  final String? decision;
+  final VoidCallback? onAccept;
+  final VoidCallback? onReject;
+
+  @override
+  Widget build(BuildContext context) {
+    final accepted = decision == 'accepted';
+    final rejected = decision == 'rejected';
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          _DecisionButton(
+            label: 'Accept',
             color: const Color(0xFFF8C100),
-            borderRadius: BorderRadius.circular(20),
+            isActive: accepted,
+            onTap: onAccept,
           ),
-          alignment: Alignment.center,
-          child: const Text(
-            'Accept',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+          const SizedBox(width: 8),
+          _DecisionButton(
+            label: 'Reject',
+            color: const Color(0xFFC91818),
+            isActive: rejected,
+            onTap: onReject,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DecisionButton extends StatelessWidget {
+  const _DecisionButton({
+    required this.label,
+    required this.color,
+    required this.isActive,
+    this.onTap,
+  });
+
+  final String label;
+  final Color color;
+  final bool isActive;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap: onTap,
+      child: Container(
+        height: 36,
+        width: 86,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(20),
+          border: isActive
+              ? Border.all(color: const Color(0xFF2D2F35), width: 1.4)
+              : null,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
           ),
         ),
       ),

@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:cabkaro/screens/driver/DriverHomeScreen.dart';
+import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
-import 'PhotoUploadScreen.dart';
-import '../../widgets/ActionButton.dart';
-import '../../widgets/GradientBackground.dart';
+
+import '../../widgets/action_button.dart';
+import '../../widgets/gradient_background.dart';
 
 class GOVDetailsScreen extends StatefulWidget {
   const GOVDetailsScreen({super.key});
@@ -229,6 +229,7 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(16),
+                                      // ignore: deprecated_member_use
                                       color: Colors.black.withOpacity(0.3),
                                     ),
                                     child: Row(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ListingBottomDock extends StatelessWidget {
-  const ListingBottomDock({super.key});
+class UserListingDock extends StatelessWidget {
+  const UserListingDock({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +15,15 @@ class ListingBottomDock extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _DockIcon(icon: Icons.home_outlined),
-          _DockIcon(icon: Icons.bar_chart_rounded),
+          _DockIcon(
+            icon: Icons.home_outlined,
+            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+          ),
+          _DockIcon(
+            icon: Icons.bar_chart_rounded,
+            selected: true,
+            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+          ),
           _DockIcon(
             icon: Icons.notifications_none_rounded,
             onTap: () => Navigator.pushReplacementNamed(context, '/notifications'),
@@ -32,12 +39,10 @@ class ListingBottomDock extends StatelessWidget {
 }
 
 class _DockIcon extends StatelessWidget {
-  const _DockIcon({
-    required this.icon,
-    this.onTap,
-  });
+  const _DockIcon({required this.icon, this.selected = false, this.onTap});
 
   final IconData icon;
+  final bool selected;
   final VoidCallback? onTap;
 
   @override
@@ -47,7 +52,11 @@ class _DockIcon extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: Icon(icon, color: Colors.white, size: 27),
+        child: Icon(
+          icon,
+          color: selected ? const Color(0xFFF8C100) : Colors.white,
+          size: 27,
+        ),
       ),
     );
   }

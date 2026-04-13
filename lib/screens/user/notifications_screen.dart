@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../widgets/notifications/notification_list_item.dart';
 import '../../widgets/notifications/notifications_bottom_dock.dart';
 import '../../widgets/notifications/notifications_day_separator.dart';

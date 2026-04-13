@@ -5,11 +5,11 @@ import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:dashed_border/dashed_border.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/providers/location_provider.dart';
-import 'package:cabkaro/screens/user/MapPickerScreen.dart';
+import 'package:cabkaro/screens/user/map_picker_screen.dart';
 import 'package:file_picker/file_picker.dart';
-import 'GOVDetailsScreen.dart';
-import '../../widgets/ActionButton.dart';
-import '../../widgets/SignupInput.dart';
+import 'gov_details_screen.dart';
+import '../../widgets/action_button.dart';
+import '../../widgets/signup_input.dart';
 
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
@@ -143,31 +143,102 @@ class _DriverScreenState extends State<DriverScreen> {
                     child: Center(
                       child: _profileImage == null
                           // Empty state — circular
-                          ? Container(
-                              width: 110,
-                              height: 110,
-                              decoration: BoxDecoration(
-                                color: const Color(0x10000000),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: const Color(0x8F2D2F35),
-                                  width: 1,
-                                ),
+                          ? // ── Profile Photo Picker ──────────────────────────────────
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
                               ),
-                              child: Center(
-                                child: Container(
-                                  width: 42,
-                                  height: 42,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF2D2F35),
-                                    shape: BoxShape.circle,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Center(
+                                    child: GestureDetector(
+                                      onTap: _pickProfileImage,
+                                      child: Stack(
+                                        alignment: Alignment.bottomRight,
+                                        children: [
+                                          // Avatar circle
+                                          Container(
+                                            width: 120,
+                                            height: 120,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: const Color(0xFFF8C100),
+                                                width: 2,
+                                              ),
+                                              color: Colors.white,
+                                            ),
+                                            child: ClipOval(
+                                              child: _profileImage != null
+                                                  // Preview picked image
+                                                  ? Image.file(
+                                                      _profileImage!,
+                                                      fit: BoxFit.cover,
+                                                      width: 120,
+                                                      height: 120,
+                                                    )
+                                                  // Default avatar placeholder
+                                                  : Image.asset(
+                                                      'assets/images/avatar.png',
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder:
+                                                          (
+                                                            context,
+                                                            error,
+                                                            stackTrace,
+                                                          ) {
+                                                            return Container(
+                                                              color:
+                                                                  const Color(
+                                                                    0xFFF0F0F0,
+                                                                  ),
+                                                              child: const Icon(
+                                                                Icons.person,
+                                                                size: 60,
+                                                                color: Color(
+                                                                  0xFF2D2F35,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                    ),
+                                            ),
+                                          ),
+                                          // Camera badge
+                                          Container(
+                                            width: 36,
+                                            height: 36,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF2D2F35),
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Colors.white,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: const Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  child: const Icon(
-                                    Icons.add,
-                                    color: Color(0xFFF2F2F2),
-                                    size: 26,
+                                  const SizedBox(height: 6),
+                                  Center(
+                                    child: Text(
+                                      'Tap to upload your photo',
+                                      style: TextStyle(
+                                        fontSize: fontSize * 0.9,
+                                        color: const Color(0xFF888780),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             )
                           // Preview state — circular with overlay
@@ -177,6 +248,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                 Container(
                                   width: 110,
                                   height: 110,
+                                  
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -195,6 +267,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                   height: 110,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    // ignore: deprecated_member_use
                                     color: Colors.black.withOpacity(0.35),
                                   ),
                                   child: Column(
@@ -348,7 +421,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                       style: TextStyle(
                                         fontSize: fontSize,
                                         fontWeight: FontWeight.w500,
-                                        color: const Color(0xFF9E9E9E),
+                                        color: const Color.fromARGB(255, 6, 4, 4),
                                       ),
                                     ),
                                   ],
@@ -501,11 +574,11 @@ class _DriverScreenState extends State<DriverScreen> {
                                       hintStyle: TextStyle(
                                         fontSize: fontSize,
                                         fontWeight: FontWeight.w500,
-                                        color: const Color(0xFF9E9E9E),
+                                        color: const Color.fromARGB(255, 16, 16, 16),
                                       ),
                                       prefixIcon: Icon(
                                         Icons.social_distance_outlined,
-                                        color: const Color(0xFF4C473F),
+                                        color: const Color.fromARGB(255, 0, 0, 0),
                                         size: iconSize,
                                       ),
                                       border: InputBorder.none,
@@ -533,6 +606,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                   ),
                                 );
                                 if (mounted) {
+                                  // ignore: use_build_context_synchronously
                                   final loc = context
                                       .read<LocationProvider>()
                                       .pickupLocation;
@@ -626,6 +700,7 @@ class _DriverScreenState extends State<DriverScreen> {
                     );
                     Future.delayed(const Duration(milliseconds: 500), () {
                       Navigator.push(
+                        // ignore: use_build_context_synchronously
                         context,
                         MaterialPageRoute(
                           builder: (context) => const GOVDetailsScreen(),

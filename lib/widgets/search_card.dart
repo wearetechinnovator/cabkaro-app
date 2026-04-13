@@ -5,10 +5,78 @@ import 'package:provider/provider.dart';
 import 'package:cabkaro/providers/location_provider.dart';
 import 'location_picker_modal.dart';
 
-class Searchcard extends StatelessWidget {
+class Searchcard extends StatefulWidget {
   const Searchcard({super.key, required this.onSubmit});
 
   final GestureTapCallback onSubmit;
+
+  @override
+  State<Searchcard> createState() => _SearchcardState();
+}
+
+class _SearchcardState extends State<Searchcard> {
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+
+  String get _dateText {
+    if (_selectedDate == null) return '';
+    final d = _selectedDate!;
+    return '${d.day.toString().padLeft(2, '0')}/'
+        '${d.month.toString().padLeft(2, '0')}/'
+        '${d.year}';
+  }
+
+  String get _timeText {
+    if (_selectedTime == null) return '';
+    final t = _selectedTime!;
+    final hour = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
+    final minute = t.minute.toString().padLeft(2, '0');
+    final period = t.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? now,
+      firstDate: now,
+      lastDate: DateTime(now.year + 2),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color.fromARGB(255, 248, 182, 0),
+              onPrimary: Colors.black,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) setState(() => _selectedDate = picked);
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime ?? TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color.fromARGB(255, 248, 182, 0),
+              onPrimary: Colors.black,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) setState(() => _selectedTime = picked);
+  }
 
   void _openModal(BuildContext context) {
     showModalBottomSheet(
@@ -61,13 +129,12 @@ class Searchcard extends StatelessWidget {
                   onTap: () => _openModal(context),
                   height: 40,
                 ),
-
                 const SizedBox(height: 10),
 
                 // Price / Date / Time row
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Price — still a free text field
                     Expanded(
                       child: _InputField(
                         hint: "Price",
@@ -75,15 +142,26 @@ class Searchcard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 5),
+
+                    // Date — tappable picker
                     Expanded(
-                      child: _InputField(
+                      child: _TappableField(
                         hint: "Date",
+                        value: _dateText,
                         icon: Icons.date_range_outlined,
+                        onTap: _pickDate,
                       ),
                     ),
                     const SizedBox(width: 5),
+
+                    // Time — tappable picker
                     Expanded(
-                      child: _InputField(hint: "Time", icon: Icons.access_time),
+                      child: _TappableField(
+                        hint: "Time",
+                        value: _timeText,
+                        icon: Icons.access_time,
+                        onTap: _pickTime,
+                      ),
                     ),
                   ],
                 ),
@@ -100,7 +178,7 @@ class Searchcard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: GestureDetector(
-                    onTap: onSubmit,
+                    onTap: widget.onSubmit,
                     child: Center(
                       child: Text(
                         "Submit",
@@ -137,7 +215,6 @@ class Searchcard extends StatelessWidget {
               final provider = context.read<LocationProvider>();
               final pickup = provider.pickupLocation;
               final drop = provider.dropLocation;
-              // Only swap if at least one has a value
               if (pickup != null || drop != null) {
                 provider.setPickupLocation(drop ?? '');
                 provider.setDropLocation(pickup ?? '');
@@ -151,7 +228,7 @@ class Searchcard extends StatelessWidget {
   }
 }
 
-// Tappable location display field (reads from provider)
+// Tappable location display field
 class _LocationField extends StatelessWidget {
   const _LocationField({
     required this.hint,
@@ -174,7 +251,7 @@ class _LocationField extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           border: const DashedBorder(
-            color: Color(0xFF5E5951),
+            color: Color.fromARGB(255, 0, 0, 0),
             width: 1.1,
             dashLength: 4.0,
             dashGap: 4.0,
@@ -190,8 +267,8 @@ class _LocationField extends StatelessWidget {
                 value ?? hint,
                 style: GoogleFonts.oswald(
                   color: value != null
-                      ? const Color(0xFF2C2C2A)
-                      : const Color(0xFF888780),
+                      ? const Color.fromARGB(255, 0, 0, 0)
+                      : const Color.fromARGB(255, 1, 1, 1),
                   fontSize: 14,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -204,7 +281,64 @@ class _LocationField extends StatelessWidget {
   }
 }
 
-// Non-tappable input field (Price / Date / Time)
+// Tappable date/time display field
+class _TappableField extends StatelessWidget {
+  const _TappableField({
+    required this.hint,
+    required this.value,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String hint;
+  final String value;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasValue = value.isNotEmpty;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        height: 40,
+        decoration: BoxDecoration(
+          border: const DashedBorder(
+            color: Color.fromARGB(255, 0, 0, 0),
+            width: 1.1,
+            dashLength: 4.0,
+            dashGap: 4.0,
+          ),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 16,
+                color: hasValue
+                    ? const Color.fromARGB(255, 0, 0, 0)
+                    : const Color.fromARGB(255, 0, 0, 0)),
+            const SizedBox(width: 3),
+            Expanded(
+              child: Text(
+                hasValue ? value : hint,
+                style: GoogleFonts.oswald(
+                  color: hasValue
+                      ? const Color.fromARGB(255, 0, 0, 0)
+                      : const Color.fromARGB(255, 4, 4, 4),
+                  fontSize: 11,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Free-text input field (Price only)
 class _InputField extends StatelessWidget {
   const _InputField({required this.hint, required this.icon});
 
@@ -218,7 +352,7 @@ class _InputField extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         border: const DashedBorder(
-          color: Color(0xFF5E5951),
+          color: Color.fromARGB(255, 0, 0, 0),
           width: 1.1,
           dashLength: 4.0,
           dashGap: 4.0,

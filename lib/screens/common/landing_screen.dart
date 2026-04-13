@@ -1,9 +1,9 @@
-import 'package:cabkaro/screens/driver/DriverScreen.dart';
+import 'package:cabkaro/screens/driver/driver_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:cabkaro/screens/user/SignupScreen.dart';
-import '../../widgets/GradientBackground.dart';
-import '../../widgets/ActionButton.dart';
+import 'package:cabkaro/screens/user/signup_screen.dart';
+import '../../widgets/gradient_background.dart';
+import '../../widgets/action_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,7 +15,7 @@ class LandingScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.05;
-    final isSmallScreen = screenHeight < 600;
+    // final isSmallScreen = screenHeight < 600;
 
     return Scaffold(
       body: GradientBackground(

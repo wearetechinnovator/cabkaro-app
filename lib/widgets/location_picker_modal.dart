@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/providers/location_provider.dart';
-import 'package:cabkaro/screens/user/MapPickerScreen.dart';
+import 'package:cabkaro/screens/user/map_picker_screen.dart';
 import 'package:cabkaro/services/places_service.dart';
 
 class LocationPickerModal extends StatefulWidget {

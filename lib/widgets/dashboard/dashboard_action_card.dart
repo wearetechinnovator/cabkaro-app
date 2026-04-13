@@ -5,10 +5,12 @@ class DashboardActionCard extends StatelessWidget {
     super.key,
     required this.userName,
     this.onEditProfileTap,
+    this.onLastRideTap,
   });
 
   final String userName;
   final VoidCallback? onEditProfileTap;
+  final VoidCallback? onLastRideTap;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,8 @@ class DashboardActionCard extends StatelessWidget {
               GestureDetector(
                 onTap: onEditProfileTap,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
                     color: const Color(0xFF2D2F35),
                     borderRadius: BorderRadius.circular(20),
@@ -56,11 +59,15 @@ class DashboardActionCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Divider(color: Color(0x66FFFFFF), thickness: 1),
-          const _ActionRow(
+
+          // ← no const here because onTap is a runtime value
+          _ActionRow(
             icon: Icons.history,
             label: 'Last Ride',
-            trailing: Icon(Icons.arrow_forward, color: Color(0xFF2D2F35)),
+            trailing: const Icon(Icons.arrow_forward, color: Color(0xFF2D2F35)),
+            onTap: onLastRideTap,
           ),
+
           const Divider(color: Color(0x66FFFFFF), thickness: 1),
           const _ActionRow(
             icon: Icons.location_city,
@@ -90,32 +97,37 @@ class _ActionRow extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.trailing,
+    this.onTap,
   });
 
   final IconData icon;
   final String label;
   final Widget trailing;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          Icon(icon, color: const Color(0xFF2D2F35), size: 24),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF2D2F35),
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            Icon(icon, color: const Color(0xFF2D2F35), size: 24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF2D2F35),
+                ),
               ),
             ),
-          ),
-          trailing,
-        ],
+            trailing,
+          ],
+        ),
       ),
     );
   }

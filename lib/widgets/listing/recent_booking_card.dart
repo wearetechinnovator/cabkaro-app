@@ -121,25 +121,3 @@ class RecentBookingCard extends StatelessWidget {
   }
 }
 
-class _SmallAvatar extends StatelessWidget {
-  const _SmallAvatar({required this.initials});
-
-  final String initials;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 36,
-      height: 36,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Color(0xFFEA5A5A),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        initials,
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-      ),
-    );
-  }
-}

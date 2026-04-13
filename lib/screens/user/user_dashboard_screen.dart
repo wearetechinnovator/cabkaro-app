@@ -1,11 +1,11 @@
+import '../common/booking_details_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../../widgets/dashboard/dashboard_action_card.dart';
 import '../../widgets/dashboard/dashboard_bottom_dock.dart';
 import '../../widgets/dashboard/dashboard_greeting.dart';
 import '../../widgets/dashboard/dashboard_header.dart';
 import '../../widgets/dashboard/dashboard_logout_button.dart';
-import 'EditProfileScreen.dart';
+// import 'EditProfileScreen.dart';
 
 class UserDashboardScreen extends StatelessWidget {
   const UserDashboardScreen({super.key});
@@ -31,7 +31,16 @@ class UserDashboardScreen extends StatelessWidget {
                   onEditProfileTap: () {
                     Navigator.pushNamed(context, '/edit-profile');
                   },
+                  onLastRideTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BookingDetailsScreen(),
+                      ),
+                    );
+                  },
                 ),
+                
               ],
             ),
             Positioned(

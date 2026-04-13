@@ -1,29 +1,25 @@
-import 'package:cabkaro/screens/user/OTPScreen.dart';
+import 'package:cabkaro/screens/user/otp_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'SigninScreen.dart';
-import '../../widgets/ActionButton.dart';
-import '../../widgets/GradientBackground.dart';
-import '../../widgets/SignupInput.dart';
+import '../../widgets/action_button.dart';
+import '../../widgets/gradient_background.dart';
+import '../../widgets/signup_input.dart';
+import 'signup_screen.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SigninScreen extends StatefulWidget {
+  const SigninScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SigninScreen> createState() => _SigninScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SigninScreenState extends State<SigninScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-
+  final TextEditingController _passwordController = TextEditingController();
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
   }
@@ -75,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 Text(
-                  'Sign Up',
+                  'Sign In',
                   style: TextStyle(
                     fontSize: screenHeight * 0.027,
                     fontWeight: FontWeight.w500,
@@ -88,53 +84,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      SignupInput(
-                        hint: 'Name',
-                        icon: Icons.person,
-                        controller: _nameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Name is required',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: screenHeight * 0.015),
-                      SignupInput(
-                        hint: 'Email',
-                        icon: Icons.email,
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Email is required',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          final emailRegex = RegExp(
-                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                          );
-                          if (!emailRegex.hasMatch(value)) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Enter a valid email address',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: screenHeight * 0.015),
                       SignupInput(
                         hint: 'Phone',
                         icon: Icons.call,
@@ -160,10 +109,29 @@ class _SignupScreenState extends State<SignupScreen> {
                           return null;
                         },
                       ),
+                      SizedBox(height: 16,),
+                      SignupInput(
+                        hint: 'Password',
+                        icon: Icons.password_rounded,
+                        controller: _passwordController,
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            ToastWidget.show(
+                              context,
+                              message: 'Password is required',
+                              type: ToastType.error,
+                            );
+                            return '';
+                          }
+                          return null;
+                        },
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.1),
+                
+                SizedBox(height: screenHeight * 0.18),
                 ActionButton(
                   label: 'Submit',
                   backgroundColor: const Color.fromARGB(255, 242, 202, 42),
@@ -173,7 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     if (_formKey.currentState!.validate()) {
                       ToastWidget.show(
                         context,
-                        message:'Account created! OTP sent to ${_phoneController.text}',
+                        message: 'OTP sent to ${_phoneController.text}',
                         type: ToastType.success,
                       );
                       Future.delayed(const Duration(milliseconds: 500), () {
@@ -181,22 +149,22 @@ class _SignupScreenState extends State<SignupScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                OTPScreen(email: _emailController.text),
+                                const OTPScreen(email: "sayan@gmail.com"),
                           ),
                         );
                       });
                     } else {
                       // ToastWidget.show(
                       //   context,
-                      //   message: 'Please fill all fields correctly.',
+                      //   message: 'Please fix the errors before continuing.',
                       //   type: ToastType.error,
                       // );
                     }
                   },
                 ),
-                SizedBox(height: screenHeight * 0.019),
+                SizedBox(height: screenHeight * 0.015),
                 ActionButton(
-                  label: 'Sign in',
+                  label: 'Sign up',
                   backgroundColor: const Color(0xFF2D2F35),
                   textColor: Colors.white,
                   borderColor: const Color(0xFF2D2F35),
@@ -204,7 +172,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SigninScreen(),
+                        builder: (context) => const SignupScreen(),
                       ),
                     );
                   },

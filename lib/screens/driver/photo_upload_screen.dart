@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'DriverHomeScreen.dart';
-import '../../widgets/ActionButton.dart';
-import '../../widgets/GradientBackground.dart';
+import 'driver_home_screen.dart';
+import '../../widgets/action_button.dart';
+import '../../widgets/gradient_background.dart';
 
 class PhotoUploadScreen extends StatelessWidget {
   const PhotoUploadScreen({super.key});

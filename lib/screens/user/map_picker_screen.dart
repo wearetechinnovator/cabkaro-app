@@ -14,7 +14,7 @@ class MapPickerScreen extends StatefulWidget {
 
 class _MapPickerScreenState extends State<MapPickerScreen> {
   LatLng _centerPosition = const LatLng(22.5726, 88.3639);
-  GoogleMapController? _mapController;
+  // GoogleMapController? _mapController;
   String _resolvedAddress = 'Move map to select location';
   bool _isResolving = false;
 
@@ -77,7 +77,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
               zoom: 15.0,
             ),
             onMapCreated: (controller) {
-              _mapController = controller;
+              // _mapController = controller;
               _resolveAddress(_centerPosition);
             },
             onCameraMove: (position) {
@@ -108,7 +108,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black,
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -149,7 +149,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
               onPressed: _isResolving ? null : _confirmLocation,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amber,
-                disabledBackgroundColor: Colors.amber.withOpacity(0.5),
+                disabledBackgroundColor: Colors.amber,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

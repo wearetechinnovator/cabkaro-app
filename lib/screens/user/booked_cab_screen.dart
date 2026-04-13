@@ -1,3 +1,4 @@
+import 'package:cabkaro/widgets/listing/listing_bottom_dock.dart';
 import 'package:cabkaro/widgets/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -74,6 +75,12 @@ class BookedCabScreen extends StatelessWidget {
                   ),
                 ],
               ],
+            ),
+            Positioned(
+              left: screenWidth * 0.07,
+              right: screenWidth * 0.07,
+              bottom: 16,
+              child: const ListingBottomDock(),
             ),
           ],
         ),
