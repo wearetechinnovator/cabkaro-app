@@ -1,57 +1,47 @@
-import 'package:cabkaro/screens/user/car_listing_screen.dart';
+import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
 import 'package:cabkaro/widgets/otp_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/gradient_background.dart';
 import '../../widgets/action_button.dart';
 
+
+
 class OTPScreen extends StatefulWidget {
-  final String email;
-  const OTPScreen({super.key, required this.email});
+  final String phone;
+  const OTPScreen({super.key, required this.phone});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  late List<TextEditingController> _controllers;
-  late List<FocusNode> _focusNodes;
-  String otp = '';
-
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(5, (_) => TextEditingController());
-    _focusNodes = List.generate(5, (_) => FocusNode());
+
+    Provider.of<VerifyOtpController>(context, listen: false).controllers =
+        List.generate(5, (_) => TextEditingController());
+    Provider.of<VerifyOtpController>(context, listen: false).focusNodes =
+        List.generate(5, (_) => FocusNode());
   }
 
   @override
   void dispose() {
-    for (var controller in _controllers) {
+    for (var controller in Provider.of<VerifyOtpController>(
+      context,
+      listen: false,
+    ).controllers) {
       controller.dispose();
     }
-    for (var node in _focusNodes) {
+    for (var node in Provider.of<VerifyOtpController>(
+      context,
+      listen: false,
+    ).focusNodes) {
       node.dispose();
     }
     super.dispose();
-  }
-
-  void _handleInput(String value, int index) {
-    if (value.isNotEmpty) {
-      otp = _controllers.map((c) => c.text).join();
-      if (index < 4) {
-        _focusNodes[index + 1].requestFocus();
-      } else {
-        _focusNodes[index].unfocus();
-      }
-    }
-  }
-
-  void _handleBackspace(int index) {
-    if (_controllers[index].text.isEmpty && index > 0) {
-      _controllers[index - 1].clear();
-      _focusNodes[index - 1].requestFocus();
-    }
   }
 
   @override
@@ -60,12 +50,10 @@ class _OTPScreenState extends State<OTPScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = screenWidth * 0.06;
 
-    // Mask email
-    final parts = widget.email.split('@');
-    final emailPrefix = parts[0];
-    final maskedEmail = emailPrefix.length > 2
-        ? '${emailPrefix.substring(0, 2)}${'*' * (emailPrefix.length - 2)}${parts.isNotEmpty ? '@${parts[1]}' : ''}'
-        : widget.email;
+    // Mask phone number
+    final maskedPhone = widget.phone.length > 4
+        ? '${widget.phone.substring(0, 4)}${'*' * (widget.phone.length - 4)}'
+        : widget.phone;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -147,7 +135,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     // Subtitle
                     Text(
-                      'Enter the 5-digit code we\'ve sent to $maskedEmail',
+                      'Enter the 5-digit code we\'ve sent to $maskedPhone',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: screenHeight * 0.016,
@@ -167,11 +155,24 @@ class _OTPScreenState extends State<OTPScreen> {
                         children: List.generate(
                           5,
                           (index) => OTPField(
-                            controller: _controllers[index],
-                            focusNode: _focusNodes[index],
+                            controller: Provider.of<VerifyOtpController>(
+                              context,
+                              listen: false,
+                            ).controllers[index],
+                            focusNode: Provider.of<VerifyOtpController>(
+                              context,
+                              listen: false,
+                            ).focusNodes[index],
                             screenHeight: screenHeight,
-                            onChanged: (value) => _handleInput(value, index),
-                            onBackspace: () => _handleBackspace(index),
+                            onChanged: (value) =>
+                                Provider.of<VerifyOtpController>(
+                                  context,
+                                  listen: false,
+                                ).handleInput(value, index),
+                            onBackspace: () => Provider.of<VerifyOtpController>(
+                              context,
+                              listen: false,
+                            ).handleBackspace(index),
                           ),
                         ),
                       ),
@@ -250,12 +251,10 @@ class _OTPScreenState extends State<OTPScreen> {
                         textColor: Colors.white,
                         borderColor: const Color(0xFF2D2F35),
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Provider.of<VerifyOtpController>(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const CarListingScreen(),
-                            ),
-                          );
+                            listen: false,
+                          ).verifyOtp(widget.phone, context);
                         },
                       ),
                     ),

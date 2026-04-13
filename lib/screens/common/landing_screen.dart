@@ -1,7 +1,7 @@
 import 'package:cabkaro/screens/driver/driver_screen.dart';
+import 'package:cabkaro/screens/user/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:cabkaro/screens/user/signup_screen.dart';
 import '../../widgets/gradient_background.dart';
 import '../../widgets/action_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -106,7 +106,7 @@ class LandingScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
+                        builder: (context) => const SigninScreen(),
                       ),
                     );
                   },

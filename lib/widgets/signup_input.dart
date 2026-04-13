@@ -39,6 +39,7 @@ class SignupInput extends StatelessWidget {
         width: double.infinity,
         height: inputHeight,
         child: TextFormField(
+          obscureText: hint.toLowerCase() == "password" ? true : false,
           controller: controller,
           textAlignVertical: TextAlignVertical.center,
           validator: validator,

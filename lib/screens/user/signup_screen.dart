@@ -1,7 +1,7 @@
-import 'package:cabkaro/screens/user/otp_screen.dart';
-import 'package:cabkaro/widgets/ToastWidget.dart';
+import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'signin_screen.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/gradient_background.dart';
@@ -15,7 +15,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -85,80 +84,47 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Form(
-                  key: _formKey,
+                  key: Provider.of<SignupController>(context).formKey,
                   child: Column(
                     children: [
                       SignupInput(
                         hint: 'Name',
                         icon: Icons.person,
-                        controller: _nameController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Name is required',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: screenHeight * 0.015),
-                      SignupInput(
-                        hint: 'Email',
-                        icon: Icons.email,
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Email is required',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          final emailRegex = RegExp(
-                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                          );
-                          if (!emailRegex.hasMatch(value)) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Enter a valid email address',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          return null;
-                        },
+                        controller: Provider.of<SignupController>(
+                          context,
+                          listen: true,
+                        ).nameController,
+                        validator: (value) => Provider.of<SignupController>(
+                          context,
+                          listen: false,
+                        ).nameValidate(value, context),
                       ),
                       SizedBox(height: screenHeight * 0.015),
                       SignupInput(
                         hint: 'Phone',
                         icon: Icons.call,
-                        controller: _phoneController,
+                        controller: Provider.of<SignupController>(
+                          context,
+                          listen: true,
+                        ).phoneController,
                         keyboardType: TextInputType.phone,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Phone is required',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          if (value.length != 10) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Enter a valid 10-digit number',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          return null;
-                        },
+                        validator: (value) => Provider.of<SignupController>(
+                          context,
+                          listen: false,
+                        ).phoneValidate(value, context),
+                      ),
+                      SizedBox(height: screenHeight * 0.015),
+                      SignupInput(
+                        hint: 'Password',
+                        icon: Icons.email,
+                        controller: Provider.of<SignupController>(
+                          context,
+                          listen: true,
+                        ).passwordController,
+                        validator: (value) => Provider.of<SignupController>(
+                          context,
+                          listen: false,
+                        ).passwordValidate(value, context),
                       ),
                     ],
                   ),
@@ -169,30 +135,10 @@ class _SignupScreenState extends State<SignupScreen> {
                   backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      ToastWidget.show(
-                        context,
-                        message:'Account created! OTP sent to ${_phoneController.text}',
-                        type: ToastType.success,
-                      );
-                      Future.delayed(const Duration(milliseconds: 500), () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                OTPScreen(email: _emailController.text),
-                          ),
-                        );
-                      });
-                    } else {
-                      // ToastWidget.show(
-                      //   context,
-                      //   message: 'Please fill all fields correctly.',
-                      //   type: ToastType.error,
-                      // );
-                    }
-                  },
+                  onTap: () => Provider.of<SignupController>(
+                    context,
+                    listen: false,
+                  ).signup(context),
                 ),
                 SizedBox(height: screenHeight * 0.019),
                 ActionButton(

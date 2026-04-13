@@ -40,7 +40,6 @@ class UserDashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                
               ],
             ),
             Positioned(
@@ -66,5 +65,3 @@ class UserDashboardScreen extends StatelessWidget {
     );
   }
 }
-
-

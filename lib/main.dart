@@ -1,3 +1,7 @@
+import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/user/login_controller.dart';
+import 'package:cabkaro/controllers/user/signup_controller.dart';
+import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
 import 'package:cabkaro/screens/common/landing_screen.dart';
 import 'package:cabkaro/screens/common/booking_details_screen.dart';
 import 'package:cabkaro/screens/driver/driver_screen.dart';
@@ -30,6 +34,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LocationProvider()),
+        ChangeNotifierProvider(create: (_) => LoginController()),
+        ChangeNotifierProvider(create: (_) => VerifyOtpController()),
+        ChangeNotifierProvider(create: (_) => SignupController()),
+        ChangeNotifierProvider(create: (_) => EditProfileController()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',

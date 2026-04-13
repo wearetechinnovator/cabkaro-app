@@ -139,7 +139,7 @@ class _ToastOverlayState extends State<_ToastOverlay>
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: Colors.black.withValues(),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),

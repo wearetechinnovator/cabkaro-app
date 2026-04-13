@@ -17,15 +17,15 @@ class DashboardBottomDock extends StatelessWidget {
         children: [
           _DockIcon(
             icon: Icons.home_outlined,
-            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+            onTap: () => Navigator.pushNamed(context, '/listing'),
           ),
           _DockIcon(
             icon: Icons.bar_chart_rounded,
-            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+            onTap: () => Navigator.pushNamed(context, '/listing'),
           ),
           _DockIcon(
             icon: Icons.notifications_none_rounded,
-            onTap: () => Navigator.pushReplacementNamed(context, '/notifications'),
+            onTap: () => Navigator.pushNamed(context, '/notifications'),
           ),
           const _DockIcon(icon: Icons.person_rounded, selected: true),
         ],

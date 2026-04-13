@@ -1,11 +1,12 @@
-import 'package:cabkaro/screens/user/otp_screen.dart';
+import 'package:cabkaro/controllers/user/login_controller.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/gradient_background.dart';
 import '../../widgets/signup_input.dart';
-import 'signup_screen.dart';
+import './signup_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -15,12 +16,17 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   @override
   void dispose() {
-    _phoneController.dispose();
+    Provider.of<LoginController>(
+      context,
+      listen: false,
+    ).phoneController.dispose();
+    Provider.of<LoginController>(
+      context,
+      listen: false,
+    ).passwordController.dispose();
+
     super.dispose();
   }
 
@@ -81,13 +87,19 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Form(
-                  key: _formKey,
+                  key: Provider.of<LoginController>(
+                    context,
+                    listen: false,
+                  ).formKey,
                   child: Column(
                     children: [
                       SignupInput(
                         hint: 'Phone',
                         icon: Icons.call,
-                        controller: _phoneController,
+                        controller: Provider.of<LoginController>(
+                          context,
+                          listen: false,
+                        ).phoneController,
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -109,12 +121,14 @@ class _SigninScreenState extends State<SigninScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16,),
+                      SizedBox(height: 16),
                       SignupInput(
                         hint: 'Password',
                         icon: Icons.password_rounded,
-                        controller: _passwordController,
-                        keyboardType: TextInputType.phone,
+                        controller: Provider.of<LoginController>(
+                          context,
+                          listen: false,
+                        ).passwordController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             ToastWidget.show(
@@ -130,7 +144,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     ],
                   ),
                 ),
-                
+
                 SizedBox(height: screenHeight * 0.18),
                 ActionButton(
                   label: 'Submit',
@@ -138,28 +152,10 @@ class _SigninScreenState extends State<SigninScreen> {
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      ToastWidget.show(
-                        context,
-                        message: 'OTP sent to ${_phoneController.text}',
-                        type: ToastType.success,
-                      );
-                      Future.delayed(const Duration(milliseconds: 500), () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const OTPScreen(email: "sayan@gmail.com"),
-                          ),
-                        );
-                      });
-                    } else {
-                      // ToastWidget.show(
-                      //   context,
-                      //   message: 'Please fix the errors before continuing.',
-                      //   type: ToastType.error,
-                      // );
-                    }
+                    Provider.of<LoginController>(
+                      context,
+                      listen: false,
+                    ).login(context);
                   },
                 ),
                 SizedBox(height: screenHeight * 0.015),
@@ -169,7 +165,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   textColor: Colors.white,
                   borderColor: const Color(0xFF2D2F35),
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const SignupScreen(),
