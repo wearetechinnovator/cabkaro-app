@@ -2,6 +2,7 @@ import 'package:cabkaro/screens/driver/driver_screen.dart';
 import 'package:cabkaro/screens/user/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/gradient_background.dart';
 import '../../widgets/action_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -35,7 +36,7 @@ class LandingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               SizedBox(height: 60),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -63,7 +64,6 @@ class LandingScreen extends StatelessWidget {
               ),
               SizedBox(height: screenHeight * 0.02),
 
-              
               Align(
                 alignment: Alignment.centerRight,
                 child: Transform.translate(
@@ -87,7 +87,7 @@ class LandingScreen extends StatelessWidget {
                               height: screenHeight * 0.250,
                               fit: BoxFit.contain,
                             )
-                            .animate(autoPlay: true) 
+                            .animate(autoPlay: true)
                             .slideX(begin: 0.5, end: 0, duration: 400.ms)
                             .fadeIn(duration: 300.ms),
                   ),
@@ -102,7 +102,12 @@ class LandingScreen extends StatelessWidget {
                   backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                   textColor: Colors.black,
                   borderColor: const Color(0xFF1F1F1F),
-                  onTap: () {
+                  onTap: () async {
+                    final SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                    pref.setString("role", "user");
+
+                    if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -120,7 +125,12 @@ class LandingScreen extends StatelessWidget {
                   backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                   textColor: const Color.fromARGB(255, 0, 0, 0),
                   borderColor: const Color(0xFF1F1F1F),
-                  onTap: () {
+                  onTap: () async {
+                    final SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                    pref.setString("role", "driver");
+
+                    if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -130,7 +140,6 @@ class LandingScreen extends StatelessWidget {
                   },
                 ),
               ),
-
             ],
           ),
         ),

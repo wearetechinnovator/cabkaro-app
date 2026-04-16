@@ -110,9 +110,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
     Navigator.pop(context);
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => MapPickerScreen(isPickup: isPickup),
-      ),
+      MaterialPageRoute(builder: (_) => MapPickerScreen(isPickup: isPickup)),
     );
   }
 
@@ -147,12 +145,14 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
             onTap: () => onSelect(place),
             borderRadius: BorderRadius.circular(12),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
-                  const Icon(Icons.location_on_outlined,
-                      size: 18, color: Colors.grey),
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 18,
+                    color: Colors.grey,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -198,8 +198,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Set Locations',
-                style:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 16),
@@ -210,8 +209,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 hintText: 'Pickup Location',
-                prefixIcon:
-                    const Icon(Icons.my_location, color: Colors.blue),
+                prefixIcon: const Icon(Icons.my_location, color: Colors.blue),
                 suffixIcon: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -225,14 +223,18 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                         }),
                       ),
                     IconButton(
-                      icon: const Icon(Icons.map_outlined,
-                          size: 18, color: Colors.amber),
+                      icon: const Icon(
+                        Icons.map_outlined,
+                        size: 18,
+                        color: Colors.amber,
+                      ),
                       onPressed: () => _openMapPicker(true),
                     ),
                   ],
                 ),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 filled: true,
                 fillColor: Colors.grey[100],
               ),
@@ -256,8 +258,7 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
                 hintText: 'Where to?',
-                prefixIcon:
-                    const Icon(Icons.location_on, color: Colors.red),
+                prefixIcon: const Icon(Icons.location_on, color: Colors.red),
                 suffixIcon: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -271,14 +272,18 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                         }),
                       ),
                     IconButton(
-                      icon: const Icon(Icons.map_outlined,
-                          size: 18, color: Colors.amber),
+                      icon: const Icon(
+                        Icons.map_outlined,
+                        size: 18,
+                        color: Colors.amber,
+                      ),
                       onPressed: () => _openMapPicker(false),
                     ),
                   ],
                 ),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 filled: true,
                 fillColor: Colors.grey[100],
               ),
@@ -299,18 +304,20 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
 
             ElevatedButton.icon(
               onPressed: () {
-                final pickupEmpty =
-                    _pickupController.text.trim().isEmpty;
+                final pickupEmpty = _pickupController.text.trim().isEmpty;
                 _openMapPicker(pickupEmpty);
               },
               icon: const Icon(Icons.map, color: Colors.black),
-              label: const Text('Pick from Map',
-                  style: TextStyle(color: Colors.black)),
+              label: const Text(
+                'Pick from Map',
+                style: TextStyle(color: Colors.black),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amber,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -321,10 +328,13 @@ class _LocationPickerModalState extends State<LocationPickerModal> {
                 backgroundColor: Colors.black,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Confirm Locations',
-                  style: TextStyle(color: Colors.white)),
+              child: const Text(
+                'Confirm Locations',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 24),
           ],

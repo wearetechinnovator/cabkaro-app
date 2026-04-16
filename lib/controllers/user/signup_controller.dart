@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cabkaro/screens/user/otp_screen.dart';
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +78,7 @@ class SignupController extends ChangeNotifier {
         "phone": phoneController.text.trim(),
         "password": passwordController.text.trim(),
       };
-      print(data);
+
       Uri url = Uri.parse("${constant.apiUrl}/user/register");
       var req = await http.post(
         url,
@@ -92,7 +91,6 @@ class SignupController extends ChangeNotifier {
         return;
       }
 
-      print(res['data']);
       Future.delayed(const Duration(milliseconds: 500), () {
         Navigator.pushReplacement(
           ctx,

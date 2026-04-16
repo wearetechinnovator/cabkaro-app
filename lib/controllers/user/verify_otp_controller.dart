@@ -44,7 +44,7 @@ class VerifyOtpController extends ChangeNotifier {
 
       var res = jsonDecode(req.body);
       if (req.statusCode == 200) {
-        pref.setString(constant.CabToken, res['token']);
+        pref.setString(constant.cabToken, res['token']);
         pref.setString("user-data", jsonEncode(res['data']));
 
         Navigator.pushReplacement(

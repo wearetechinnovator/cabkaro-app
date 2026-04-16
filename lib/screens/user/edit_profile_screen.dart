@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/dashboard/dashboard_bottom_dock.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -12,30 +14,15 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  late TextEditingController nameController;
-  late TextEditingController emailController;
-  late TextEditingController phoneController;
-  late TextEditingController addressController;
 
   File? _profileImage;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: 'User1257');
-    emailController = TextEditingController(text: 'user@example.com');
-    phoneController = TextEditingController(text: '+1 234 567 8900');
-    addressController = TextEditingController(text: '123 Main Street');
   }
 
-  @override
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    phoneController.dispose();
-    addressController.dispose();
-    super.dispose();
-  }
+
 
   Future<void> _pickImage() async {
     try {
@@ -59,6 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    var provider = Provider.of<EditProfileController>(context, listen: false);
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
@@ -189,15 +177,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _EditProfileInput(
                   icon: Icons.person,
                   hintText: 'Name',
-                  controller: nameController,
-                ),
-                const SizedBox(height: 14),
-
-                // Email Input
-                _EditProfileInput(
-                  icon: Icons.mail,
-                  hintText: 'Email',
-                  controller: emailController,
+                  controller: provider.nameController,
                 ),
                 const SizedBox(height: 14),
 
@@ -205,26 +185,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _EditProfileInput(
                   icon: Icons.call,
                   hintText: 'Phone',
-                  controller: phoneController,
+                  controller: provider.phoneController,
                 ),
                 const SizedBox(height: 14),
-
-                // Address Input
-                _EditProfileInput(
-                  icon: Icons.location_on,
-                  hintText: 'Address',
-                  controller: addressController,
-                ),
-                const SizedBox(height: 32),
 
                 // Update Profile Button
                 Align(
                   alignment: Alignment.centerLeft,
                   child: GestureDetector(
                     onTap: () {
-                      ToastWidget.show(context,
-                          message: 'Profile updated successfully',
-                          type: ToastType.success);
+                      provider.update(context);
                     },
                     child: Container(
                       width: 150,

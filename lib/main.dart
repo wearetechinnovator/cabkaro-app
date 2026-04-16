@@ -1,9 +1,10 @@
 import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
 import 'package:cabkaro/controllers/user/login_controller.dart';
+import 'package:cabkaro/controllers/user/ride_controller.dart';
 import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
-import 'package:cabkaro/screens/common/landing_screen.dart';
 import 'package:cabkaro/screens/common/booking_details_screen.dart';
+import 'package:cabkaro/screens/common/splash_screen.dart';
 import 'package:cabkaro/screens/driver/driver_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:cabkaro/screens/driver/gov_details_screen.dart';
@@ -26,8 +27,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VerifyOtpController()),
         ChangeNotifierProvider(create: (_) => SignupController()),
         ChangeNotifierProvider(create: (_) => EditProfileController()),
+        ChangeNotifierProvider(create: (_) => RideController()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',
@@ -45,7 +53,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         ),
-        home: const LandingScreen(),
+        home: const SplashScreen(),
         routes: {
           '/signup': (context) => const SignupScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
@@ -58,7 +66,6 @@ class MyApp extends StatelessWidget {
           '/dashboard': (context) => const UserDashboardScreen(),
           '/signin': (context) => SigninScreen(),
           '/edit-profile': (context) => const EditProfileScreen(),
-          // '/map-picker': (context) => const MapPickerScreen(),
         },
       ),
     );

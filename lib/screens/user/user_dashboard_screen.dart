@@ -1,3 +1,5 @@
+import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
+import 'package:provider/provider.dart';
 import '../common/booking_details_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/dashboard/dashboard_action_card.dart';
@@ -5,14 +7,27 @@ import '../../widgets/dashboard/dashboard_bottom_dock.dart';
 import '../../widgets/dashboard/dashboard_greeting.dart';
 import '../../widgets/dashboard/dashboard_header.dart';
 import '../../widgets/dashboard/dashboard_logout_button.dart';
-// import 'EditProfileScreen.dart';
 
-class UserDashboardScreen extends StatelessWidget {
+class UserDashboardScreen extends StatefulWidget {
   const UserDashboardScreen({super.key});
+
+  @override
+  State<UserDashboardScreen> createState() => _UserDashboardScreenState();
+}
+
+class _UserDashboardScreenState extends State<UserDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<EditProfileController>(context, listen: false).getUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final Map<String, dynamic> userData =
+        Provider.of<EditProfileController>(context, listen: true).userData ??
+        {"name": "Loading...", "phone": "Loading..."};
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
@@ -24,10 +39,10 @@ class UserDashboardScreen extends StatelessWidget {
               children: [
                 DashboardHeader(onBack: () => Navigator.pop(context)),
                 const SizedBox(height: 24),
-                const DashboardGreeting(name: 'User1257'),
+                DashboardGreeting(name: userData['name']),
                 const SizedBox(height: 18),
                 DashboardActionCard(
-                  userName: 'User1257',
+                  userName: userData['name'],
                   onEditProfileTap: () {
                     Navigator.pushNamed(context, '/edit-profile');
                   },
@@ -46,11 +61,10 @@ class UserDashboardScreen extends StatelessWidget {
               left: 18,
               bottom: 130,
               child: DashboardLogoutButton(
-                onTap: () => Navigator.pushNamedAndRemoveUntil(
+                onTap: () => Provider.of<EditProfileController>(
                   context,
-                  '/',
-                  (route) => false,
-                ),
+                  listen: false,
+                ).logout(context),
               ),
             ),
             Positioned(
