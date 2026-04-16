@@ -8,8 +8,14 @@ import '../../widgets/cabslider/cabdata.dart';
 import 'grayed_cab_card.dart';
 import 'package:cabkaro/widgets/cabslider/cabcard.dart';
 
-class BookedCabScreen extends StatelessWidget {
+class BookedCabScreen extends StatefulWidget {
   const BookedCabScreen();
+
+  @override
+  State<BookedCabScreen> createState() => _BookedCabScreenState();
+}
+
+class _BookedCabScreenState extends State<BookedCabScreen> {
   static const List<CabData> _cabs = [
     CabData(
       driverName: 'Mark',

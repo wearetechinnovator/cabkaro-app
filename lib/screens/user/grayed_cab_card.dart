@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import '../../widgets/cabslider/cabcard.dart';
 import '../../widgets/cabslider/cabdata.dart';
 
-class GreyedCabCard extends StatelessWidget {
+class GreyedCabCard extends StatefulWidget {
   final CabData cab;
   final double screenWidth;
 
   const GreyedCabCard({required this.cab, required this.screenWidth});
 
+  @override
+  State<GreyedCabCard> createState() => _GreyedCabCardState();
+}
+
+class _GreyedCabCardState extends State<GreyedCabCard> {
   @override
   Widget build(BuildContext context) {
     return ColorFiltered(
@@ -21,8 +26,8 @@ class GreyedCabCard extends StatelessWidget {
       child: IgnorePointer( // disables tap on greyed cards
         child: CabCard(
           cardColor: Color(0xFFF8C100),
-          data: cab,
-          screenWidth: screenWidth,
+          data: widget.cab,
+          screenWidth: widget.screenWidth,
           onAccept: () {},
         ),
       ),

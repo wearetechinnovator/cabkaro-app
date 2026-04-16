@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 import '../../widgets/gradient_background.dart';
 import '../../widgets/action_button.dart';
 
-
-
 class OTPScreen extends StatefulWidget {
   final String phone;
   const OTPScreen({super.key, required this.phone});
@@ -17,28 +15,30 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  @override
-  void initState() {
-    super.initState();
+  // Cache the controller reference so it's safe to use in dispose()
+  late VerifyOtpController _otpController;
 
-    Provider.of<VerifyOtpController>(context, listen: false).controllers =
-        List.generate(5, (_) => TextEditingController());
-    Provider.of<VerifyOtpController>(context, listen: false).focusNodes =
-        List.generate(5, (_) => FocusNode());
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _otpController = Provider.of<VerifyOtpController>(context, listen: false);
+    // Initialize only once — didChangeDependencies can be called multiple times
+    if (!_initialized) {
+      _otpController.controllers = List.generate(5, (_) => TextEditingController());
+      _otpController.focusNodes = List.generate(5, (_) => FocusNode());
+      _initialized = true;
+    }
   }
 
   @override
   void dispose() {
-    for (var controller in Provider.of<VerifyOtpController>(
-      context,
-      listen: false,
-    ).controllers) {
+    // Use cached reference — context is NOT safe to use here
+    for (var controller in _otpController.controllers) {
       controller.dispose();
     }
-    for (var node in Provider.of<VerifyOtpController>(
-      context,
-      listen: false,
-    ).focusNodes) {
+    for (var node in _otpController.focusNodes) {
       node.dispose();
     }
     super.dispose();
@@ -155,24 +155,13 @@ class _OTPScreenState extends State<OTPScreen> {
                         children: List.generate(
                           5,
                           (index) => OTPField(
-                            controller: Provider.of<VerifyOtpController>(
-                              context,
-                              listen: false,
-                            ).controllers[index],
-                            focusNode: Provider.of<VerifyOtpController>(
-                              context,
-                              listen: false,
-                            ).focusNodes[index],
+                            controller: _otpController.controllers[index],
+                            focusNode: _otpController.focusNodes[index],
                             screenHeight: screenHeight,
                             onChanged: (value) =>
-                                Provider.of<VerifyOtpController>(
-                                  context,
-                                  listen: false,
-                                ).handleInput(value, index),
-                            onBackspace: () => Provider.of<VerifyOtpController>(
-                              context,
-                              listen: false,
-                            ).handleBackspace(index),
+                                _otpController.handleInput(value, index),
+                            onBackspace: () =>
+                                _otpController.handleBackspace(index),
                           ),
                         ),
                       ),
@@ -232,12 +221,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     Expanded(
                       child: ActionButton(
                         label: 'Cancel',
-                        backgroundColor: const Color.fromARGB(
-                          255,
-                          242,
-                          202,
-                          42,
-                        ),
+                        backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                         textColor: const Color(0xFF2D2F35),
                         borderColor: const Color(0xFF2D2F35),
                         onTap: () => Navigator.pop(context),
@@ -251,10 +235,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         textColor: Colors.white,
                         borderColor: const Color(0xFF2D2F35),
                         onTap: () {
-                          Provider.of<VerifyOtpController>(
-                            context,
-                            listen: false,
-                          ).verifyOtp(widget.phone, context);
+                          _otpController.verifyOtp(widget.phone, context);
                         },
                       ),
                     ),

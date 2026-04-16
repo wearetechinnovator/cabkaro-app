@@ -228,9 +228,9 @@ class _SearchcardState extends State<Searchcard> {
   }
 }
 
-// Tappable location display field
-class _LocationField extends StatelessWidget {
+class _LocationField extends StatefulWidget {
   const _LocationField({
+    super.key,
     required this.hint,
     required this.value,
     required this.onTap,
@@ -243,12 +243,17 @@ class _LocationField extends StatelessWidget {
   final double height;
 
   @override
+  State<_LocationField> createState() => _LocationFieldState();
+}
+
+class _LocationFieldState extends State<_LocationField> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        height: height,
+        height: widget.height,
         decoration: BoxDecoration(
           border: const DashedBorder(
             color: Color.fromARGB(255, 0, 0, 0),
@@ -264,9 +269,9 @@ class _LocationField extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                value ?? hint,
+                widget.value ?? widget.hint,
                 style: GoogleFonts.oswald(
-                  color: value != null
+                  color: widget.value != null
                       ? const Color.fromARGB(255, 0, 0, 0)
                       : const Color.fromARGB(255, 1, 1, 1),
                   fontSize: 14,
@@ -283,8 +288,9 @@ class _LocationField extends StatelessWidget {
 
 
 // Tappable date/time display field
-class _TappableField extends StatelessWidget {
+class _TappableField extends StatefulWidget {
   const _TappableField({
+    super.key,
     required this.hint,
     required this.value,
     required this.icon,
@@ -297,10 +303,16 @@ class _TappableField extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_TappableField> createState() => _TappableFieldState();
+}
+
+class _TappableFieldState extends State<_TappableField> {
+  @override
   Widget build(BuildContext context) {
-    final hasValue = value.isNotEmpty;
+    final hasValue = widget.value.isNotEmpty;
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         height: 40,
@@ -315,14 +327,17 @@ class _TappableField extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, size: 16,
-                color: hasValue
-                    ? const Color.fromARGB(255, 0, 0, 0)
-                    : const Color.fromARGB(255, 0, 0, 0)),
+            Icon(
+              widget.icon,
+              size: 16,
+              color: hasValue
+                  ? const Color.fromARGB(255, 0, 0, 0)
+                  : const Color.fromARGB(255, 0, 0, 0),
+            ),
             const SizedBox(width: 3),
             Expanded(
               child: Text(
-                hasValue ? value : hint,
+                hasValue ? widget.value : widget.hint,
                 style: GoogleFonts.oswald(
                   color: hasValue
                       ? const Color.fromARGB(255, 0, 0, 0)
@@ -340,11 +355,34 @@ class _TappableField extends StatelessWidget {
 }
 
 // Free-text input field (Price only)
-class _InputField extends StatelessWidget {
-  const _InputField({required this.hint, required this.icon});
+class _InputField extends StatefulWidget {
+  const _InputField({
+    super.key,
+    required this.hint,
+    required this.icon,
+  });
 
   final String hint;
   final IconData icon;
+
+  @override
+  State<_InputField> createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<_InputField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // important cleanup
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -361,14 +399,15 @@ class _InputField extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
+        controller: _controller,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           hintStyle: GoogleFonts.oswald(),
-          hintText: hint,
+          hintText: widget.hint,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
-          prefixIcon: Icon(icon),
+          prefixIcon: Icon(widget.icon),
           prefixIconConstraints: const BoxConstraints(
             minWidth: 5,
             minHeight: 0,

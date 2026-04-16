@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-class GreetingBlock extends StatelessWidget {
+class GreetingBlock extends StatefulWidget {
   const GreetingBlock();
 
+  @override
+  State<GreetingBlock> createState() => _GreetingBlockState();
+}
+
+class _GreetingBlockState extends State<GreetingBlock> {
   @override
   Widget build(BuildContext context) {
     return Column(

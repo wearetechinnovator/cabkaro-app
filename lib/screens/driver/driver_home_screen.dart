@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'driver_booked_cab_screen.dart';
 import '../../widgets/listing/listing_bottom_dock.dart';
 
-class DriverHomeScreen extends StatelessWidget {
+class DriverHomeScreen extends StatefulWidget {
   const DriverHomeScreen({super.key});
 
+  @override
+  State<DriverHomeScreen> createState() => _DriverHomeScreenState();
+}
+
+class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -52,9 +57,14 @@ class DriverHomeScreen extends StatelessWidget {
   }
 }
 
-class _DriverHeader extends StatelessWidget {
+class _DriverHeader extends StatefulWidget {
   const _DriverHeader();
 
+  @override
+  State<_DriverHeader> createState() => _DriverHeaderState();
+}
+
+class _DriverHeaderState extends State<_DriverHeader> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -79,17 +89,22 @@ class _DriverHeader extends StatelessWidget {
   }
 }
 
-class _HeaderCircle extends StatelessWidget {
+class _HeaderCircle extends StatefulWidget {
   const _HeaderCircle({required this.icon, this.onTap});
 
   final IconData icon;
   final VoidCallback? onTap;
 
   @override
+  State<_HeaderCircle> createState() => _HeaderCircleState();
+}
+
+class _HeaderCircleState extends State<_HeaderCircle> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(20),
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         width: 40,
         height: 40,
@@ -97,15 +112,20 @@ class _HeaderCircle extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
         ),
-        child: Icon(icon, size: 20, color: const Color(0xFF2D2F35)),
+        child: Icon(widget.icon, size: 20, color: const Color(0xFF2D2F35)),
       ),
     );
   }
 }
 
-class _RequestCard extends StatelessWidget {
+class _RequestCard extends StatefulWidget {
   const _RequestCard();
 
+  @override
+  State<_RequestCard> createState() => _RequestCardState();
+}
+
+class _RequestCardState extends State<_RequestCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -228,12 +248,17 @@ class _RequestCard extends StatelessWidget {
   }
 }
 
-class _ChipInput extends StatelessWidget {
+class _ChipInput extends StatefulWidget {
   const _ChipInput({required this.icon, required this.text});
 
   final IconData icon;
   final String text;
 
+  @override
+  State<_ChipInput> createState() => _ChipInputState();
+}
+
+class _ChipInputState extends State<_ChipInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -246,11 +271,11 @@ class _ChipInput extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF3F3F3F)),
+          Icon(widget.icon, size: 18, color: const Color(0xFF3F3F3F)),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              text,
+              widget.text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
@@ -266,9 +291,14 @@ class _ChipInput extends StatelessWidget {
   }
 }
 
-class _AcceptButton extends StatelessWidget {
+class _AcceptButton extends StatefulWidget {
   const _AcceptButton();
 
+  @override
+  State<_AcceptButton> createState() => _AcceptButtonState();
+}
+
+class _AcceptButtonState extends State<_AcceptButton> {
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -301,11 +331,16 @@ class _AcceptButton extends StatelessWidget {
   }
 }
 
-class _FarePill extends StatelessWidget {
+class _FarePill extends StatefulWidget {
   const _FarePill({required this.fare});
 
   final String fare;
 
+  @override
+  State<_FarePill> createState() => _FarePillState();
+}
+
+class _FarePillState extends State<_FarePill> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -315,7 +350,7 @@ class _FarePill extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        'Fair - ₹ $fare',
+        'Fair - ₹ ${widget.fare}',
         style: const TextStyle(
           color: Colors.white,
           fontSize: 12,
@@ -326,9 +361,14 @@ class _FarePill extends StatelessWidget {
   }
 }
 
-class _RouteLine extends StatelessWidget {
+class _RouteLine extends StatefulWidget {
   const _RouteLine();
 
+  @override
+  State<_RouteLine> createState() => _RouteLineState();
+}
+
+class _RouteLineState extends State<_RouteLine> {
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
@@ -372,9 +412,14 @@ class _RouteLine extends StatelessWidget {
   }
 }
 
-class _Dot extends StatelessWidget {
+class _Dot extends StatefulWidget {
   const _Dot();
 
+  @override
+  State<_Dot> createState() => _DotState();
+}
+
+class _DotState extends State<_Dot> {
   @override
   Widget build(BuildContext context) {
     return Container(

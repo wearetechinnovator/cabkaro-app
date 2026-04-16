@@ -7,8 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../widgets/cabslider/cabdata.dart';
 import '../../widgets/listing/listing_bottom_dock.dart';
 
-class AvailableCabsScreen extends StatelessWidget {
+class AvailableCabsScreen extends StatefulWidget {
   const AvailableCabsScreen({super.key});
+
+  @override
+  State<AvailableCabsScreen> createState() => _AvailableCabsScreenState();
+}
+
+class _AvailableCabsScreenState extends State<AvailableCabsScreen> {
   static const List<CabData> _cabs = [
     CabData(
       driverName: 'Mark',

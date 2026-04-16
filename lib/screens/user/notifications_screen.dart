@@ -4,9 +4,14 @@ import '../../widgets/notifications/notifications_bottom_dock.dart';
 import '../../widgets/notifications/notifications_day_separator.dart';
 import '../../widgets/notifications/notifications_header.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

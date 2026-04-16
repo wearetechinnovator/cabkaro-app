@@ -31,6 +31,7 @@ class LoginController extends ChangeNotifier {
       var res = jsonDecode(req.body);
       print(res);
       if (req.statusCode == 200) {
+        print(res);
         if (!ctx.mounted) return;
         ToastWidget.show(
           ctx,

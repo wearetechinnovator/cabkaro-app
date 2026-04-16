@@ -4,9 +4,14 @@ import 'driver_home_screen.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/gradient_background.dart';
 
-class PhotoUploadScreen extends StatelessWidget {
+class PhotoUploadScreen extends StatefulWidget {
   const PhotoUploadScreen({super.key});
 
+  @override
+  State<PhotoUploadScreen> createState() => _PhotoUploadScreenState();
+}
+
+class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -100,16 +105,21 @@ class PhotoUploadScreen extends StatelessWidget {
   }
 }
 
-class _PhotoUploadBox extends StatelessWidget {
+class _PhotoUploadBox extends StatefulWidget {
   const _PhotoUploadBox({required this.onTap});
 
   final VoidCallback onTap;
 
   @override
+  State<_PhotoUploadBox> createState() => _PhotoUploadBoxState();
+}
+
+class _PhotoUploadBoxState extends State<_PhotoUploadBox> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         width: double.infinity,
         height: 102,
@@ -138,9 +148,14 @@ class _PhotoUploadBox extends StatelessWidget {
   }
 }
 
-class _TopDashedCurve extends StatelessWidget {
+class _TopDashedCurve extends StatefulWidget {
   const _TopDashedCurve();
 
+  @override
+  State<_TopDashedCurve> createState() => _TopDashedCurveState();
+}
+
+class _TopDashedCurveState extends State<_TopDashedCurve> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(

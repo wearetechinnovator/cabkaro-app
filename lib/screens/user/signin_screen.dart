@@ -16,18 +16,21 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
+  late LoginController _loginController;
+ 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loginController = Provider.of<LoginController>(context, listen: false);
+  }
+ 
   @override
   void dispose() {
-    Provider.of<LoginController>(
-      context,
-      listen: false,
-    ).phoneController.dispose();
-    Provider.of<LoginController>(
-      context,
-      listen: false,
-    ).passwordController.dispose();
-
+    // Use cached reference — context is NOT safe to use here
+    _loginController.phoneController.dispose();
+    _loginController.passwordController.dispose();
     super.dispose();
+    // important cleanup
   }
 
   @override

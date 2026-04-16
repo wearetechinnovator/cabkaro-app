@@ -11,9 +11,14 @@ import '../../widgets/search_card.dart';
 import '../../widgets/cabslider/cabslider.dart';
 import 'package:cabkaro/screens/user/available_cabs_screen.dart';
 
-class CarListingScreen extends StatelessWidget {
+class CarListingScreen extends StatefulWidget {
   const CarListingScreen({super.key});
 
+  @override
+  State<CarListingScreen> createState() => _CarListingScreenState();
+}
+
+class _CarListingScreenState extends State<CarListingScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
