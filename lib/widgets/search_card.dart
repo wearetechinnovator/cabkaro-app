@@ -1,14 +1,15 @@
+import 'package:cabkaro/controllers/user/ride_controller.dart';
+import 'package:cabkaro/screens/user/map_picker_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_border/dashed_border.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/providers/location_provider.dart';
-import 'location_picker_modal.dart';
+// import 'location_picker_modal.dart';
 
 class Searchcard extends StatefulWidget {
-  const Searchcard({super.key, required this.onSubmit});
-
   final GestureTapCallback onSubmit;
+  const Searchcard({super.key, required this.onSubmit});
 
   @override
   State<Searchcard> createState() => _SearchcardState();
@@ -55,7 +56,12 @@ class _SearchcardState extends State<Searchcard> {
         );
       },
     );
-    if (picked != null) setState(() => _selectedDate = picked);
+    if (picked != null) {
+      setState(() {
+        _selectedDate = picked;
+        Provider.of<RideController>(context, listen: false).date = picked;
+      });
+    }
   }
 
   Future<void> _pickTime() async {
@@ -75,19 +81,25 @@ class _SearchcardState extends State<Searchcard> {
         );
       },
     );
-    if (picked != null) setState(() => _selectedTime = picked);
+
+    if (picked != null) {
+      setState(() {
+        _selectedTime = picked;
+        Provider.of<RideController>(context, listen: false).time = picked;
+      });
+    }
   }
 
-  void _openModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => const LocationPickerModal(),
-    );
-  }
+  // void _openModal(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     builder: (context) => const LocationPickerModal(),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -114,19 +126,45 @@ class _SearchcardState extends State<Searchcard> {
                 const SizedBox(height: 35),
 
                 // Pickup field
+                // _LocationField(
+                //   hint: "Pickup Location",
+                //   value: locationProvider.pickupLocation,
+                //   onTap: () => _openModal(context),
+                //   height: 45,
+                // ),
                 _LocationField(
                   hint: "Pickup Location",
                   value: locationProvider.pickupLocation,
-                  onTap: () => _openModal(context),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MapPickerScreen(isPickup: true),
+                      ),
+                    );
+                  },
                   height: 45,
                 ),
                 const SizedBox(height: 10),
 
                 // Drop field
+                // _LocationField(
+                //   hint: "Drop Location",
+                //   value: locationProvider.dropLocation,
+                //   onTap: () => _openModal(context),
+                //   height: 40,
+                // ),
                 _LocationField(
                   hint: "Drop Location",
                   value: locationProvider.dropLocation,
-                  onTap: () => _openModal(context),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MapPickerScreen(isPickup: false),
+                      ),
+                    );
+                  },
                   height: 40,
                 ),
                 const SizedBox(height: 10),
@@ -139,6 +177,10 @@ class _SearchcardState extends State<Searchcard> {
                       child: _InputField(
                         hint: "Price",
                         icon: Icons.currency_rupee_outlined,
+                        textController: Provider.of<RideController>(
+                          context,
+                          listen: false,
+                        ).price,
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -178,7 +220,12 @@ class _SearchcardState extends State<Searchcard> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: GestureDetector(
-                    onTap: widget.onSubmit,
+                    onTap: () {
+                      Provider.of<RideController>(
+                        context,
+                        listen: false,
+                      ).postRide(context);
+                    },
                     child: Center(
                       child: Text(
                         "Submit",
@@ -281,7 +328,6 @@ class _LocationField extends StatelessWidget {
   }
 }
 
-
 // Tappable date/time display field
 class _TappableField extends StatelessWidget {
   const _TappableField({
@@ -315,10 +361,13 @@ class _TappableField extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, size: 16,
-                color: hasValue
-                    ? const Color.fromARGB(255, 0, 0, 0)
-                    : const Color.fromARGB(255, 0, 0, 0)),
+            Icon(
+              icon,
+              size: 16,
+              color: hasValue
+                  ? const Color.fromARGB(255, 0, 0, 0)
+                  : const Color.fromARGB(255, 0, 0, 0),
+            ),
             const SizedBox(width: 3),
             Expanded(
               child: Text(
@@ -341,11 +390,15 @@ class _TappableField extends StatelessWidget {
 
 // Free-text input field (Price only)
 class _InputField extends StatelessWidget {
-  const _InputField({required this.hint, required this.icon});
-
   final String hint;
   final IconData icon;
+  final TextEditingController textController;
 
+  const _InputField({
+    required this.hint,
+    required this.icon,
+    required this.textController,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -361,6 +414,7 @@ class _InputField extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
+        controller: textController,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           hintStyle: GoogleFonts.oswald(),

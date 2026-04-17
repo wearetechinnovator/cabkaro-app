@@ -4,8 +4,10 @@ import 'package:cabkaro/screens/common/landing_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:cabkaro/screens/user/car_listing_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../utils/constants.dart' as constant;
+import 'package:cabkaro/utils/constants.dart' as constant;
 import 'package:http/http.dart' as http;
+
+
 
 class AuthCheckController {
   static Future<void> auth(BuildContext context) async {

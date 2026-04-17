@@ -14,7 +14,6 @@ class MapPickerScreen extends StatefulWidget {
 
 class _MapPickerScreenState extends State<MapPickerScreen> {
   LatLng _centerPosition = const LatLng(22.5726, 88.3639);
-  // GoogleMapController? _mapController;
   String _resolvedAddress = 'Move map to select location';
   bool _isResolving = false;
 
@@ -50,9 +49,12 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
     final provider = context.read<LocationProvider>();
     if (widget.isPickup) {
       provider.setPickupLocation(_resolvedAddress);
+      provider.setPickupLatLng(_centerPosition);
     } else {
       provider.setDropLocation(_resolvedAddress);
+      provider.setDropLatLng(_centerPosition);
     }
+
     Navigator.pop(context);
   }
 

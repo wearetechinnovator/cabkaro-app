@@ -3,6 +3,7 @@ import 'package:cabkaro/controllers/user/login_controller.dart';
 import 'package:cabkaro/controllers/user/ride_controller.dart';
 import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
+import 'package:cabkaro/providers/socket_provider.dart';
 import 'package:cabkaro/screens/common/booking_details_screen.dart';
 import 'package:cabkaro/screens/common/splash_screen.dart';
 import 'package:cabkaro/screens/driver/driver_screen.dart';
@@ -35,7 +36,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => SignupController()),
         ChangeNotifierProvider(create: (_) => EditProfileController()),
         ChangeNotifierProvider(create: (_) => RideController()),
+        ChangeNotifierProvider(create: (_) => SocketProvider()..connect()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',

@@ -15,7 +15,6 @@ class LoginController extends ChangeNotifier {
       return;
     }
 
-    print("click...");
     try {
       Map<String, dynamic> data = {
         "phone": phoneController.text.trim(),
@@ -29,7 +28,6 @@ class LoginController extends ChangeNotifier {
       );
 
       var res = jsonDecode(req.body);
-      print(res);
       if (req.statusCode == 200) {
         if (!ctx.mounted) return;
         ToastWidget.show(
