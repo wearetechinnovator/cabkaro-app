@@ -274,32 +274,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _EditProfileInput(
                   icon: Icons.person,
                   hintText: 'Name',
-
                   controller: provider.nameController,
-
-                  controller: nameController,
-                ),
-                const SizedBox(height: 14),
-                _EditProfileInput(
-                  icon: Icons.mail,
-                  hintText: 'Email',
-                  controller: emailController,
                 ),
                 const SizedBox(height: 14),
                 _EditProfileInput(
                   icon: Icons.call,
                   hintText: 'Phone',
                   controller: provider.phoneController,
-                ),
-                const SizedBox(height: 14),
-
-
-                // Update Profile Button
-
-                _EditProfileInput(
-                  icon: Icons.location_on,
-                  hintText: 'Address',
-                  controller: addressController,
                 ),
                 const SizedBox(height: 32),
                 Align(
