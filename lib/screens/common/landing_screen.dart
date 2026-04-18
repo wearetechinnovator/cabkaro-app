@@ -1,5 +1,6 @@
 import 'package:cabkaro/screens/driver/driver_screen.dart';
 import 'package:cabkaro/screens/user/signin_screen.dart';
+import 'package:cabkaro/services/location_permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,8 +9,22 @@ import '../../widgets/action_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LandingScreen extends StatelessWidget {
+class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
+
+  @override
+  State<LandingScreen> createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends State<LandingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Request location permission on first app open
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      LocationPermissionService.requestLocationPermission(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

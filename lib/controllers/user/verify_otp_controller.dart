@@ -10,6 +10,9 @@ class VerifyOtpController extends ChangeNotifier {
   String otp = '';
   late List<TextEditingController> controllers;
   late List<FocusNode> focusNodes;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
 
   void handleInput(String value, int index) {
     if (value.isNotEmpty) {
@@ -30,6 +33,9 @@ class VerifyOtpController extends ChangeNotifier {
   }
 
   void verifyOtp(String phone, BuildContext ctx) async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
       Map<String, dynamic> data = {"phone": phone.trim(), "otp": otp.trim()};
       Uri url = Uri.parse("${constant.apiUrl}/user/verify-otp");
@@ -67,6 +73,9 @@ class VerifyOtpController extends ChangeNotifier {
         message: 'Something went wrong.',
         type: ToastType.error,
       );
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

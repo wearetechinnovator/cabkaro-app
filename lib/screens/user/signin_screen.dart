@@ -16,23 +16,7 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  late LoginController _loginController;
  
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _loginController = Provider.of<LoginController>(context, listen: false);
-  }
- 
-  @override
-  void dispose() {
-    // Use cached reference — context is NOT safe to use here
-    _loginController.phoneController.dispose();
-    _loginController.passwordController.dispose();
-    super.dispose();
-    // important cleanup
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -149,16 +133,21 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
 
                 SizedBox(height: screenHeight * 0.18),
-                ActionButton(
-                  label: 'Submit',
-                  backgroundColor: const Color.fromARGB(255, 242, 202, 42),
-                  textColor: Colors.black,
-                  borderColor: const Color(0xFF1F1F1F),
-                  onTap: () {
-                    Provider.of<LoginController>(
-                      context,
-                      listen: false,
-                    ).login(context);
+                Consumer<LoginController>(
+                  builder: (context, loginController, _) {
+                    return ActionButton(
+                      label: 'Submit',
+                      backgroundColor: const Color.fromARGB(255, 242, 202, 42),
+                      textColor: Colors.black,
+                      borderColor: const Color(0xFF1F1F1F),
+                      isLoading: loginController.isLoading,
+                      onTap: () {
+                        Provider.of<LoginController>(
+                          context,
+                          listen: false,
+                        ).login(context);
+                      },
+                    );
                   },
                 ),
                 SizedBox(height: screenHeight * 0.015),

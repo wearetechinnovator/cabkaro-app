@@ -229,13 +229,18 @@ class _OTPScreenState extends State<OTPScreen> {
                     ),
                     SizedBox(width: screenWidth * 0.08),
                     Expanded(
-                      child: ActionButton(
-                        label: 'Verify',
-                        backgroundColor: const Color(0xFF2D2F35),
-                        textColor: Colors.white,
-                        borderColor: const Color(0xFF2D2F35),
-                        onTap: () {
-                          _otpController.verifyOtp(widget.phone, context);
+                      child: Consumer<VerifyOtpController>(
+                        builder: (context, otpController, _) {
+                          return ActionButton(
+                            label: 'Verify',
+                            backgroundColor: const Color(0xFF2D2F35),
+                            textColor: Colors.white,
+                            borderColor: const Color(0xFF2D2F35),
+                            isLoading: otpController.isLoading,
+                            onTap: () {
+                              _otpController.verifyOtp(widget.phone, context);
+                            },
+                          );
                         },
                       ),
                     ),

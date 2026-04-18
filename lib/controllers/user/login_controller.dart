@@ -9,11 +9,24 @@ class LoginController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   Future<void> login(BuildContext ctx) async {
     if (!formKey.currentState!.validate()) {
       return;
     }
+
+    _isLoading = true;
+    notifyListeners();
 
     print("click...");
     try {
@@ -64,6 +77,9 @@ class LoginController extends ChangeNotifier {
         type: ToastType.error,
       );
       return;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }

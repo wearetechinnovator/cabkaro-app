@@ -1,5 +1,6 @@
 import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
 import 'package:cabkaro/controllers/user/login_controller.dart';
+import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/controllers/user/ride_controller.dart';
 import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
@@ -46,6 +47,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => SignupController()),
         ChangeNotifierProvider(create: (_) => EditProfileController()),
         ChangeNotifierProvider(create: (_) => RideController()),
+        ChangeNotifierProvider(create: (_) => ReviewController()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',

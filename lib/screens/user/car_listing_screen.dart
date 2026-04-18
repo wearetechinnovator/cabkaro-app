@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/screens/user/user_listing_dock.dart';
 import 'package:cabkaro/widgets/reviewslider/review_slider.dart';
 import 'package:cabkaro/screens/user/available_cabs_screen.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/listing/listing_dot_indicator.dart';
 import '../../widgets/listing/listing_header.dart';
 import '../../widgets/listing/recent_booking_card.dart';
@@ -51,11 +53,23 @@ class _CarListingScreenState extends State<CarListingScreen> {
                   const SizedBox(height: 22.0),
                   const SectionTitle(title: 'Recent Booking'),
                   const SizedBox(height: 12.0),
-                  const RecentBookingCard(
+                  RecentBookingCard(
                     customer: 'Nishan',
                     pickup: '69 New New York, USA',
                     drop: 'Digha',
                     fare: '₹800',
+                    driverId: 'driver_123', // Replace with actual driver ID
+                    rideId: 'ride_456', // Replace with actual ride ID
+                    onReviewSubmit: (rating, review) {
+                      Provider.of<ReviewController>(context, listen: false)
+                          .submitReview(
+                        context: context,
+                        driverId: 'driver_123', // Replace with actual driver ID
+                        rideId: 'ride_456', // Replace with actual ride ID
+                        rating: rating,
+                        review: review,
+                      );
+                    },
                   ),
                   const SizedBox(height: 22.0),
                   const SectionTitle(title: 'Reviews'),

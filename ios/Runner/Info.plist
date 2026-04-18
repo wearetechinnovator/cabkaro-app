@@ -6,6 +6,10 @@
 	<string>We need camera access to update your profile photo.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need photo library access to update your profile photo.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Cabkaro needs access to your location to show nearby rides and calculate fares accurately. Your location is only used for ride services.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Cabkaro needs access to your location to show nearby rides and calculate fares accurately. Your location is only used for ride services.</string>
 	
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cabkaro/screens/user/otp_screen.dart';
+import 'package:cabkaro/services/image_picker_service.dart';
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +12,23 @@ class SignupController extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  
+  File? _profileImage;
+  File? get profileImage => _profileImage;
+  
+  bool _isLoadingImage = false;
+  bool get isLoadingImage => _isLoadingImage;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    passwordController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
 
   String? nameValidate(String? value, BuildContext ctx) {
     if (value == null || value.isEmpty) {
@@ -67,10 +86,77 @@ class SignupController extends ChangeNotifier {
     return null;
   }
 
+  /// Pick profile image from camera or gallery
+  Future<void> pickProfileImage(BuildContext context) async {
+    _isLoadingImage = true;
+    notifyListeners();
+
+    try {
+      final file = await ImagePickerService.showImagePickerDialog(context);
+
+      if (file != null) {
+        // Validate file size (max 5MB)
+        final sizeMB = await ImagePickerService.getFileSizeInMB(file);
+        if (sizeMB > 5) {
+          if (!context.mounted) return;
+          ToastWidget.show(
+            context,
+            message: 'Image size should be less than 5MB',
+            type: ToastType.error,
+          );
+          _isLoadingImage = false;
+          notifyListeners();
+          return;
+        }
+
+        // Validate file format
+        if (!ImagePickerService.isValidImageFile(file)) {
+          if (!context.mounted) return;
+          ToastWidget.show(
+            context,
+            message: 'Please select a valid image file',
+            type: ToastType.error,
+          );
+          _isLoadingImage = false;
+          notifyListeners();
+          return;
+        }
+
+        _profileImage = file;
+        if (!context.mounted) return;
+        ToastWidget.show(
+          context,
+          message: 'Profile picture selected',
+          type: ToastType.success,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error picking image: $e');
+      if (!context.mounted) return;
+      ToastWidget.show(
+        context,
+        message: 'Error picking image',
+        type: ToastType.error,
+      );
+    } finally {
+      _isLoadingImage = false;
+      notifyListeners();
+    }
+  }
+
+  /// Remove selected profile image
+  void removeProfileImage() {
+    _profileImage = null;
+    notifyListeners();
+  }
+
   Future<void> signup(BuildContext ctx) async {
     if (!formKey.currentState!.validate()) {
       return;
     }
+
+    _isLoading = true;
+    notifyListeners();
 
     try {
       Map<String, dynamic> data = {
@@ -78,6 +164,13 @@ class SignupController extends ChangeNotifier {
         "phone": phoneController.text.trim(),
         "password": passwordController.text.trim(),
       };
+
+      // Add profile image if selected
+      if (_profileImage != null) {
+        final base64Image =
+            await ImagePickerService.fileToBase64(_profileImage!);
+        data["profilePicture"] = base64Image;
+      }
 
       Uri url = Uri.parse("${constant.apiUrl}/user/register");
       var req = await http.post(
@@ -108,6 +201,9 @@ class SignupController extends ChangeNotifier {
         type: ToastType.error,
       );
       return;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }

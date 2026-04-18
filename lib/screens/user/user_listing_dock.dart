@@ -26,8 +26,7 @@ class _UserListingDockState extends State<UserListingDock> {
           ),
           _DockIcon(
             icon: Icons.bar_chart_rounded,
-            selected: true,
-            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+            onTap: () => Navigator.pushReplacementNamed(context, '/booking-details'),
           ),
           _DockIcon(
             icon: Icons.notifications_none_rounded,
