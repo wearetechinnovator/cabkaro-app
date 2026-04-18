@@ -1,12 +1,17 @@
+import 'package:cabkaro/controllers/driver/driver_get_ride.dart';
+import 'package:cabkaro/controllers/driver/driver_signin_controller.dart';
+import 'package:cabkaro/controllers/driver/driver_signup_controller.dart';
+import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
 import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
 import 'package:cabkaro/controllers/user/login_controller.dart';
+import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/controllers/user/ride_controller.dart';
 import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
 import 'package:cabkaro/providers/socket_provider.dart';
 import 'package:cabkaro/screens/common/booking_details_screen.dart';
 import 'package:cabkaro/screens/common/splash_screen.dart';
-import 'package:cabkaro/screens/driver/driver_screen.dart';
+import 'package:cabkaro/screens/driver/driver_signin_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:cabkaro/screens/driver/gov_details_screen.dart';
 import 'package:cabkaro/screens/driver/photo_upload_screen.dart';
@@ -20,9 +25,9 @@ import 'package:cabkaro/providers/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// =================================================================
-// ===================[🙌🏻 JAY JAGANNATH 0!!0 🙏🏻]===================
-// =================================================================
+// ========================================================
+// ===============[🙌🏻 JAY JAGANNATH 0!!0 🙏🏻]==============
+// ========================================================
 
 void main() {
   runApp(const MyApp());
@@ -46,7 +51,12 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => SignupController()),
         ChangeNotifierProvider(create: (_) => EditProfileController()),
         ChangeNotifierProvider(create: (_) => RideController()),
-        ChangeNotifierProvider(create: (_) => SocketProvider()..connect()),
+        ChangeNotifierProvider(create: (_) => SocketProvider()),
+        ChangeNotifierProvider(create: (_) => ReviewController()),
+        ChangeNotifierProvider(create: (_) => DriverSignupController()),
+        ChangeNotifierProvider(create: (_) => DriverSigninController()),
+        ChangeNotifierProvider(create: (_) => DriverVerifyOtpController()),
+        ChangeNotifierProvider(create: (_) => DriverGetRide()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',
@@ -58,7 +68,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           '/signup': (context) => const SignupScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
-          '/driver': (context) => const DriverScreen(),
+          '/driver': (context) => const DriverSigninScreen(),
           '/driver-home': (context) => const DriverHomeScreen(),
           '/gov-details': (context) => const GOVDetailsScreen(),
           '/photo-upload': (context) => const PhotoUploadScreen(),

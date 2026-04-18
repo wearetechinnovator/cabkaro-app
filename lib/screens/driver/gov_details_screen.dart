@@ -20,6 +20,11 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
   String? licenseFile;
   String? carProofFile;
   File? _carPhoto;
+  String? _selectedSeats;
+  bool _hasAC = false;
+  bool _hasWiFi = false;
+
+  final List<String> _seatOptions = ['2', '4', '5', '7', '8'];
 
   Future<void> _pickCarPhoto() async {
     try {
@@ -260,7 +265,120 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
 
               SizedBox(height: screenHeight * 0.025),
 
-              // ── Document tiles ─────────────────────────────────────
+              // ── Car Features Section ────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Car Features',
+                      style: TextStyle(
+                        fontSize: screenHeight * 0.02,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF2D2F35),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Seats Dropdown
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Number of Seats',
+                          style: TextStyle(
+                            fontSize: screenHeight * 0.016,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF3C3D42),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0x8F2D2F35),
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: DropdownButton<String>(
+                            value: _selectedSeats,
+                            hint: const Text('Select seats'),
+                            isExpanded: true,
+                            underline: const SizedBox(),
+                            items: _seatOptions.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedSeats = newValue;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+
+                    // AC Toggle
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'AC Available',
+                          style: TextStyle(
+                            fontSize: screenHeight * 0.016,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF3C3D42),
+                          ),
+                        ),
+                        Switch(
+                          value: _hasAC,
+                          onChanged: (bool value) {
+                            setState(() {
+                              _hasAC = value;
+                            });
+                          },
+                          activeColor: const Color(0xFFF8C100),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+
+                    // WiFi Toggle
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'WiFi Available',
+                          style: TextStyle(
+                            fontSize: screenHeight * 0.016,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF3C3D42),
+                          ),
+                        ),
+                        Switch(
+                          value: _hasWiFi,
+                          onChanged: (bool value) {
+                            setState(() {
+                              _hasWiFi = value;
+                            });
+                          },
+                          activeColor: const Color(0xFFF8C100),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.025),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: _DocumentTile(

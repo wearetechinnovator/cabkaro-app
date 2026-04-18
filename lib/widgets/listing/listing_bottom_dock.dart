@@ -15,8 +15,14 @@ class ListingBottomDock extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _DockIcon(icon: Icons.home_outlined),
-          _DockIcon(icon: Icons.bar_chart_rounded),
+          _DockIcon(
+            icon: Icons.home_outlined,
+            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+          ),
+          _DockIcon(
+            icon: Icons.bar_chart_rounded,
+            onTap: () => Navigator.pushReplacementNamed(context, '/booking-details'),
+          ),
           _DockIcon(
             icon: Icons.notifications_none_rounded,
             onTap: () => Navigator.pushReplacementNamed(context, '/notifications'),

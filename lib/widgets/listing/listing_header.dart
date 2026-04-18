@@ -1,4 +1,6 @@
+import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ListingHeader extends StatelessWidget {
   const ListingHeader({super.key});
@@ -21,10 +23,7 @@ class ListingHeader extends StatelessWidget {
 }
 
 class _IconCircle extends StatelessWidget {
-  const _IconCircle({
-    required this.icon,
-    this.onTap,
-  });
+  const _IconCircle({required this.icon, this.onTap});
 
   final IconData icon;
   final VoidCallback? onTap;
@@ -52,6 +51,16 @@ class _ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<EditProfileController>();
+    String name = controller.userData?['name'] ?? '';
+    final parts = name.trim().split(" ").where((e) => e.isNotEmpty).toList();
+
+    final initials = parts.isEmpty
+        ? '?'
+        : parts.length == 1
+        ? parts[0][0]
+        : parts[0][0] + parts[1][0];
+
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: () => Navigator.pushNamed(context, '/dashboard'),
@@ -65,12 +74,12 @@ class _ProfileAvatar extends StatelessWidget {
           ),
         ),
         alignment: Alignment.center,
-        child: const Text(
-          'JM',
+        child: Text(
+          initials,
           style: TextStyle(
             color: Color(0xFF1F1F1F),
             fontWeight: FontWeight.w700,
-            fontSize: 12,
+            fontSize: 18,
           ),
         ),
       ),

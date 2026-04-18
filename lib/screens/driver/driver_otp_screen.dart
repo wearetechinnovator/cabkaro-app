@@ -1,29 +1,32 @@
-import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
+import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
 import 'package:cabkaro/widgets/otp_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/gradient_background.dart';
-import '../../widgets/action_button.dart';
+import 'package:cabkaro/widgets/gradient_background.dart';
+import 'package:cabkaro/widgets/action_button.dart';
 
-class OTPScreen extends StatefulWidget {
+
+
+
+class DriverOtpScreen extends StatefulWidget {
   final String phone;
-  const OTPScreen({super.key, required this.phone});
+  const DriverOtpScreen({super.key, required this.phone});
 
   @override
-  State<OTPScreen> createState() => _OTPScreenState();
+  State<DriverOtpScreen> createState() => _DriverOtpScreenState();
 }
 
-class _OTPScreenState extends State<OTPScreen> {
+class _DriverOtpScreenState extends State<DriverOtpScreen> {
   // Cache the controller reference so it's safe to use in dispose()
-  late VerifyOtpController _otpController;
+  late DriverVerifyOtpController _otpController;
 
   bool _initialized = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _otpController = Provider.of<VerifyOtpController>(context, listen: false);
+    _otpController = Provider.of<DriverVerifyOtpController>(context, listen: false);
     // Initialize only once — didChangeDependencies can be called multiple times
     if (!_initialized) {
       _otpController.controllers = List.generate(5, (_) => TextEditingController());
@@ -229,7 +232,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     ),
                     SizedBox(width: screenWidth * 0.08),
                     Expanded(
-                      child: Consumer<VerifyOtpController>(
+                      child: Consumer<DriverVerifyOtpController>(
                         builder: (context, otpController, _) {
                           return ActionButton(
                             label: 'Verify',

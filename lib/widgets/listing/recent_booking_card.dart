@@ -1,19 +1,46 @@
+import 'package:cabkaro/widgets/modals/review_rating_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RecentBookingCard extends StatelessWidget {
+class RecentBookingCard extends StatefulWidget {
   const RecentBookingCard({
     super.key,
     required this.customer,
     required this.pickup,
     required this.drop,
     required this.fare,
+    this.driverId = '',
+    this.rideId = '',
+    this.onReviewSubmit,
   });
 
   final String customer;
   final String pickup;
   final String drop;
   final String fare;
+  final String driverId;
+  final String rideId;
+  final Function(int rating, String review)? onReviewSubmit;
+
+  @override
+  State<RecentBookingCard> createState() => _RecentBookingCardState();
+}
+
+class _RecentBookingCardState extends State<RecentBookingCard> {
+  void _showReviewModal() {
+    showDialog(
+      context: context,
+      builder: (context) => ReviewRatingModal(
+        driverName: widget.customer,
+        driverId: widget.driverId,
+        onSubmit: (rating, review) async {
+          if (widget.onReviewSubmit != null) {
+            widget.onReviewSubmit!(rating, review);
+          }
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +109,35 @@ class RecentBookingCard extends StatelessWidget {
 
           Positioned(
             bottom: 7, left: 12,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 28, vertical: 10),
-              decoration: BoxDecoration(
-                color: Color(0xFFF8C100),
-                borderRadius: BorderRadius.circular(20),
+            child: GestureDetector(
+              onTap: _showReviewModal,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF8C100),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      'Drive Complete ₹${widget.fare}',
+                      style: GoogleFonts.oswald(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_forward_rounded, size: 18),
+                  ],
+                ),
               ),
-              child: Text('Drive Complete ₹800 /-', style: GoogleFonts.oswald(fontWeight: FontWeight.w700, fontSize: 16)),
             ),
           ),
           Positioned(

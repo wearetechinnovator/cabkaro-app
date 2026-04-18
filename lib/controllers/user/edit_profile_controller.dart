@@ -16,11 +16,19 @@ class EditProfileController extends ChangeNotifier {
   TextEditingController phoneController = TextEditingController();
   Map<String, dynamic>? userData;
 
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
   void getUserData() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     String? data = pref.getString("user-data");
     if (data != null) {
       userData = jsonDecode(data);
+      notifyListeners();
 
       nameController.text = userData!['name'];
       phoneController.text = userData!['phone'].toString();

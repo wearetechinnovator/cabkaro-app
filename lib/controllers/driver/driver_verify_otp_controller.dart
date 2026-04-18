@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:cabkaro/screens/user/car_listing_screen.dart';
+import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/constants.dart' as constant;
 
-class VerifyOtpController extends ChangeNotifier {
+class DriverVerifyOtpController extends ChangeNotifier {
   String otp = '';
   late List<TextEditingController> controllers;
   late List<FocusNode> focusNodes;
@@ -38,7 +38,7 @@ class VerifyOtpController extends ChangeNotifier {
 
     try {
       Map<String, dynamic> data = {"phone": phone.trim(), "otp": otp.trim()};
-      Uri url = Uri.parse("${constant.apiUrl}/user/verify-otp");
+      Uri url = Uri.parse("${constant.apiUrl}/driver/verify-otp");
 
       final SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -56,12 +56,14 @@ class VerifyOtpController extends ChangeNotifier {
 
       var res = jsonDecode(req.body);
 
+      print("==================");
+      print(res);
       if (req.statusCode == 200) {
         pref.setString(constant.cabToken, res['token']);
         pref.setString("user-data", jsonEncode(res['data']));
         Navigator.pushReplacement(
           ctx,
-          MaterialPageRoute(builder: (context) => const CarListingScreen()),
+          MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
         );
       } else {
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);

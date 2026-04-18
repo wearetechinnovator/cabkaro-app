@@ -83,6 +83,110 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
+                // Profile Picture Picker
+                Consumer<SignupController>(
+                  builder: (context, signupController, _) {
+                    return GestureDetector(
+                      onTap: signupController.isLoadingImage
+                          ? null
+                          : () {
+                              signupController.pickProfileImage(context);
+                            },
+                      child: Center(
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey[200],
+                                border: Border.all(
+                                  color: const Color.fromARGB(255, 242, 202, 42),
+                                  width: 3,
+                                ),
+                              ),
+                              child: signupController.profileImage != null
+                                  ? ClipOval(
+                                      child: Image.file(
+                                        signupController.profileImage!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Center(
+                                      child: signupController.isLoadingImage
+                                          ? const SizedBox(
+                                              width: 40,
+                                              height: 40,
+                                              child:
+                                                  CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  Color.fromARGB(
+                                                      255, 242, 202, 42),
+                                                ),
+                                              ),
+                                            )
+                                          : Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.camera_alt,
+                                                  size: 40,
+                                                  color: Colors.grey[600],
+                                                ),
+                                                SizedBox(
+                                                    height:
+                                                        screenHeight * 0.005),
+                                                Text(
+                                                  'Add Photo',
+                                                  style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                            ),
+                            if (signupController.profileImage != null)
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    signupController.removeProfileImage();
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(6),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: screenHeight * 0.02),
                 Form(
                   key: Provider.of<SignupController>(context).formKey,
                   child: Column(
@@ -130,15 +234,20 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.1),
-                ActionButton(
-                  label: 'Submit',
-                  backgroundColor: const Color.fromARGB(255, 242, 202, 42),
-                  textColor: Colors.black,
-                  borderColor: const Color(0xFF1F1F1F),
-                  onTap: () => Provider.of<SignupController>(
-                    context,
-                    listen: false,
-                  ).signup(context),
+                Consumer<SignupController>(
+                  builder: (context, signupController, _) {
+                    return ActionButton(
+                      label: 'Submit',
+                      backgroundColor: const Color.fromARGB(255, 242, 202, 42),
+                      textColor: Colors.black,
+                      borderColor: const Color(0xFF1F1F1F),
+                      isLoading: signupController.isLoading,
+                      onTap: () => Provider.of<SignupController>(
+                        context,
+                        listen: false,
+                      ).signup(context),
+                    );
+                  },
                 ),
                 SizedBox(height: screenHeight * 0.019),
                 ActionButton(

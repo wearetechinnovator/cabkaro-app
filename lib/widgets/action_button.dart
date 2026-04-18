@@ -8,6 +8,7 @@ class ActionButton extends StatelessWidget {
 		required this.textColor,
 		required this.borderColor,
 		required this.onTap,
+		this.isLoading = false,
 	});
 
 	final String label;
@@ -15,6 +16,7 @@ class ActionButton extends StatelessWidget {
 	final Color textColor;
 	final Color borderColor;
 	final VoidCallback onTap;
+	final bool isLoading;
 
 	@override
 	Widget build(BuildContext context) {
@@ -33,23 +35,35 @@ class ActionButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
         ),
         child: ElevatedButton(
-          onPressed: onTap,
+          onPressed: isLoading ? null : onTap,
           style: ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor,
+            backgroundColor: isLoading ? Colors.grey[400] : backgroundColor,
+            disabledBackgroundColor: Colors.grey[400],
             shape: RoundedRectangleBorder(
 						borderRadius: BorderRadius.circular(30),
 						side: BorderSide(color: borderColor, width: 2),
 					),
           ),
-          child: Text(
-            label,
-            style: GoogleFonts.oswald(
-              color: textColor,
-              fontSize: fontSize,
-              fontWeight: FontWeight.w500,
-              height: 1,
-            ),
-          ),
+          child: isLoading
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      textColor,
+                    ),
+                  ),
+                )
+              : Text(
+                  label,
+                  style: GoogleFonts.oswald(
+                    color: textColor,
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
+                  ),
+                ),
           ),
       ),
 		);

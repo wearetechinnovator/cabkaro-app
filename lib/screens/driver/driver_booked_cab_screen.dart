@@ -102,9 +102,14 @@ class _DriverBookedCabScreenState extends State<DriverBookedCabScreen> {
   }
 }
 
-class _DriverHeader extends StatelessWidget {
-  const _DriverHeader();
+class _DriverHeader extends StatefulWidget {
+  const _DriverHeader({super.key});
 
+  @override
+  State<_DriverHeader> createState() => _DriverHeaderState();
+}
+
+class _DriverHeaderState extends State<_DriverHeader> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -136,11 +141,16 @@ class _DriverHeader extends StatelessWidget {
   }
 }
 
-class _HeaderCircle extends StatelessWidget {
+class _HeaderCircle extends StatefulWidget {
   const _HeaderCircle({required this.icon});
 
   final IconData icon;
 
+  @override
+  State<_HeaderCircle> createState() => _HeaderCircleState();
+}
+
+class _HeaderCircleState extends State<_HeaderCircle> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -151,12 +161,12 @@ class _HeaderCircle extends StatelessWidget {
         border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
       ),
       alignment: Alignment.center,
-      child: Icon(icon, size: 20, color: const Color(0xFF2D2F35)),
+      child: Icon(widget.icon, size: 20, color: const Color(0xFF2D2F35)),
     );
   }
 }
 
-class _DriverBookedCard extends StatelessWidget {
+class _DriverBookedCard extends StatefulWidget {
   const _DriverBookedCard({
     required this.userName,
     required this.fareText,
@@ -176,6 +186,12 @@ class _DriverBookedCard extends StatelessWidget {
   final String? decision;
   final VoidCallback? onAccept;
   final VoidCallback? onReject;
+
+  @override
+  State<_DriverBookedCard> createState() => _DriverBookedCardState();
+}
+
+class _DriverBookedCardState extends State<_DriverBookedCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +231,7 @@ class _DriverBookedCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        userName,
+                        widget.userName,
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
@@ -266,21 +282,21 @@ class _DriverBookedCard extends StatelessWidget {
                     children: [
                       _ChipInput(
                         icon: Icons.currency_rupee_rounded,
-                        text: fareText,
+                        text: widget.fareText,
                       ),
                       const SizedBox(height: 8),
                       _ChipInput(
                         icon: Icons.access_time_rounded,
-                        text: estimateText,
+                        text: widget.estimateText,
                       ),
                       const SizedBox(height: 10),
-                      isPrimary
+                      widget.isPrimary
                           ? _DecisionButtons(
-                              decision: decision,
-                              onAccept: onAccept,
-                              onReject: onReject,
+                              decision: widget.decision,
+                              onAccept: widget.onAccept,
+                              onReject: widget.onReject,
                             )
-                          : _StateButton(text: waitText ?? 'Accept'),
+                          : _StateButton(text: widget.waitText ?? 'Accept'),
                     ],
                   ),
                 ),
@@ -302,7 +318,7 @@ class _DriverBookedCard extends StatelessWidget {
       ),
     );
 
-    if (isPrimary) {
+    if (widget.isPrimary) {
       return card;
     }
 
@@ -318,12 +334,17 @@ class _DriverBookedCard extends StatelessWidget {
   }
 }
 
-class _ChipInput extends StatelessWidget {
+class _ChipInput extends StatefulWidget {
   const _ChipInput({required this.icon, required this.text});
 
   final IconData icon;
   final String text;
 
+  @override
+  State<_ChipInput> createState() => _ChipInputState();
+}
+
+class _ChipInputState extends State<_ChipInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -336,11 +357,11 @@ class _ChipInput extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF3F3F3F)),
+          Icon(widget.icon, size: 18, color: const Color(0xFF3F3F3F)),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              text,
+              widget.text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
@@ -356,11 +377,16 @@ class _ChipInput extends StatelessWidget {
   }
 }
 
-class _StateButton extends StatelessWidget {
+class _StateButton extends StatefulWidget {
   const _StateButton({required this.text});
 
   final String text;
 
+  @override
+  State<_StateButton> createState() => _StateButtonState();
+}
+
+class _StateButtonState extends State<_StateButton> {
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -374,7 +400,7 @@ class _StateButton extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text(
-          text,
+          widget.text,
           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
         ),
       ),
@@ -382,7 +408,7 @@ class _StateButton extends StatelessWidget {
   }
 }
 
-class _DecisionButtons extends StatelessWidget {
+class _DecisionButtons extends StatefulWidget {
   const _DecisionButtons({
     required this.decision,
     this.onAccept,
@@ -394,9 +420,14 @@ class _DecisionButtons extends StatelessWidget {
   final VoidCallback? onReject;
 
   @override
+  State<_DecisionButtons> createState() => _DecisionButtonsState();
+}
+
+class _DecisionButtonsState extends State<_DecisionButtons> {
+  @override
   Widget build(BuildContext context) {
-    final accepted = decision == 'accepted';
-    final rejected = decision == 'rejected';
+    final accepted = widget.decision == 'accepted';
+    final rejected = widget.decision == 'rejected';
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -406,14 +437,14 @@ class _DecisionButtons extends StatelessWidget {
             label: 'Accept',
             color: const Color(0xFFF8C100),
             isActive: accepted,
-            onTap: onAccept,
+            onTap: widget.onAccept,
           ),
           const SizedBox(width: 8),
           _DecisionButton(
             label: 'Reject',
             color: const Color(0xFFC91818),
             isActive: rejected,
-            onTap: onReject,
+            onTap: widget.onReject,
           ),
         ],
       ),
@@ -421,7 +452,7 @@ class _DecisionButtons extends StatelessWidget {
   }
 }
 
-class _DecisionButton extends StatelessWidget {
+class _DecisionButton extends StatefulWidget {
   const _DecisionButton({
     required this.label,
     required this.color,
@@ -435,23 +466,28 @@ class _DecisionButton extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
+  State<_DecisionButton> createState() => _DecisionButtonState();
+}
+
+class _DecisionButtonState extends State<_DecisionButton> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(20),
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         height: 36,
         width: 86,
         decoration: BoxDecoration(
-          color: color,
+          color: widget.color,
           borderRadius: BorderRadius.circular(20),
-          border: isActive
+          border: widget.isActive
               ? Border.all(color: const Color(0xFF2D2F35), width: 1.4)
               : null,
         ),
         alignment: Alignment.center,
         child: Text(
-          label,
+          widget.label,
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w700,
@@ -463,11 +499,16 @@ class _DecisionButton extends StatelessWidget {
   }
 }
 
-class _FarePill extends StatelessWidget {
+class _FarePill extends StatefulWidget {
   const _FarePill({required this.fare});
 
   final String fare;
 
+  @override
+  State<_FarePill> createState() => _FarePillState();
+}
+
+class _FarePillState extends State<_FarePill> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -477,7 +518,7 @@ class _FarePill extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        'Fair - ₹ $fare',
+        'Fair - ₹ ${widget.fare}',
         style: const TextStyle(
           color: Colors.white,
           fontSize: 12,
@@ -488,9 +529,14 @@ class _FarePill extends StatelessWidget {
   }
 }
 
-class _RouteLine extends StatelessWidget {
+class _RouteLine extends StatefulWidget {
   const _RouteLine();
 
+  @override
+  State<_RouteLine> createState() => _RouteLineState();
+}
+
+class _RouteLineState extends State<_RouteLine> {
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
@@ -534,9 +580,14 @@ class _RouteLine extends StatelessWidget {
   }
 }
 
-class _Dot extends StatelessWidget {
+class _Dot extends StatefulWidget {
   const _Dot();
 
+  @override
+  State<_Dot> createState() => _DotState();
+}
+
+class _DotState extends State<_Dot> {
   @override
   Widget build(BuildContext context) {
     return Container(

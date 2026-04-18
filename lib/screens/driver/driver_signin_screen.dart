@@ -1,22 +1,21 @@
-import 'package:cabkaro/controllers/user/login_controller.dart';
+import 'package:cabkaro/controllers/driver/driver_signin_controller.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/action_button.dart';
-import '../../widgets/gradient_background.dart';
-import '../../widgets/signup_input.dart';
-import './signup_screen.dart';
+import 'package:cabkaro/widgets/action_button.dart';
+import 'package:cabkaro/widgets/gradient_background.dart';
+import 'package:cabkaro/widgets/signup_input.dart';
+import 'package:cabkaro/screens/driver/driver_signup_screen.dart';
 
-class SigninScreen extends StatefulWidget {
-  const SigninScreen({super.key});
+class DriverSigninScreen extends StatefulWidget {
+  const DriverSigninScreen({super.key});
 
   @override
-  State<SigninScreen> createState() => _SigninScreenState();
+  State<DriverSigninScreen> createState() => _DriverSigninScreenState();
 }
 
-class _SigninScreenState extends State<SigninScreen> {
- 
+class _DriverSigninScreenState extends State<DriverSigninScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -74,7 +73,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Form(
-                  key: Provider.of<LoginController>(
+                  key: Provider.of<DriverSigninController>(
                     context,
                     listen: false,
                   ).formKey,
@@ -83,7 +82,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       SignupInput(
                         hint: 'Phone',
                         icon: Icons.call,
-                        controller: Provider.of<LoginController>(
+                        controller: Provider.of<DriverSigninController>(
                           context,
                           listen: false,
                         ).phoneController,
@@ -111,8 +110,8 @@ class _SigninScreenState extends State<SigninScreen> {
                       SizedBox(height: 16),
                       SignupInput(
                         hint: 'Password',
-                        icon: Icons.password_rounded,
-                        controller: Provider.of<LoginController>(
+                        icon: Icons.lock,
+                        controller: Provider.of<DriverSigninController>(
                           context,
                           listen: false,
                         ).passwordController,
@@ -133,16 +132,16 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
 
                 SizedBox(height: screenHeight * 0.18),
-                Consumer<LoginController>(
-                  builder: (context, loginController, _) {
+                Consumer<DriverSigninController>(
+                  builder: (context, controller, _) {
                     return ActionButton(
                       label: 'Submit',
                       backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                       textColor: Colors.black,
                       borderColor: const Color(0xFF1F1F1F),
-                      isLoading: loginController.isLoading,
+                      isLoading: controller.isLoading,
                       onTap: () {
-                        Provider.of<LoginController>(
+                        Provider.of<DriverSigninController>(
                           context,
                           listen: false,
                         ).login(context);
@@ -160,7 +159,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
+                        builder: (context) => const DriverSignupScreen(),
                       ),
                     );
                   },

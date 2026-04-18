@@ -2,12 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to upload documents</string>
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera to upload documents</string>
+	<string>We need camera access to update your profile photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need photo library access to update your profile photo.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Cabkaro needs access to your location to show nearby rides and calculate fares accurately. Your location is only used for ride services.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Cabkaro needs access to your location to show nearby rides and calculate fares accurately. Your location is only used for ride services.</string>
+	
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	
 	<key>CFBundleDisplayName</key>
 	<string>Cabkaro</string>
 	<key>CFBundleExecutable</key>

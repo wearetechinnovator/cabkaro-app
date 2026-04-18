@@ -1,85 +1,98 @@
+import 'package:cabkaro/controllers/user/ride_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/screens/user/user_listing_dock.dart';
 import 'package:cabkaro/widgets/reviewslider/review_slider.dart';
-import 'package:flutter/material.dart';
-// import '../../widgets/listing/listing_bottom_dock.dart';
+import 'package:cabkaro/screens/user/available_cabs_screen.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/listing/listing_dot_indicator.dart';
 import '../../widgets/listing/listing_header.dart';
 import '../../widgets/listing/recent_booking_card.dart';
-import 'greeting_block.dart';
 import '../../widgets/listing/section_title.dart';
 import '../../widgets/search_card.dart';
 import '../../widgets/cabslider/cabslider.dart';
-import 'package:cabkaro/screens/user/available_cabs_screen.dart';
+import 'greeting_block.dart';
 
-class CarListingScreen extends StatelessWidget {
+class CarListingScreen extends StatefulWidget {
   const CarListingScreen({super.key});
 
   @override
+  State<CarListingScreen> createState() => _CarListingScreenState();
+}
+
+class _CarListingScreenState extends State<CarListingScreen> {
+  @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
       body: SafeArea(
         child: Stack(
           children: [
-            ListView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
-              children: [
-                ListingHeader(),
-                SizedBox(height: 24),
-                GreetingBlock(),
-                SizedBox(height: 14),
-                // _ListingSearchCard(),
-                
-                Searchcard(
-                  onSubmit: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AvailableCabsScreen(),
-                      ),
-                    );
-                  },
-                  
-                ),
-                SizedBox(height: 26),
-                SectionTitle(title: 'Available Cabs'),
-                SizedBox(height: 12),
-                CabSlider(),
-                SizedBox(height: 12),
-                ListingDotIndicator(activeIndex: 0, count: 3),
-                SizedBox(height: 22),
-                SectionTitle(title: 'Recent Booking'),
-                SizedBox(height: 12),
-                RecentBookingCard(
-                  customer: 'Nishan',
-                  pickup: '69 New New York, USA',
-                  drop: 'Digha',
-                  fare: '₹800',
-                ),
-                SizedBox(height: 22),
-                SectionTitle(title: 'Reviews'),
-                SizedBox(height: 12),
-                ReviewSlider(),
-                SizedBox(height: 8),
-                ListingDotIndicator(activeIndex: 1, count: 3),
-              ],
-              
+            Positioned.fill(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 120.0),
+                children: [
+                  const ListingHeader(),
+                  const SizedBox(height: 24.0),
+                  const GreetingBlock(),
+                  const SizedBox(height: 14.0),
+                  Searchcard(
+                    onSubmit: () {
+                      Provider.of<RideController>(
+                        context,
+                        listen: false,
+                      ).postRide(context);
+                    },
+                  ),
+                  const SizedBox(height: 26.0),
+                  const SectionTitle(title: 'Available Cabs'),
+                  const SizedBox(height: 12.0),
+                  const CabSlider(),
+                  const SizedBox(height: 12.0),
+                  const ListingDotIndicator(activeIndex: 0, count: 3),
+                  const SizedBox(height: 22.0),
+                  const SectionTitle(title: 'Recent Booking'),
+                  const SizedBox(height: 12.0),
+                  RecentBookingCard(
+                    customer: 'Nishan',
+                    pickup: '69 New New York, USA',
+                    drop: 'Digha',
+                    fare: '₹800',
+                    driverId: 'driver_123', // Replace with actual driver ID
+                    rideId: 'ride_456', // Replace with actual ride ID
+                    onReviewSubmit: (rating, review) {
+                      Provider.of<ReviewController>(
+                        context,
+                        listen: false,
+                      ).submitReview(
+                        context: context,
+                        driverId: 'driver_123', // Replace with actual driver ID
+                        rideId: 'ride_456', // Replace with actual ride ID
+                        rating: rating,
+                        review: review,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 22.0),
+                  const SectionTitle(title: 'Reviews'),
+                  const SizedBox(height: 12.0),
+                  const ReviewSlider(),
+                  const SizedBox(height: 8.0),
+                  const ListingDotIndicator(activeIndex: 1, count: 3),
+                ],
+              ),
             ),
-            
             Positioned(
-              left: screenWidth * 0.07,
-              right: screenWidth * 0.07,
-              bottom: 16,
+              left: size.width * 0.07,
+              right: size.width * 0.07,
+              bottom: 16.0,
               child: const UserListingDock(),
             ),
-            
           ],
         ),
-        
       ),
-      
     );
   }
 }

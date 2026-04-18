@@ -9,7 +9,11 @@ import 'package:cabkaro/providers/location_provider.dart';
 
 class Searchcard extends StatefulWidget {
   final GestureTapCallback onSubmit;
-  const Searchcard({super.key, required this.onSubmit});
+
+  const Searchcard({
+    super.key,
+    required this.onSubmit,
+  });
 
   @override
   State<Searchcard> createState() => _SearchcardState();
@@ -20,16 +24,18 @@ class _SearchcardState extends State<Searchcard> {
   TimeOfDay? _selectedTime;
 
   String get _dateText {
-    if (_selectedDate == null) return '';
-    final d = _selectedDate!;
+    final d = context.watch<RideController>().selectedDate;
+    if (d == null) return '';
+
     return '${d.day.toString().padLeft(2, '0')}/'
         '${d.month.toString().padLeft(2, '0')}/'
         '${d.year}';
   }
 
   String get _timeText {
-    if (_selectedTime == null) return '';
-    final t = _selectedTime!;
+    final t = context.watch<RideController>().selectedTime;
+    if (t == null) return '';
+
     final hour = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
     final minute = t.minute.toString().padLeft(2, '0');
     final period = t.period == DayPeriod.am ? 'AM' : 'PM';
@@ -58,8 +64,7 @@ class _SearchcardState extends State<Searchcard> {
     );
     if (picked != null) {
       setState(() {
-        _selectedDate = picked;
-        Provider.of<RideController>(context, listen: false).date = picked;
+        Provider.of<RideController>(context, listen: false).setDate(picked);
       });
     }
   }
@@ -84,22 +89,10 @@ class _SearchcardState extends State<Searchcard> {
 
     if (picked != null) {
       setState(() {
-        _selectedTime = picked;
-        Provider.of<RideController>(context, listen: false).time = picked;
+        Provider.of<RideController>(context, listen: false).setTime(picked);
       });
     }
   }
-
-  // void _openModal(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //     ),
-  //     builder: (context) => const LocationPickerModal(),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -124,14 +117,6 @@ class _SearchcardState extends State<Searchcard> {
             child: Column(
               children: [
                 const SizedBox(height: 35),
-
-                // Pickup field
-                // _LocationField(
-                //   hint: "Pickup Location",
-                //   value: locationProvider.pickupLocation,
-                //   onTap: () => _openModal(context),
-                //   height: 45,
-                // ),
                 _LocationField(
                   hint: "Pickup Location",
                   value: locationProvider.pickupLocation,
@@ -146,14 +131,6 @@ class _SearchcardState extends State<Searchcard> {
                   height: 45,
                 ),
                 const SizedBox(height: 10),
-
-                // Drop field
-                // _LocationField(
-                //   hint: "Drop Location",
-                //   value: locationProvider.dropLocation,
-                //   onTap: () => _openModal(context),
-                //   height: 40,
-                // ),
                 _LocationField(
                   hint: "Drop Location",
                   value: locationProvider.dropLocation,
@@ -211,21 +188,18 @@ class _SearchcardState extends State<Searchcard> {
                 const SizedBox(height: 16),
 
                 // Submit button
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      Provider.of<RideController>(
-                        context,
-                        listen: false,
-                      ).postRide(context);
-                    },
+                GestureDetector(
+                  onTap: () {
+                    widget.onSubmit();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     child: Center(
                       child: Text(
                         "Submit",
@@ -275,8 +249,7 @@ class _SearchcardState extends State<Searchcard> {
   }
 }
 
-// Tappable location display field
-class _LocationField extends StatelessWidget {
+class _LocationField extends StatefulWidget {
   const _LocationField({
     required this.hint,
     required this.value,
@@ -290,12 +263,17 @@ class _LocationField extends StatelessWidget {
   final double height;
 
   @override
+  State<_LocationField> createState() => _LocationFieldState();
+}
+
+class _LocationFieldState extends State<_LocationField> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        height: height,
+        height: widget.height,
         decoration: BoxDecoration(
           border: const DashedBorder(
             color: Color.fromARGB(255, 0, 0, 0),
@@ -311,9 +289,9 @@ class _LocationField extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                value ?? hint,
+                widget.value ?? widget.hint,
                 style: GoogleFonts.oswald(
-                  color: value != null
+                  color: widget.value != null
                       ? const Color.fromARGB(255, 0, 0, 0)
                       : const Color.fromARGB(255, 1, 1, 1),
                   fontSize: 14,
@@ -329,7 +307,7 @@ class _LocationField extends StatelessWidget {
 }
 
 // Tappable date/time display field
-class _TappableField extends StatelessWidget {
+class _TappableField extends StatefulWidget {
   const _TappableField({
     required this.hint,
     required this.value,
@@ -343,10 +321,16 @@ class _TappableField extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_TappableField> createState() => _TappableFieldState();
+}
+
+class _TappableFieldState extends State<_TappableField> {
+  @override
   Widget build(BuildContext context) {
-    final hasValue = value.isNotEmpty;
+    final hasValue = widget.value.isNotEmpty;
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         height: 40,
@@ -362,7 +346,7 @@ class _TappableField extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              icon,
+              widget.icon,
               size: 16,
               color: hasValue
                   ? const Color.fromARGB(255, 0, 0, 0)
@@ -371,7 +355,7 @@ class _TappableField extends StatelessWidget {
             const SizedBox(width: 3),
             Expanded(
               child: Text(
-                hasValue ? value : hint,
+                hasValue ? widget.value : widget.hint,
                 style: GoogleFonts.oswald(
                   color: hasValue
                       ? const Color.fromARGB(255, 0, 0, 0)
@@ -389,7 +373,7 @@ class _TappableField extends StatelessWidget {
 }
 
 // Free-text input field (Price only)
-class _InputField extends StatelessWidget {
+class _InputField extends StatefulWidget {
   final String hint;
   final IconData icon;
   final TextEditingController textController;
@@ -399,6 +383,25 @@ class _InputField extends StatelessWidget {
     required this.icon,
     required this.textController,
   });
+  @override
+  State<_InputField> createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<_InputField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // important cleanup
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -414,15 +417,15 @@ class _InputField extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
-        controller: textController,
+        controller: widget.textController,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           hintStyle: GoogleFonts.oswald(),
-          hintText: hint,
+          hintText: widget.hint,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
-          prefixIcon: Icon(icon),
+          prefixIcon: Icon(widget.icon),
           prefixIconConstraints: const BoxConstraints(
             minWidth: 5,
             minHeight: 0,

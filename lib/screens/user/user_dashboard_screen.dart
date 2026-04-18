@@ -18,12 +18,14 @@ class UserDashboardScreen extends StatefulWidget {
 
 class _UserDashboardScreenState extends State<UserDashboardScreen> {
   @override
+
   void initState() {
     super.initState();
     Provider.of<EditProfileController>(context, listen: false).getUserData();
   }
 
   @override
+
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final Map<String, dynamic> userData =

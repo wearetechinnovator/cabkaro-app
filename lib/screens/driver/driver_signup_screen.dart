@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cabkaro/controllers/driver/driver_signup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
@@ -7,44 +8,17 @@ import 'package:provider/provider.dart';
 import 'package:cabkaro/providers/location_provider.dart';
 import 'package:cabkaro/screens/user/map_picker_screen.dart';
 import 'package:file_picker/file_picker.dart';
-import 'gov_details_screen.dart';
-import '../../widgets/action_button.dart';
-import '../../widgets/signup_input.dart';
+import 'package:cabkaro/widgets/action_button.dart';
+import 'package:cabkaro/widgets/signup_input.dart';
 
-class DriverScreen extends StatefulWidget {
-  const DriverScreen({super.key});
+class DriverSignupScreen extends StatefulWidget {
+  const DriverSignupScreen({super.key});
 
   @override
-  State<DriverScreen> createState() => _DriverScreenState();
+  State<DriverSignupScreen> createState() => _DriverSignupScreenState();
 }
 
-class _DriverScreenState extends State<DriverScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _licenseController = TextEditingController();
-  final TextEditingController _aadharController = TextEditingController();
-  final TextEditingController _radiusController = TextEditingController();
-
-  String? _selectedGender;
-  String? _selectedLocation;
-  File? _profileImage;
-
-  final List<String> _genderOptions = ['Male', 'Female', 'Others'];
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _licenseController.dispose();
-    _aadharController.dispose();
-    _radiusController.dispose();
-    super.dispose();
-  }
-
+class _DriverSignupScreenState extends State<DriverSignupScreen> {
   Future<void> _pickProfileImage() async {
     final result = await FilePicker.pickFiles(
       type: FileType.image,
@@ -52,7 +26,12 @@ class _DriverScreenState extends State<DriverScreen> {
     );
     if (result != null && result.files.single.path != null) {
       setState(() {
-        _profileImage = File(result.files.single.path!);
+        Provider.of<DriverSignupController>(
+          context,
+          listen: false,
+        ).profileImage = File(
+          result.files.single.path!,
+        );
       });
     }
   }
@@ -75,6 +54,10 @@ class _DriverScreenState extends State<DriverScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<DriverSignupController>(
+      context,
+      listen: false,
+    );
     final screenHeight = MediaQuery.of(context).size.height;
     final fontSize = screenHeight * 0.015;
     final iconSize = screenHeight * 0.025;
@@ -86,7 +69,6 @@ class _DriverScreenState extends State<DriverScreen> {
         child: ListView(
           children: [
             const SizedBox(height: 10),
-
             // Logo
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
@@ -141,7 +123,7 @@ class _DriverScreenState extends State<DriverScreen> {
                   GestureDetector(
                     onTap: _pickProfileImage,
                     child: Center(
-                      child: _profileImage == null
+                      child: provider.profileImage == null
                           // Empty state — circular
                           ? // ── Profile Photo Picker ──────────────────────────────────
                             Padding(
@@ -171,10 +153,11 @@ class _DriverScreenState extends State<DriverScreen> {
                                               color: Colors.white,
                                             ),
                                             child: ClipOval(
-                                              child: _profileImage != null
+                                              child:
+                                                  provider.profileImage != null
                                                   // Preview picked image
                                                   ? Image.file(
-                                                      _profileImage!,
+                                                      provider.profileImage!,
                                                       fit: BoxFit.cover,
                                                       width: 120,
                                                       height: 120,
@@ -248,7 +231,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                 Container(
                                   width: 110,
                                   height: 110,
-                                  
+
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -256,7 +239,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                       width: 2.5,
                                     ),
                                     image: DecorationImage(
-                                      image: FileImage(_profileImage!),
+                                      image: FileImage(provider.profileImage!),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -304,14 +287,14 @@ class _DriverScreenState extends State<DriverScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Form(
-                key: _formKey,
+                key: provider.formKey,
                 child: Column(
                   children: [
                     // Name
                     SignupInput(
                       hint: 'Name',
                       icon: Icons.person,
-                      controller: _nameController,
+                      controller: provider.nameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           ToastWidget.show(
@@ -319,7 +302,7 @@ class _DriverScreenState extends State<DriverScreen> {
                             message: 'Name is required',
                             type: ToastType.error,
                           );
-                          return '';
+                          return null;
                         }
                         return null;
                       },
@@ -330,7 +313,7 @@ class _DriverScreenState extends State<DriverScreen> {
                     SignupInput(
                       hint: 'Email',
                       icon: Icons.email,
-                      controller: _emailController,
+                      controller: provider.emailController,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -361,7 +344,7 @@ class _DriverScreenState extends State<DriverScreen> {
                     SignupInput(
                       hint: 'Phone',
                       icon: Icons.call,
-                      controller: _phoneController,
+                      controller: provider.phoneController,
                       keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -385,10 +368,29 @@ class _DriverScreenState extends State<DriverScreen> {
                     ),
                     SizedBox(height: screenHeight * 0.014),
 
+                    // Password
+                    SignupInput(
+                      hint: 'Password',
+                      icon: Icons.lock,
+                      controller: provider.passwordController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          ToastWidget.show(
+                            context,
+                            message: 'Password is required',
+                            type: ToastType.error,
+                          );
+                          return null;
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: screenHeight * 0.014),
+
                     // Gender dropdown
                     FormField<String>(
                       validator: (_) {
-                        if (_selectedGender == null) {
+                        if (provider.selectedGender == null) {
                           ToastWidget.show(
                             context,
                             message: 'Please select a gender',
@@ -404,7 +406,7 @@ class _DriverScreenState extends State<DriverScreen> {
                             height: inputHeight,
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
-                                value: _selectedGender,
+                                value: provider.selectedGender,
                                 isExpanded: true,
                                 isDense: true,
                                 hint: Row(
@@ -421,12 +423,18 @@ class _DriverScreenState extends State<DriverScreen> {
                                       style: TextStyle(
                                         fontSize: fontSize,
                                         fontWeight: FontWeight.w500,
-                                        color: const Color.fromARGB(255, 6, 4, 4),
+                                        color: const Color.fromARGB(
+                                          255,
+                                          6,
+                                          4,
+                                          4,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                selectedItemBuilder: (_) => _genderOptions
+                                selectedItemBuilder: (_) => provider
+                                    .genderOptions
                                     .map(
                                       (g) => Row(
                                         children: [
@@ -449,7 +457,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                       ),
                                     )
                                     .toList(),
-                                items: _genderOptions
+                                items: provider.genderOptions
                                     .map(
                                       (g) => DropdownMenuItem(
                                         value: g,
@@ -465,7 +473,9 @@ class _DriverScreenState extends State<DriverScreen> {
                                     )
                                     .toList(),
                                 onChanged: (value) {
-                                  setState(() => _selectedGender = value);
+                                  setState(
+                                    () => provider.selectedGender = value,
+                                  );
                                   field.didChange(value);
                                 },
                               ),
@@ -480,7 +490,7 @@ class _DriverScreenState extends State<DriverScreen> {
                     SignupInput(
                       hint: 'Driving License',
                       icon: Icons.description,
-                      controller: _licenseController,
+                      controller: provider.licenseController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           ToastWidget.show(
@@ -508,7 +518,7 @@ class _DriverScreenState extends State<DriverScreen> {
                     SignupInput(
                       hint: 'Aadhar Number',
                       icon: Icons.credit_card,
-                      controller: _aadharController,
+                      controller: provider.aadharController,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -532,18 +542,38 @@ class _DriverScreenState extends State<DriverScreen> {
                     ),
                     SizedBox(height: screenHeight * 0.014),
 
-                    // Service Radius + Location button
-                    FormField<String>(
-                      validator: (_) {
-                        if (_radiusController.text.trim().isEmpty) {
+                    // Vehicle Number;
+                    SignupInput(
+                      hint: 'Vehicle Number',
+                      icon: Icons.car_repair,
+                      controller: provider.vehicleNumberController,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
                           ToastWidget.show(
                             context,
-                            message: 'Service radius is required',
+                            message: 'Vehicle number is required',
                             type: ToastType.error,
                           );
                           return '';
                         }
-                        if (_selectedLocation == null) {
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: screenHeight * 0.014),
+
+                    // Service Radius + Location button
+                    FormField<String>(
+                      validator: (_) {
+                        if (provider.radiusController.text.trim().isEmpty) {
+                          ToastWidget.show(
+                            context,
+                            message: 'Service area is required',
+                            type: ToastType.error,
+                          );
+                          return '';
+                        }
+                        if (provider.selectedLocation == null) {
                           ToastWidget.show(
                             context,
                             message: 'Please select your base location',
@@ -561,7 +591,7 @@ class _DriverScreenState extends State<DriverScreen> {
                                 child: SizedBox(
                                   height: inputHeight,
                                   child: TextFormField(
-                                    controller: _radiusController,
+                                    controller: provider.radiusController,
                                     keyboardType: TextInputType.number,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
@@ -570,15 +600,25 @@ class _DriverScreenState extends State<DriverScreen> {
                                         height: 0,
                                       ),
                                       errorBorder: InputBorder.none,
-                                      hintText: 'Enter distance in km',
+                                      hintText: 'Enter service distance in km',
                                       hintStyle: TextStyle(
                                         fontSize: fontSize,
                                         fontWeight: FontWeight.w500,
-                                        color: const Color.fromARGB(255, 16, 16, 16),
+                                        color: const Color.fromARGB(
+                                          255,
+                                          16,
+                                          16,
+                                          16,
+                                        ),
                                       ),
                                       prefixIcon: Icon(
                                         Icons.social_distance_outlined,
-                                        color: const Color.fromARGB(255, 0, 0, 0),
+                                        color: const Color.fromARGB(
+                                          255,
+                                          0,
+                                          0,
+                                          0,
+                                        ),
                                         size: iconSize,
                                       ),
                                       border: InputBorder.none,
@@ -611,7 +651,9 @@ class _DriverScreenState extends State<DriverScreen> {
                                       .read<LocationProvider>()
                                       .pickupLocation;
                                   if (loc != null) {
-                                    setState(() => _selectedLocation = loc);
+                                    setState(
+                                      () => provider.selectedLocation = loc,
+                                    );
                                     field.didChange(loc);
                                   }
                                 }
@@ -622,10 +664,10 @@ class _DriverScreenState extends State<DriverScreen> {
                                   width: inputHeight,
                                   child: Center(
                                     child: Icon(
-                                      _selectedLocation != null
+                                      provider.selectedLocation != null
                                           ? Icons.location_on
                                           : Icons.location_on_outlined,
-                                      color: _selectedLocation != null
+                                      color: provider.selectedLocation != null
                                           ? Colors.amber
                                           : const Color(0xFF4C473F),
                                       size: iconSize,
@@ -639,7 +681,7 @@ class _DriverScreenState extends State<DriverScreen> {
                       },
                     ),
 
-                    if (_selectedLocation != null) ...[
+                    if (provider.selectedLocation != null) ...[
                       const SizedBox(height: 6),
                       Align(
                         alignment: Alignment.centerLeft,
@@ -655,7 +697,7 @@ class _DriverScreenState extends State<DriverScreen> {
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
-                                  _selectedLocation!,
+                                  provider.selectedLocation!,
                                   style: TextStyle(
                                     fontSize: fontSize * 0.9,
                                     color: const Color(0xFF4C473F),
@@ -674,7 +716,6 @@ class _DriverScreenState extends State<DriverScreen> {
             ),
 
             SizedBox(height: screenHeight * 0.12),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: ActionButton(
@@ -683,35 +724,10 @@ class _DriverScreenState extends State<DriverScreen> {
                 textColor: Colors.black,
                 borderColor: const Color(0xFF1F1F1F),
                 onTap: () {
-                  // Also validate profile photo
-                  if (_profileImage == null) {
-                    ToastWidget.show(
-                      context,
-                      message: 'Please upload a profile photo',
-                      type: ToastType.error,
-                    );
-                    return;
-                  }
-                  if (_formKey.currentState!.validate()) {
-                    ToastWidget.show(
-                      context,
-                      message: 'Registration submitted successfully!',
-                      type: ToastType.success,
-                    );
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      Navigator.push(
-                        // ignore: use_build_context_synchronously
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const GOVDetailsScreen(),
-                        ),
-                      );
-                    });
-                  }
+                  provider.signup(context);
                 },
               ),
             ),
-
             SizedBox(height: screenHeight * 0.05),
           ],
         ),
