@@ -57,6 +57,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   }
 }
 
+// ─────────────────────────────────────────────
+// Header
+// ─────────────────────────────────────────────
+
 class _DriverHeader extends StatefulWidget {
   const _DriverHeader();
 
@@ -117,6 +121,10 @@ class _HeaderCircleState extends State<_HeaderCircle> {
     );
   }
 }
+
+// ─────────────────────────────────────────────
+// Request Card
+// ─────────────────────────────────────────────
 
 class _RequestCard extends StatefulWidget {
   const _RequestCard();
@@ -181,11 +189,11 @@ class _RequestCardState extends State<_RequestCard> {
                   horizontal: 10,
                   vertical: 8,
                 ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8C100),
-                  borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(22),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF8C100),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(22),
                   ),
                 ),
                 transform: Matrix4.translationValues(0, -9, 0),
@@ -216,15 +224,9 @@ class _RequestCardState extends State<_RequestCard> {
                 Expanded(
                   child: Column(
                     children: const [
-                      _ChipInput(
-                        icon: Icons.currency_rupee_rounded,
-                        text: 'Price',
-                      ),
+                      _PriceInput(),
                       SizedBox(height: 8),
-                      _ChipInput(
-                        icon: Icons.access_time_rounded,
-                        text: 'Estimate Time',
-                      ),
+                      _TimePickerChip(),
                       SizedBox(height: 10),
                       _AcceptButton(),
                     ],
@@ -248,17 +250,26 @@ class _RequestCardState extends State<_RequestCard> {
   }
 }
 
-class _ChipInput extends StatefulWidget {
-  const _ChipInput({required this.icon, required this.text});
+// ─────────────────────────────────────────────
+// Price Input 
+// ─────────────────────────────────────────────
 
-  final IconData icon;
-  final String text;
+class _PriceInput extends StatefulWidget {
+  const _PriceInput();
 
   @override
-  State<_ChipInput> createState() => _ChipInputState();
+  State<_PriceInput> createState() => _PriceInputState();
 }
 
-class _ChipInputState extends State<_ChipInput> {
+class _PriceInputState extends State<_PriceInput> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -271,17 +282,31 @@ class _ChipInputState extends State<_ChipInput> {
       ),
       child: Row(
         children: [
-          Icon(widget.icon, size: 18, color: const Color(0xFF3F3F3F)),
+          const Icon(
+            Icons.currency_rupee_rounded,
+            size: 18,
+            color: Color(0xFF3F3F3F),
+          ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              widget.text,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: TextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
               style: const TextStyle(
                 fontSize: 15,
                 color: Color(0xFF2F2F2F),
                 fontWeight: FontWeight.w500,
+              ),
+              decoration: const InputDecoration(
+                hintText: 'Enter price',
+                hintStyle: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
               ),
             ),
           ),
@@ -290,6 +315,101 @@ class _ChipInputState extends State<_ChipInput> {
     );
   }
 }
+
+// ─────────────────────────────────────────────
+// Time Picker Chip  (replaces the old _ChipInput for time)
+// ─────────────────────────────────────────────
+
+class _TimePickerChip extends StatefulWidget {
+  const _TimePickerChip();
+
+  @override
+  State<_TimePickerChip> createState() => _TimePickerChipState();
+}
+
+class _TimePickerChipState extends State<_TimePickerChip> {
+  TimeOfDay? _selectedTime;
+
+  Future<void> _pickTime() async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime ?? TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFFF8C100),
+              onPrimary: Color(0xFF2D2F35),
+              onSurface: Color(0xFF2D2F35),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() => _selectedTime = picked);
+    }
+  }
+
+  String get _label {
+    if (_selectedTime == null) return 'Estimate Time';
+    final hour = _selectedTime!.hourOfPeriod == 0 ? 12 : _selectedTime!.hourOfPeriod;
+    final minute = _selectedTime!.minute.toString().padLeft(2, '0');
+    final period = _selectedTime!.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
+  bool get _hasSelection => _selectedTime != null;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _pickTime,
+      child: Container(
+        height: 40,
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: const Color(0xFF66635A), width: 1),
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.access_time_rounded,
+              size: 18,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                _label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: _hasSelection
+                      ? const Color(0xFF2F2F2F)
+                      : const Color.fromARGB(255, 0, 0, 0),
+                  fontWeight: _hasSelection
+                      ? FontWeight.w500
+                      : FontWeight.w400,
+                ),
+              ),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// Accept Button
+// ─────────────────────────────────────────────
 
 class _AcceptButton extends StatefulWidget {
   const _AcceptButton();
@@ -331,6 +451,10 @@ class _AcceptButtonState extends State<_AcceptButton> {
   }
 }
 
+// ─────────────────────────────────────────────
+// Fare Pill
+// ─────────────────────────────────────────────
+
 class _FarePill extends StatefulWidget {
   const _FarePill({required this.fare});
 
@@ -360,6 +484,10 @@ class _FarePillState extends State<_FarePill> {
     );
   }
 }
+
+// ─────────────────────────────────────────────
+// Route Line
+// ─────────────────────────────────────────────
 
 class _RouteLine extends StatefulWidget {
   const _RouteLine();
@@ -411,6 +539,10 @@ class _RouteLineState extends State<_RouteLine> {
     );
   }
 }
+
+// ─────────────────────────────────────────────
+// Dot
+// ─────────────────────────────────────────────
 
 class _Dot extends StatefulWidget {
   const _Dot();

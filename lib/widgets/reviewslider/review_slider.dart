@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 import 'review_card.dart';
 
+class ReviewData {
+  final String name;
+  final String role;
+  final String rating;
+  final String comment;
+  final String image;
+
+  const ReviewData({
+    required this.name,
+    required this.role,
+    required this.rating,
+    required this.comment,
+    required this.image,
+  });
+}
+
 // File-level reviews so other widgets can read the current count.
 const List<ReviewData> _reviews = [
   ReviewData(
@@ -29,27 +45,11 @@ const List<ReviewData> _reviews = [
   ),
 ];
 
-class ReviewData {
-  final String name;
-  final String role;
-  final String rating;
-  final String comment;
-  final String image;
-
-  const ReviewData({
-    required this.name,
-    required this.role,
-    required this.rating,
-    required this.comment,
-    required this.image,
-  });
-}
-
 class ReviewSlider extends StatefulWidget {
   const ReviewSlider({super.key, required this.onPageChanged});
   final ValueChanged<int> onPageChanged;
 
-
+  // Expose the number of reviews so other widgets can react to the data length.
   static int get count => _reviews.length;
 
   @override
@@ -58,35 +58,6 @@ class ReviewSlider extends StatefulWidget {
 
 class _ReviewSliderState extends State<ReviewSlider> {
   final _controller = PageController(viewportFraction: 1);
-
-  static const List<ReviewData> _reviews = [
-    ReviewData(
-      image: "assets/images/avatarimg.png",
-      name: 'Merry',
-      role: 'Student',
-      rating: '4.5',
-      comment:
-          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since.',
-    ),
-
-    ReviewData(
-      image: "assets/images/avatar.png",
-      name: 'Noah',
-      role: 'Designer',
-      rating: '4.8',
-      comment:
-          'Professional driver, clean car and perfect timing. The whole ride felt smooth and safe for city travel.',
-    ),
-    ReviewData(
-      image: "assets/images/avatarimg.png",
-      name: 'Ava',
-      role: 'Founder',
-      rating: '4.6',
-      comment:
-          'Booking was quick and transparent. I liked the route update and the comfort level during peak traffic.',
-    ),
-    
-  ];
 
   @override
   void dispose() {
