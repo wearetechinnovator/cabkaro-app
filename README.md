@@ -1,55 +1,45 @@
-# Cabkaro
+# Cabkaro | Flutter Cab Booking App
 
-Cabkaro is a Flutter-based cab booking application designed to provide a seamless transportation experience for both users and drivers. The app utilizes a robust architecture featuring the Provider package for state management and integrates essential services such as Google Maps and real-time socket communications.
+**Cabkaro** is a professional-grade **Flutter-based cab booking application** designed to provide a seamless ride-sharing experience for both users and drivers. This open-source project features a robust architecture using the **Provider** package for state management, **Google Maps API** for real-time tracking, and **Socket.io** for instant communication.
 
 ## Key Features
 
-* **User & Driver Dashboards**: Separate, tailored interfaces for passengers and service providers.
-* **Real-time Tracking**: Integration with Google Maps for accurate location services and ride tracking.
-* **Authentication System**: Complete flow including Sign In, Sign Up, and OTP verification.
-* **Profile Management**: Functionality for users to view and update their personal information.
-* **Ride Management**: Specialized screens for car listings, booking details, and ride history.
-* **Notifications**: A dedicated system to keep users informed about ride status and updates.
+* **Dual Dashboards:** Tailored interfaces for both **Passengers** and **Drivers**.
+* **Real-time GPS Tracking:** Integrated **Google Maps** for live ride tracking and accurate geocoding.
+* **Secure Authentication:** Complete user flow including **Firebase/OTP verification**, Sign In, and Sign Up.
+* **Advanced Ride Management:** Specialized screens for vehicle listings, booking details, and ride history.
+* **Profile & Security:** Comprehensive profile management and permission handling for user data.
+* **Instant Notifications:** Real-time alert system to keep users updated on ride status.
 
 ## Tech Stack
 
-* **Framework**: Flutter (SDK version ^3.10.7)
-* **State Management**: Provider
-* **Location Services**: Google Maps Flutter, Geocoding
-* **Real-time Communication**: Socket.io Client
-* **UI Components**: Flutter Animate, Google Fonts, Blurry Container
-* **Utilities**: Shared Preferences, Image Picker, Permission Handler, File Picker
+* **Frontend Framework:** Flutter (SDK ^3.10.7)
+* **State Management:** Provider (Clean Architecture)
+* **Maps & Location:** Google Maps Flutter, Geocoding, Location Services
+* **Real-time Backend:** Socket.io Client
+* **UI/UX:** Flutter Animate, Google Fonts, Blurry Container
+* **Local Storage:** Shared Preferences
 
 ## Project Structure
 
-The application's core logic is organized into specialized controllers and providers:
+The codebase is organized for scalability and readability:
 
-* **Controllers**: Handle business logic for Login, OTP Verification, Signup, Profile Editing, Rides, and Reviews.
-* **Providers**: Manage global state, specifically for location data.
-* **Screens**: Organized into common (Splash, Booking Details), user-specific (Dashboard, Listings), and driver-specific (Government Details, Photo Upload) directories.
+* **Controllers:** Business logic for Auth, OTP, Profile, Rides, and Reviews.
+* **Providers:** Global state management for location and user data.
+* **Screens:** Categorized into `Common` (Splash/Booking), `User` (Dashboard/Listings), and `Driver` (KYC/Photo Upload).
 
 ## Getting Started
 
 ### Prerequisites
-
-* Flutter SDK installed on your machine.
-* A configured emulator or physical device.
+* Flutter SDK installed
+* Google Maps API Key
+* Android Studio / VS Code
 
 ### Installation
 
-1.  Clone the repository.
-2.  Navigate to the project directory.
-3.  Install dependencies:
-    ```bash
-    flutter pub get
-    ```
-4.  Run the application:
-    ```bash
-    flutter run
-    ```
-
-## Asset Configuration
-
-The project utilizes several asset directories for its user interface:
-* `assets/icons/`: Stores SVG and PNG icons used throughout the app.
-* `assets/images/`: Contains UI backgrounds, car images, and branding elements.
+```bash
+git clone https://github.com/your-username/cabkaro-app.git
+cd cabkaro-app
+flutter pub get
+flutter run
+```
