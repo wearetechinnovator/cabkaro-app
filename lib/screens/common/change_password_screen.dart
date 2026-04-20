@@ -1,4 +1,4 @@
-import 'package:cabkaro/controllers/user/change_password_controller.dart';
+import 'package:cabkaro/controllers/auth_check_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // ─────────────────────────────────────────────
@@ -20,12 +20,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   void dispose() {
     context
-        .read<ChangePasswordController>()
+        .read<AuthCheckController>()
         .currentPasswordController
         .dispose();
-    context.read<ChangePasswordController>().newPasswordController.dispose();
+    context.read<AuthCheckController>().newPasswordController.dispose();
     context
-        .read<ChangePasswordController>()
+        .read<AuthCheckController>()
         .confirmPasswordController
         .dispose();
     super.dispose();
@@ -52,7 +52,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
-          key: context.read<ChangePasswordController>().formKey,
+          key: context.read<AuthCheckController>().formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -63,7 +63,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 6),
               _PasswordField(
                 controller: context
-                    .read<ChangePasswordController>()
+                    .read<AuthCheckController>()
                     .currentPasswordController,
                 hint: 'Enter your current password',
                 obscure: _obscureCurrent,
@@ -82,7 +82,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 6),
               _PasswordField(
                 controller: context
-                    .read<ChangePasswordController>()
+                    .read<AuthCheckController>()
                     .newPasswordController,
                 hint: 'Enter your new password',
                 obscure: _obscureNew,
@@ -96,7 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     return 'Must contain at least one number';
                   if (val ==
                       context
-                          .read<ChangePasswordController>()
+                          .read<AuthCheckController>()
                           .currentPasswordController
                           .text)
                     return 'New password must differ from current';
@@ -110,7 +110,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 6),
               _PasswordField(
                 controller: context
-                    .read<ChangePasswordController>()
+                    .read<AuthCheckController>()
                     .confirmPasswordController,
                 hint: 'Confirm your new password',
                 obscure: _obscureRetype,
@@ -121,7 +121,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     return 'Please confirm your new password';
                   if (val !=
                       context
-                          .read<ChangePasswordController>()
+                          .read<AuthCheckController>()
                           .newPasswordController
                           .text)
                     return 'Passwords do not match';
@@ -137,11 +137,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (context
-                        .read<ChangePasswordController>()
+                        .read<AuthCheckController>()
                         .formKey
                         .currentState!
                         .validate()) {
-                      context.read<ChangePasswordController>().changePassword(
+                      context.read<AuthCheckController>().changePassword(
                         context,
                       );
                     }

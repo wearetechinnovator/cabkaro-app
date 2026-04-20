@@ -1,4 +1,4 @@
-import 'package:cabkaro/controllers/driver/driver_get_ride.dart';
+import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_signin_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_signup_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => DriverSignupController()),
         ChangeNotifierProvider(create: (_) => DriverSigninController()),
         ChangeNotifierProvider(create: (_) => DriverVerifyOtpController()),
-        ChangeNotifierProvider(create: (_) => DriverGetRide()),
+        ChangeNotifierProvider(create: (_) => DriverRideController()),
         ChangeNotifierProvider(create: (_) => ChangePasswordController()),
       ],
       child: MaterialApp(

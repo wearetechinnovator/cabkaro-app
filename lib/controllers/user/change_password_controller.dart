@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/constants.dart' as constant;
+
 
 class ChangePasswordController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -35,6 +35,7 @@ class ChangePasswordController extends ChangeNotifier {
       );
       var res = jsonDecode(req.body);
       if (req.statusCode != 200) {
+        print(res);
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
         return;
       }
