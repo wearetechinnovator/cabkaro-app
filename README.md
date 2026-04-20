@@ -28,18 +28,4 @@ The codebase is organized for scalability and readability:
 * **Providers:** Global state management for location and user data.
 * **Screens:** Categorized into `Common` (Splash/Booking), `User` (Dashboard/Listings), and `Driver` (KYC/Photo Upload).
 
-## Getting Started
 
-### Prerequisites
-* Flutter SDK installed
-* Google Maps API Key
-* Android Studio / VS Code
-
-### Installation
-
-```bash
-git clone https://github.com/your-username/cabkaro-app.git
-cd cabkaro-app
-flutter pub get
-flutter run
-```
