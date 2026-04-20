@@ -26,8 +26,6 @@ class _CarListingScreenState extends State<CarListingScreen> {
   int _cabIndex = 0;
   int _reviewIndex = 0;
 
-  static const int _cabCount = 3;
-  static const int _reviewCount = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +65,7 @@ class _CarListingScreenState extends State<CarListingScreen> {
                     onPageChanged: (i) => setState(() => _cabIndex = i),
                   ),
                   const SizedBox(height: 12.0),
-                  ListingDotIndicator(activeIndex: _cabIndex, count: _cabCount),
+                  ListingDotIndicator(activeIndex: _cabIndex, count: CabSlider.count),
                   const SizedBox(height: 22.0),
                   const SectionTitle(title: 'Recent Booking'),
                   const SizedBox(height: 12.0),
@@ -98,7 +96,7 @@ class _CarListingScreenState extends State<CarListingScreen> {
                     onPageChanged: (i) => setState(() => _reviewIndex = i),
                   ),
                   const SizedBox(height: 8.0),
-                  ListingDotIndicator(activeIndex: _reviewIndex, count: _reviewCount),
+                  ListingDotIndicator(activeIndex: _reviewIndex, count: ReviewSlider.count),
                 ],
               ),
             ),

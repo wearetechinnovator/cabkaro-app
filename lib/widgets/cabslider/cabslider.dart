@@ -3,37 +3,46 @@ import 'package:flutter/material.dart';
 import 'cabdata.dart';
 import 'cabcard.dart';
 
+const List<CabData> _cabs = [
+  CabData(
+    driverName: 'Mark',
+    carModel: 'Sedan - A1243XG',
+    fare: '₹ 800 /-',
+    eta: '30 Mins',
+  ),
+  CabData(
+    driverName: 'Harry',
+    carModel: 'Sedan - B7732AR',
+    fare: '₹ 840 /-',
+    eta: '25 Mins',
+  ),
+  CabData(
+    driverName: 'Samar',
+    carModel: 'Sedan - D3345TR',
+    fare: '₹ 760 /-',
+    eta: '34 Mins',
+  ),
+  CabData(
+    driverName: 'Samar',
+    carModel: 'Sedan - D3345TR',
+    fare: '₹ 760 /-',
+    eta: '34 Mins',
+  ),
+];
+
 class CabSlider extends StatefulWidget {
   const CabSlider({super.key, required this.onPageChanged});
   final ValueChanged<int> onPageChanged;
+
+
+  static int get count => _cabs.length;
 
   @override
   State<CabSlider> createState() => _CabSliderState();
 }
 
 class _CabSliderState extends State<CabSlider> {
-  final _controller = PageController(viewportFraction: 1.05);
-
-  static const List<CabData> _cabs = [
-    CabData(
-      driverName: 'Mark',
-      carModel: 'Sedan - A1243XG',
-      fare: '₹ 800 /-',
-      eta: '30 Mins',
-    ),
-    CabData(
-      driverName: 'Harry',
-      carModel: 'Sedan - B7732AR',
-      fare: '₹ 840 /-',
-      eta: '25 Mins',
-    ),
-    CabData(
-      driverName: 'Samar',
-      carModel: 'Sedan - D3345TR',
-      fare: '₹ 760 /-',
-      eta: '34 Mins',
-    ),
-  ];
+  final _controller = PageController(viewportFraction: 1);
 
   @override
   void dispose() {
