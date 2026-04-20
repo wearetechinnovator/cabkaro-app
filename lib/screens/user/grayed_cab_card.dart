@@ -27,7 +27,7 @@ class _GreyedCabCardState extends State<GreyedCabCard> {
         child: CabCard(
           cardColor: Color(0xFFF8C100),
           data: widget.cab,
-          screenWidth: widget.screenWidth,
+          // screenWidth: widget.screenWidth,
           onAccept: () {},
         ),
       ),

@@ -8,6 +8,14 @@ class UserListingDock extends StatefulWidget {
 }
 
 class _UserListingDockState extends State<UserListingDock> {
+  String _currentRoute = '/listing'; // set your default
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _currentRoute = ModalRoute.of(context)?.settings.name ?? '/listing';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,18 +30,22 @@ class _UserListingDockState extends State<UserListingDock> {
         children: [
           _DockIcon(
             icon: Icons.home_outlined,
+            selected: _currentRoute == '/listing',
             onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
           ),
           _DockIcon(
             icon: Icons.bar_chart_rounded,
+            selected: _currentRoute == '/booking-details',
             onTap: () => Navigator.pushReplacementNamed(context, '/booking-details'),
           ),
           _DockIcon(
             icon: Icons.notifications_none_rounded,
+            selected: _currentRoute == '/notifications',
             onTap: () => Navigator.pushReplacementNamed(context, '/notifications'),
           ),
           _DockIcon(
             icon: Icons.person_rounded,
+            selected: _currentRoute == '/dashboard',
             onTap: () => Navigator.pushReplacementNamed(context, '/dashboard'),
           ),
         ],
@@ -42,7 +54,7 @@ class _UserListingDockState extends State<UserListingDock> {
   }
 }
 
-class _DockIcon extends StatefulWidget {
+class _DockIcon extends StatelessWidget {
   const _DockIcon({required this.icon, this.selected = false, this.onTap});
 
   final IconData icon;
@@ -50,20 +62,15 @@ class _DockIcon extends StatefulWidget {
   final VoidCallback? onTap;
 
   @override
-  State<_DockIcon> createState() => _DockIconState();
-}
-
-class _DockIconState extends State<_DockIcon> {
-  @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(20),
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: Icon(
-          widget.icon,
-          color: widget.selected ? const Color(0xFFF8C100) : Colors.white,
+          icon,
+          color: selected ? const Color(0xFFF8C100) : Colors.white,
           size: 27,
         ),
       ),

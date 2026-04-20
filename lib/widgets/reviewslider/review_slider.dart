@@ -17,8 +17,16 @@ class ReviewData {
   });
 }
 
-class ReviewSlider extends StatelessWidget {
-  const ReviewSlider({super.key});
+class ReviewSlider extends StatefulWidget {
+  const ReviewSlider({super.key, required this.onPageChanged});
+  final ValueChanged<int> onPageChanged;
+
+  @override
+  State<ReviewSlider> createState() => _ReviewSliderState();
+}
+
+class _ReviewSliderState extends State<ReviewSlider> {
+  final _controller = PageController(viewportFraction: 2);
 
   static const List<ReviewData> _reviews = [
     ReviewData(
@@ -26,43 +34,71 @@ class ReviewSlider extends StatelessWidget {
       name: 'Merry',
       role: 'Student',
       rating: '4.5',
-      comment: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since.',
+      comment:
+          'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since.',
     ),
     ReviewData(
       image: "assets/images/avatar.png",
       name: 'Noah',
       role: 'Designer',
       rating: '4.8',
-      comment: 'Professional driver, clean car and perfect timing. The whole ride felt smooth and safe for city travel.',
+      comment:
+          'Professional driver, clean car and perfect timing. The whole ride felt smooth and safe for city travel.',
     ),
     ReviewData(
       image: "assets/images/avatarimg.png",
       name: 'Ava',
       role: 'Founder',
       rating: '4.6',
-      comment: 'Booking was quick and transparent. I liked the route update and the comfort level during peak traffic.',
+      comment:
+          'Booking was quick and transparent. I liked the route update and the comfort level during peak traffic.',
     ),
   ];
 
   @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
-      width: screenWidth,
       height: 180,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
+      width: double.infinity,
+      child: PageView.builder(
+        padEnds: false,
         clipBehavior: Clip.none,
+        controller: _controller,
+        onPageChanged: widget.onPageChanged,
         itemCount: _reviews.length,
         itemBuilder: (context, index) {
           final review = _reviews[index];
-          return ReviewCard(
-            image:review.image,
-            name: review.name,
-            role: review.role,
-            rating: review.rating,
-            comment: review.comment,
+
+          return AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              double value = 1.0;
+
+              if (_controller.position.haveDimensions) {
+                value = _controller.page! - index;
+                value = (1 - (value.abs() * 0.2)).clamp(0.85, 1.0);
+              }
+
+              return Center(
+                child: Transform.scale(scale: value, child: child),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: ReviewCard(
+                image: review.image,
+                name: review.name,
+                role: review.role,
+                rating: review.rating,
+                comment: review.comment,
+              ),
+            ),
           );
         },
       ),

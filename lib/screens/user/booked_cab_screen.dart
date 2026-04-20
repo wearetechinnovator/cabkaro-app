@@ -52,7 +52,7 @@ class _BookedCabScreenState extends State<BookedCabScreen> {
                       child: CabCard(
                         cardColor: Color(0xFFF8C100),
                         data: cab,
-                        screenWidth: screenWidth,
+                        // screenWidth: screenWidth,
                         onAccept: () {
                           Navigator.push(
                             context,
