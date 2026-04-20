@@ -8,6 +8,8 @@ import 'package:cabkaro/providers/location_provider.dart';
 // import 'location_picker_modal.dart';
 
 class Searchcard extends StatefulWidget {
+
+  const Searchcard({super.key, required this.onSubmit});
   final GestureTapCallback onSubmit;
 
   const Searchcard({
