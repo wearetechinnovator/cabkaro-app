@@ -1,4 +1,6 @@
+import 'package:cabkaro/controllers/driver/driver_get_ride.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'driver_booked_cab_screen.dart';
 import '../../widgets/listing/listing_bottom_dock.dart';
@@ -12,37 +14,53 @@ class DriverHomeScreen extends StatefulWidget {
 
 class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
+  initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DriverGetRide>().getRide(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+    List<dynamic> availableRides = context
+        .watch<DriverGetRide>()
+        .availableRides;
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
       body: SafeArea(
         child: Stack(
           children: [
-            ListView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
-              children: const [
-                _DriverHeader(),
-                SizedBox(height: 24),
-                Text(
-                  'Driver Dashboard',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F1F1F),
-                    height: 1,
+            RefreshIndicator(
+              onRefresh: () =>
+                  context.read<DriverGetRide>().refreshRides(context),
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+                children: [
+                  _DriverHeader(),
+                  SizedBox(height: 24),
+                  Text(
+                    'Driver Dashboard',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1F1F1F),
+                      height: 1,
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-              ],
+                  SizedBox(height: 16),
+                  ...List.generate(
+                    availableRides.length,
+                    (index) => Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: _RequestCard(rideData: availableRides[index]),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Positioned(
               left: screenWidth * 0.07,
@@ -119,7 +137,8 @@ class _HeaderCircleState extends State<_HeaderCircle> {
 }
 
 class _RequestCard extends StatefulWidget {
-  const _RequestCard();
+  final dynamic rideData;
+  const _RequestCard({required this.rideData});
 
   @override
   State<_RequestCard> createState() => _RequestCardState();
@@ -154,8 +173,10 @@ class _RequestCardState extends State<_RequestCard> {
                           color: Color(0xFFE6A64E),
                         ),
                         alignment: Alignment.center,
-                        child: const Text(
-                          'J',
+                        child: Text(
+                          widget.rideData['user']['name'] != null
+                              ? widget.rideData['user']['name'][0].toUpperCase()
+                              : 'U',
                           style: TextStyle(
                             color: Color(0xFF2D2F35),
                             fontWeight: FontWeight.w700,
@@ -163,12 +184,15 @@ class _RequestCardState extends State<_RequestCard> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      const Text(
-                        'Jeena',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF1F1F1F),
+                      Expanded(
+                        child: Text(
+                          overflow: TextOverflow.ellipsis,
+                          widget.rideData['user']['name'] ?? 'Unknown User',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF1F1F1F),
+                          ),
                         ),
                       ),
                     ],
@@ -184,18 +208,18 @@ class _RequestCardState extends State<_RequestCard> {
                 decoration: BoxDecoration(
                   color: const Color(0xFFF8C100),
                   borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(22),
+                    topRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(22),
                   ),
                 ),
                 transform: Matrix4.translationValues(0, -9, 0),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(Icons.access_time_rounded, size: 18),
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '30 Dec\n9:30 A.M',
+                        '${widget.rideData['pickup_date'].split("T")[0] ?? 'Unknown Date'}\n${widget.rideData['pickup_time'] ?? 'Unknown Time'}',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -231,10 +255,12 @@ class _RequestCardState extends State<_RequestCard> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    _FarePill(fare: '800 /-'),
+                    _FarePill(
+                      fare: '${widget.rideData['price'] ?? 'Unknown Fare'} /-',
+                    ),
                     SizedBox(height: 20),
                     _RouteLine(),
                   ],

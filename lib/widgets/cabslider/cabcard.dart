@@ -7,19 +7,19 @@ class CabCard extends StatelessWidget {
   const CabCard({
     super.key,
     required this.data,
-    required this.screenWidth,
+    // required this.screenWidth,
     required this.onAccept,
     required this.cardColor,
   });
 
   final GestureTapCallback onAccept;
   final CabData data;
-  final double screenWidth;
+  // final double screenWidth;
   final Color cardColor;
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: screenWidth - 30,
+      width: double.infinity,
       height: 220,
       decoration: BoxDecoration(
         color: Color(0xFFF4E5B0),

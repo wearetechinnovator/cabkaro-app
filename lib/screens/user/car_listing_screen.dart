@@ -13,6 +13,8 @@ import '../../widgets/search_card.dart';
 import '../../widgets/cabslider/cabslider.dart';
 import 'greeting_block.dart';
 
+
+
 class CarListingScreen extends StatefulWidget {
   const CarListingScreen({super.key});
 
@@ -21,10 +23,15 @@ class CarListingScreen extends StatefulWidget {
 }
 
 class _CarListingScreenState extends State<CarListingScreen> {
+  int _cabIndex = 0;
+  int _reviewIndex = 0;
+
+  static const int _cabCount = 3;
+  static const int _reviewCount = 3;
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
       body: SafeArea(
@@ -44,14 +51,23 @@ class _CarListingScreenState extends State<CarListingScreen> {
                         context,
                         listen: false,
                       ).postRide(context);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AvailableCabsScreen(rideId: "120",),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 26.0),
                   const SectionTitle(title: 'Available Cabs'),
                   const SizedBox(height: 12.0),
-                  const CabSlider(),
+                  CabSlider(
+                    onPageChanged: (i) => setState(() => _cabIndex = i),
+                  ),
                   const SizedBox(height: 12.0),
-                  const ListingDotIndicator(activeIndex: 0, count: 3),
+                  ListingDotIndicator(activeIndex: _cabIndex, count: _cabCount),
                   const SizedBox(height: 22.0),
                   const SectionTitle(title: 'Recent Booking'),
                   const SizedBox(height: 12.0),
@@ -59,17 +75,17 @@ class _CarListingScreenState extends State<CarListingScreen> {
                     customer: 'Nishan',
                     pickup: '69 New New York, USA',
                     drop: 'Digha',
-                    fare: '₹800',
-                    driverId: 'driver_123', // Replace with actual driver ID
-                    rideId: 'ride_456', // Replace with actual ride ID
+                    fare: '800',
+                    driverId: 'driver_123',
+                    rideId: 'ride_456',
                     onReviewSubmit: (rating, review) {
                       Provider.of<ReviewController>(
                         context,
                         listen: false,
                       ).submitReview(
                         context: context,
-                        driverId: 'driver_123', // Replace with actual driver ID
-                        rideId: 'ride_456', // Replace with actual ride ID
+                        driverId: 'driver_123',
+                        rideId: 'ride_456',
                         rating: rating,
                         review: review,
                       );
@@ -78,9 +94,11 @@ class _CarListingScreenState extends State<CarListingScreen> {
                   const SizedBox(height: 22.0),
                   const SectionTitle(title: 'Reviews'),
                   const SizedBox(height: 12.0),
-                  const ReviewSlider(),
+                  ReviewSlider(
+                    onPageChanged: (i) => setState(() => _reviewIndex = i),
+                  ),
                   const SizedBox(height: 8.0),
-                  const ListingDotIndicator(activeIndex: 1, count: 3),
+                  ListingDotIndicator(activeIndex: _reviewIndex, count: _reviewCount),
                 ],
               ),
             ),

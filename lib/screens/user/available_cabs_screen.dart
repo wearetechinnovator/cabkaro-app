@@ -81,7 +81,7 @@ class _AvailableCabsScreenState extends State<AvailableCabsScreen> {
                             child: CabCard(
                               cardColor: Color(0xFFF8C100),
                               data: cab,
-                              screenWidth: screenWidth,
+                              // screenWidth: screenWidth,
                               onAccept: () {
                                 Navigator.push(
                                   context,
@@ -108,7 +108,7 @@ class _AvailableCabsScreenState extends State<AvailableCabsScreen> {
                           child: CabCard(
                             cardColor: Color(0xFFF8C100),
                             data: cab,
-                            screenWidth: screenWidth,
+                            // screenWidth: screenWidth,
                             onAccept: () {
                               Navigator.push(
                                 context,

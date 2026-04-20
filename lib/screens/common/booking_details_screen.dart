@@ -320,7 +320,7 @@ class BookingDetailsScreen extends StatelessWidget {
               left: screenWidth * 0.07,
               right: screenWidth * 0.07,
               bottom: 16,
-              child: const ListingBottomDock(),
+              child:  ListingBottomDock(),
             ),
           ],
         ),
