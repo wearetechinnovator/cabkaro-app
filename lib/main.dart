@@ -6,6 +6,7 @@ import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
 import 'package:cabkaro/screens/common/booking_details_screen.dart';
 import 'package:cabkaro/screens/common/splash_screen.dart';
+import 'package:cabkaro/screens/driver/driver_no_ride_screen.dart';
 import 'package:cabkaro/screens/driver/driver_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:cabkaro/screens/driver/gov_details_screen.dart';
@@ -55,7 +56,8 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         ),
-        home: const SplashScreen(),
+        // home: const SplashScreen(),
+        home: DriverNoRidesScreen(),
         routes: {
           '/signup': (context) => const SignupScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
