@@ -1,3 +1,4 @@
+import 'package:cabkaro/screens/common/change_password_screen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardActionCard extends StatelessWidget {
@@ -39,8 +40,7 @@ class DashboardActionCard extends StatelessWidget {
               GestureDetector(
                 onTap: onEditProfileTap,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
                     color: const Color(0xFF2D2F35),
                     borderRadius: BorderRadius.circular(20),
@@ -60,12 +60,25 @@ class DashboardActionCard extends StatelessWidget {
           const SizedBox(height: 8),
           const Divider(color: Color(0x66FFFFFF), thickness: 1),
 
-          // ← no const here because onTap is a runtime value
           _ActionRow(
             icon: Icons.history,
             label: 'Last Ride',
             trailing: const Icon(Icons.arrow_forward, color: Color(0xFF2D2F35)),
             onTap: onLastRideTap,
+          ),
+
+          const Divider(color: Color(0x66FFFFFF), thickness: 1),
+
+          _ActionRow(
+            icon: Icons.lock_outline,
+            label: 'Change Password',
+            trailing: const Icon(Icons.arrow_forward, color: Color(0xFF2D2F35)),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
+              );
+            },
           ),
 
           const Divider(color: Color(0x66FFFFFF), thickness: 1),
