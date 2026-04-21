@@ -1,7 +1,8 @@
 import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
+import 'package:cabkaro/screens/driver/driver_listing_header.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cabkaro/widgets/listing/listing_bottom_dock.dart';
+import 'package:cabkaro/widgets/driver/driver_bottom_dock.dart';
 
 class DriverHomeScreen extends StatefulWidget {
   const DriverHomeScreen({super.key});
@@ -38,7 +39,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
                 children: [
-                  _DriverHeader(),
+                  DriverListingHeader(),
                   SizedBox(height: 24),
                   Text(
                     'Driver Dashboard',
@@ -64,75 +65,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               left: screenWidth * 0.07,
               right: screenWidth * 0.07,
               bottom: 16,
-              child: const ListingBottomDock(),
+              child: const DriverBottomDock(),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Header
-// ─────────────────────────────────────────────
-
-class _DriverHeader extends StatefulWidget {
-  const _DriverHeader();
-
-  @override
-  State<_DriverHeader> createState() => _DriverHeaderState();
-}
-
-class _DriverHeaderState extends State<_DriverHeader> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const _HeaderCircle(icon: Icons.grid_view_rounded),
-        const Spacer(),
-        _HeaderCircle(
-          icon: Icons.notifications_none_rounded,
-          onTap: () => Navigator.pushNamed(context, '/notifications'),
-        ),
-        const SizedBox(width: 12),
-        const CircleAvatar(
-          radius: 20,
-          backgroundColor: Color(0xFFD24A61),
-          child: Text(
-            'M',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HeaderCircle extends StatefulWidget {
-  const _HeaderCircle({required this.icon, this.onTap});
-
-  final IconData icon;
-  final VoidCallback? onTap;
-
-  @override
-  State<_HeaderCircle> createState() => _HeaderCircleState();
-}
-
-class _HeaderCircleState extends State<_HeaderCircle> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(20),
-      onTap: widget.onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
-        ),
-        child: Icon(widget.icon, size: 20, color: const Color(0xFF2D2F35)),
       ),
     );
   }

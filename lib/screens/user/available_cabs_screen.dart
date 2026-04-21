@@ -1,7 +1,7 @@
 import 'package:cabkaro/controllers/user/ride_controller.dart';
 import 'package:cabkaro/screens/user/booked_cab_screen.dart';
 import 'package:cabkaro/widgets/cabslider/cabcard.dart';
-import 'package:cabkaro/widgets/listing/listing_header.dart';
+import 'package:cabkaro/screens/user/user_listing_header.dart';
 import 'package:cabkaro/widgets/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,7 +45,7 @@ class _AvailableCabsScreenState extends State<AvailableCabsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ListingHeader(),
+                      UserListingHeader(),
                       SizedBox(height: 12),
                       SizedBox(
                         width: screenWidth - 32,

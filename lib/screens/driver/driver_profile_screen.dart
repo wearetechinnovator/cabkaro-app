@@ -1,31 +1,27 @@
 import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
 import 'package:provider/provider.dart';
-import '../common/booking_details_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/dashboard/dashboard_action_card.dart';
-import '../../widgets/dashboard/dashboard_bottom_dock.dart';
 import '../../widgets/dashboard/dashboard_greeting.dart';
 import '../../widgets/dashboard/dashboard_header.dart';
 import '../../widgets/dashboard/dashboard_logout_button.dart';
+import '../../widgets/driver/driver_bottom_dock.dart';
 
-
-class UserDashboardScreen extends StatefulWidget {
-  const UserDashboardScreen({super.key});
+class DriverProfileScreen extends StatefulWidget {
+  const DriverProfileScreen({super.key});
 
   @override
-  State<UserDashboardScreen> createState() => _UserDashboardScreenState();
+  State<DriverProfileScreen> createState() => _DriverProfileScreenState();
 }
 
-class _UserDashboardScreenState extends State<UserDashboardScreen> {
+class _DriverProfileScreenState extends State<DriverProfileScreen> {
   @override
-
   void initState() {
     super.initState();
     Provider.of<EditProfileController>(context, listen: false).getUserData();
   }
 
   @override
-
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final Map<String, dynamic> userData =
@@ -47,15 +43,10 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                 DashboardActionCard(
                   userName: userData['name'],
                   onEditProfileTap: () {
-                    Navigator.pushNamed(context, '/edit-profile');
+                    Navigator.pushNamed(context, '/driver-edit-profile');
                   },
                   onLastRideTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const BookingDetailsScreen(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, '/driver-ride-history');
                   },
                 ),
               ],
@@ -74,7 +65,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               left: screenWidth * 0.07,
               right: screenWidth * 0.07,
               bottom: 14,
-              child: const DashboardBottomDock(),
+              child: const DriverBottomDock(),
             ),
           ],
         ),

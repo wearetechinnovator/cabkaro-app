@@ -8,22 +8,48 @@ import 'package:cabkaro/providers/location_provider.dart';
 // import 'location_picker_modal.dart';
 
 class Searchcard extends StatefulWidget {
-
   const Searchcard({super.key, required this.onSubmit});
+  
   final GestureTapCallback onSubmit;
-
-  const Searchcard({
-    super.key,
-    required this.onSubmit,
-  });
 
   @override
   State<Searchcard> createState() => _SearchcardState();
 }
 
-class _SearchcardState extends State<Searchcard> {
+class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateMixin {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+
+  late AnimationController _bounceController;
+  late Animation<double> _bounceAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _bounceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    // Bouncy top-down animation: moves down by 12px, then bounces back to 0
+    _bounceAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 12.0)
+            .chain(CurveTween(curve: Curves.easeOutQuad)),
+        weight: 30,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 12.0, end: 0.0)
+            .chain(CurveTween(curve: Curves.bounceOut)),
+        weight: 70,
+      ),
+    ]).animate(_bounceController);
+  }
+
+  @override
+  void dispose() {
+    _bounceController.dispose();
+    super.dispose();
+  }
 
   String get _dateText {
     final d = context.watch<RideController>().selectedDate;
@@ -242,8 +268,19 @@ class _SearchcardState extends State<Searchcard> {
                 provider.setPickupLocation(drop ?? '');
                 provider.setDropLocation(pickup ?? '');
               }
+              // Trigger the animation
+              _bounceController.forward(from: 0.0);
             },
-            child: Image.asset('assets/icons/upndownicon.png', width: 30),
+            child: AnimatedBuilder(
+              animation: _bounceAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, _bounceAnimation.value),
+                  child: child,
+                );
+              },
+              child: Image.asset('assets/icons/upndownicon.png', width: 30),
+            ),
           ),
         ),
       ],

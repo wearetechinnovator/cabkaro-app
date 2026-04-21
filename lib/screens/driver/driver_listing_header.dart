@@ -1,22 +1,35 @@
 import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:cabkaro/screens/driver/driver_ride_history_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
-class ListingHeader extends StatelessWidget {
-  const ListingHeader({super.key});
+class DriverListingHeader extends StatelessWidget {
+  const DriverListingHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const _IconCircle(icon: Icons.grid_view_rounded),
+        const _ProfileAvatar(),
         const Spacer(),
         _IconCircle(
           icon: Icons.notifications_none_rounded,
-          onTap: () => Navigator.pushNamed(context, '/notifications'),
+          onTap: () => Navigator.pushNamed(context, '/driver-notification'),
         ),
         const SizedBox(width: 12),
-        const _ProfileAvatar(),
+        _IconCircle(
+          icon: Icons.history_outlined,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const RideHistoryScreen()),
+          ),
+        ),
+        // const SizedBox(width: 12),
+        // _IconCircle(
+        //   // driver-only, e.g. earnings
+        //   icon: Icons.account_balance_wallet_outlined,
+        //   onTap: () => Navigator.pushNamed(context, '/earnings'),
+        // ),
       ],
     );
   }

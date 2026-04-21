@@ -14,14 +14,17 @@ import 'package:cabkaro/screens/common/booking_details_screen.dart';
 import 'package:cabkaro/screens/common/splash_screen.dart';
 import 'package:cabkaro/screens/driver/driver_signin_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
+import 'package:cabkaro/screens/driver/driver_notifications_screen.dart';
+import 'package:cabkaro/screens/driver/driver_profile_screen.dart';
+import 'package:cabkaro/screens/driver/driver_ride_history_screen.dart';
 import 'package:cabkaro/screens/driver/gov_details_screen.dart';
 import 'package:cabkaro/screens/driver/photo_upload_screen.dart';
 import 'package:cabkaro/screens/user/car_listing_screen.dart';
 import 'package:cabkaro/screens/user/notifications_screen.dart';
-import 'package:cabkaro/screens/user/user_dashboard_screen.dart';
+import 'package:cabkaro/screens/user/user_profile_screen.dart';
 import 'package:cabkaro/screens/user/signup_screen.dart';
 import 'package:cabkaro/screens/user/signin_screen.dart';
-import 'package:cabkaro/screens/user/edit_profile_screen.dart';
+import 'package:cabkaro/screens/user/user_edit_profile_screen.dart';
 import 'package:cabkaro/providers/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,19 +69,26 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         ),
-        home: const SplashScreen(),
+        // home: const SplashScreen(),
+        home: CarListingScreen(),
         routes: {
           '/signup': (context) => const SignupScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
           '/driver': (context) => const DriverSigninScreen(),
           '/driver-home': (context) => const DriverHomeScreen(),
+          '/driver-ride-history': (context) => const RideHistoryScreen(),
+          '/driver-notifications': (context) =>
+              const DriverNotificationsScreen(),
+          '/driver-profile': (context) => const DriverProfileScreen(),
           '/gov-details': (context) => const GOVDetailsScreen(),
           '/photo-upload': (context) => const PhotoUploadScreen(),
           '/listing': (context) => const CarListingScreen(),
           '/notifications': (context) => const NotificationsScreen(),
-          '/dashboard': (context) => const UserDashboardScreen(),
+          '/dashboard': (context) => const UserProfileScreen(),
           '/signin': (context) => SigninScreen(),
           '/edit-profile': (context) => const EditProfileScreen(),
+          '/driver-notification': (context) =>
+              const DriverNotificationsScreen(),
         },
       ),
     );

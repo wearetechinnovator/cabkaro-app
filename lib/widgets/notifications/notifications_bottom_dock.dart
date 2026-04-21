@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Bottom navigation dock for the User Notifications screen.
+/// Routes: Home → /listing, Bookings → /booking-details,
+///         Notifications (active), Profile → /dashboard
 class NotificationsBottomDock extends StatelessWidget {
   const NotificationsBottomDock({super.key});
 
@@ -21,12 +24,18 @@ class NotificationsBottomDock extends StatelessWidget {
           ),
           _DockIcon(
             icon: Icons.bar_chart_rounded,
-            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+            onTap: () =>
+                Navigator.pushReplacementNamed(context, '/booking-details'),
           ),
-          const _DockIcon(icon: Icons.notifications_none_rounded, selected: true),
+          // Notifications is the current screen — highlighted
+          const _DockIcon(
+            icon: Icons.notifications_none_rounded,
+            selected: true,
+          ),
           _DockIcon(
             icon: Icons.person_rounded,
-            onTap: () => Navigator.pushNamed(context, '/dashboard'),
+            onTap: () =>
+                Navigator.pushReplacementNamed(context, '/dashboard'),
           ),
         ],
       ),
