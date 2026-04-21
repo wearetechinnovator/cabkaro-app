@@ -1,9 +1,10 @@
+import 'package:cabkaro/controllers/auth_check_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_signin_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_signup_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
 import 'package:cabkaro/controllers/user/change_password_controller.dart';
-import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:cabkaro/controllers/user/login_controller.dart';
 import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/controllers/user/ride_controller.dart';
@@ -29,9 +30,9 @@ import 'package:cabkaro/providers/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// ========================================================
-// ===============[🙌🏻 JAY JAGANNATH 0!!0 🙏🏻]==============
-// ========================================================
+// ===================================================
+// ============[🙌🏻 JAY JAGANNATH 0!!0 🙏🏻]============
+// ===================================================
 
 void main() {
   runApp(const MyApp());
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => DriverVerifyOtpController()),
         ChangeNotifierProvider(create: (_) => DriverRideController()),
         ChangeNotifierProvider(create: (_) => ChangePasswordController()),
+        ChangeNotifierProvider(create: (_) => AuthCheckController()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',
@@ -69,8 +71,7 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         ),
-        // home: const SplashScreen(),
-        home: CarListingScreen(),
+        home: const SplashScreen(),
         routes: {
           '/signup': (context) => const SignupScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),

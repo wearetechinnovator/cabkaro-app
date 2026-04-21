@@ -4,9 +4,7 @@ import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../../utils/constants.dart' as constant;
-
-
+import '../utils/constants.dart' as constant;
 
 // ===================================
 // Edit Profile with User's Dashboard |
@@ -56,13 +54,20 @@ class EditProfileController extends ChangeNotifier {
     try {
       final SharedPreferences pref = await SharedPreferences.getInstance();
       final String token = pref.getString(constant.cabToken)!;
+      final String role = pref.getString("role")!;
+      late Uri url;
       Map<String, dynamic> data = {
         "name": nameController.text.trim(),
         "phone": phoneController.text.trim(),
         "token": token,
       };
 
-      Uri url = Uri.parse("${constant.apiUrl}/user/update");
+      if (role == "driver") {
+        url = Uri.parse("${constant.apiUrl}/driver/update");
+      } else if (role == "user") {
+        url = Uri.parse("${constant.apiUrl}/user/update");
+      }
+
       var req = await http.patch(
         url,
         body: jsonEncode(data),
@@ -70,6 +75,7 @@ class EditProfileController extends ChangeNotifier {
       );
       var res = jsonDecode(req.body);
       if (req.statusCode != 200) {
+        if (!ctx.mounted) return;
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
         return;
       }
@@ -79,6 +85,7 @@ class EditProfileController extends ChangeNotifier {
       pref.setString("user-data", jsonEncode(userData));
       notifyListeners();
 
+      if (!ctx.mounted) return;
       ToastWidget.show(ctx, message: res['msg'], type: ToastType.success);
     } catch (err) {
       if (!ctx.mounted) return;

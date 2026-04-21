@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:cabkaro/utils/constants.dart' as constant;
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+
 class RideController extends ChangeNotifier {
   TextEditingController price = TextEditingController();
   DateTime? selectedDate;
@@ -21,7 +23,6 @@ class RideController extends ChangeNotifier {
   }
 
   void setTime(TimeOfDay time) {
-    print("run time..");
     selectedTime = time;
     notifyListeners();
   }
@@ -41,6 +42,12 @@ class RideController extends ChangeNotifier {
     LatLng pickupPosition = locationProvider.pickupLatLng;
     LatLng dropPosition = locationProvider.dropLatLng;
     String token = pref.getString(constant.cabToken)!;
+    String pickupString = locationProvider.pickupLocation!;
+    String dropString = locationProvider.dropLocation!;
+
+    print(pickupString);
+    print(dropString);
+
     notifyListeners();
 
     if (ridePrice.isEmpty || rideTime == null || rideDate == null) {
@@ -66,6 +73,8 @@ class RideController extends ChangeNotifier {
         "pickup_date": rideDate.toIso8601String(),
         "pickup_time": "${rideTime.hour}:${rideTime.minute}",
         "token": token,
+        "pickup_city": pickupString,
+        "drop_city": dropString,
       };
       Uri url = Uri.parse("${constant.apiUrl}/ride/create-ride");
       var req = await http.post(
@@ -121,8 +130,6 @@ class RideController extends ChangeNotifier {
     LatLng dropPosition = locationProvider.dropLatLng;
     String token = pref.getString(constant.cabToken)!;
     // Socket emit send
-    print("token:");
-    print(token);
     notifyListeners();
 
     if (ridePrice.isEmpty || rideTime == null || rideDate == null) {

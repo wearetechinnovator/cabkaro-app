@@ -1,11 +1,13 @@
-import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '../../widgets/dashboard/dashboard_action_card.dart';
-import '../../widgets/dashboard/dashboard_greeting.dart';
-import '../../widgets/dashboard/dashboard_header.dart';
-import '../../widgets/dashboard/dashboard_logout_button.dart';
-import '../../widgets/driver/driver_bottom_dock.dart';
+import 'package:cabkaro/widgets/dashboard/dashboard_action_card.dart';
+import 'package:cabkaro/widgets/dashboard/dashboard_greeting.dart';
+import 'package:cabkaro/widgets/dashboard/dashboard_header.dart';
+import 'package:cabkaro/widgets/dashboard/dashboard_logout_button.dart';
+import 'package:cabkaro/widgets/driver/driver_bottom_dock.dart';
+
+
 
 class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({super.key});

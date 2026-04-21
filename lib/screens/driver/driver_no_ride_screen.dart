@@ -170,9 +170,9 @@ class _DriverNoRidesScreenState extends State<DriverNoRidesScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
 // Header  (same style as DriverHomeScreen)
-// ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
 
 class _DriverHeader extends StatelessWidget {
   const _DriverHeader();

@@ -1,4 +1,4 @@
-import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:provider/provider.dart';
 import '../common/booking_details_screen.dart';
 import 'package:flutter/material.dart';

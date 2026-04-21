@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:cabkaro/providers/socket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cabkaro/screens/common/landing_screen.dart';
@@ -11,7 +11,7 @@ import 'package:cabkaro/utils/constants.dart' as constant;
 import 'package:http/http.dart' as http;
 import 'package:cabkaro/widgets/Toastwidget.dart';
 
-class AuthCheckController {
+class AuthCheckController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   TextEditingController currentPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();

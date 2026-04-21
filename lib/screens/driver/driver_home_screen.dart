@@ -1,8 +1,12 @@
 import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
+import 'package:cabkaro/helper/extract_city.dart';
 import 'package:cabkaro/screens/driver/driver_listing_header.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/widgets/driver/driver_bottom_dock.dart';
+
+
+
 
 class DriverHomeScreen extends StatefulWidget {
   const DriverHomeScreen({super.key});
@@ -225,7 +229,13 @@ class _RequestCardState extends State<_RequestCard> {
                       fare: '${widget.rideData['price'] ?? 'Unknown Fare'} /-',
                     ),
                     SizedBox(height: 20),
-                    _RouteLine(),
+                    _RouteLine(
+                      pickupCity:
+                          widget.rideData['pickup_city'] ??
+                          'Unknown Pickup City',
+                      dropCity:
+                          widget.rideData['drop_city'] ?? 'Unknown Drop City',
+                    ),
                   ],
                 ),
               ],
@@ -313,10 +323,11 @@ class _TimePickerChip extends StatefulWidget {
 
 class _TimePickerChipState extends State<_TimePickerChip> {
   Future<void> _pickTime() async {
+    final controller = context.read<DriverRideController>();
+
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime:
-          context.watch<DriverRideController>().rideNegoTime ?? TimeOfDay.now(),
+      initialTime: controller.rideNegoTime ?? TimeOfDay.now(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -332,7 +343,7 @@ class _TimePickerChipState extends State<_TimePickerChip> {
     );
 
     if (picked != null) {
-      context.read<DriverRideController>().setRideNegoTime(picked);
+      controller.setRideNegoTime(picked);
     }
   }
 
@@ -438,18 +449,14 @@ class _FarePillState extends State<_FarePill> {
 // ─────────────────────────────────────────────
 // Route Line
 // ─────────────────────────────────────────────
+class _RouteLine extends StatelessWidget {
+  final String pickupCity;
+  final String dropCity;
+  const _RouteLine({required this.pickupCity, required this.dropCity});
 
-class _RouteLine extends StatefulWidget {
-  const _RouteLine();
-
-  @override
-  State<_RouteLine> createState() => _RouteLineState();
-}
-
-class _RouteLineState extends State<_RouteLine> {
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       width: 120,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -475,11 +482,11 @@ class _RouteLineState extends State<_RouteLine> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Contai',
+                extractCity(pickupCity),
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               ),
               Text(
-                'Digha',
+                extractCity(dropCity),
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               ),
             ],
