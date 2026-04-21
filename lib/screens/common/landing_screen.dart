@@ -1,4 +1,4 @@
-import 'package:cabkaro/screens/driver/driver_screen.dart';
+import 'package:cabkaro/screens/common/login_screen.dart';
 import 'package:cabkaro/screens/user/signin_screen.dart';
 import 'package:cabkaro/services/location_permission_service.dart';
 import 'package:flutter/material.dart';
@@ -136,9 +136,9 @@ class _LandingScreenState extends State<LandingScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: ActionButton(
-                  label: "I'm Driver",
-                  backgroundColor: const Color.fromARGB(255, 242, 202, 42),
-                  textColor: const Color.fromARGB(255, 0, 0, 0),
+                  label: "Drive a Journey",
+                  backgroundColor: const Color.fromARGB(255, 21, 21, 19),
+                  textColor: const Color.fromARGB(255, 255, 255, 255),
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () async {
                     final SharedPreferences pref =
@@ -149,7 +149,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const DriverScreen(),
+                        builder: (context) => const LoginScreen() ,
                       ),
                     );
                   },

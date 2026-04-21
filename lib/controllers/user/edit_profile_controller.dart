@@ -28,6 +28,7 @@ class EditProfileController extends ChangeNotifier {
     String? data = pref.getString("user-data");
     if (data != null) {
       userData = jsonDecode(data);
+      notifyListeners();
 
       nameController.text = userData!['name'];
       phoneController.text = userData!['phone'].toString();

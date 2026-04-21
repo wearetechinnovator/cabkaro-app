@@ -5,7 +5,8 @@ import 'package:cabkaro/services/image_picker_service.dart';
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../../utils/constants.dart' as constant;
+import 'package:cabkaro/utils/constants.dart' as constant;
+
 
 class SignupController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -193,7 +194,6 @@ class SignupController extends ChangeNotifier {
         );
       });
     } catch (err) {
-      print(err);
       if (!ctx.mounted) return;
       ToastWidget.show(
         ctx,

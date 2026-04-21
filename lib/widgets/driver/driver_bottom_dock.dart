@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// Bottom navigation dock for User's dashboard/profile screens.
-/// Routes: Home → /listing, Bookings → /booking-details,
-///         Notifications → /notifications, Profile → /dashboard
-class DashboardBottomDock extends StatefulWidget {
-  const DashboardBottomDock({super.key});
+class DriverBottomDock extends StatefulWidget {
+  const DriverBottomDock({super.key});
 
   @override
-  State<DashboardBottomDock> createState() => _DashboardBottomDockState();
+  State<DriverBottomDock> createState() => _DriverBottomDockState();
 }
 
-class _DashboardBottomDockState extends State<DashboardBottomDock> {
-  String _currentRoute = '/dashboard';
+class _DriverBottomDockState extends State<DriverBottomDock> {
+  String _currentRoute = '/driver-home';
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _currentRoute =
-        ModalRoute.of(context)?.settings.name ?? '/dashboard';
+    _currentRoute = ModalRoute.of(context)?.settings.name ?? '/driver-home';
   }
 
   @override
@@ -32,34 +28,35 @@ class _DashboardBottomDockState extends State<DashboardBottomDock> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Home → user car listing (user's main/home screen)
+          // Home → driver home (available rides / no-rides)
           _DockIcon(
             icon: Icons.home_outlined,
-            selected: _currentRoute == '/listing',
+            selected: _currentRoute == '/driver-home',
             onTap: () =>
-                Navigator.pushReplacementNamed(context, '/listing'),
+                Navigator.pushReplacementNamed(context, '/driver-home'),
           ),
-          // Bookings → user booking details
+          // Chart → driver ride history
           _DockIcon(
             icon: Icons.bar_chart_rounded,
-            selected: _currentRoute == '/booking-details',
+            selected: _currentRoute == '/driver-ride-history',
             onTap: () =>
-                Navigator.pushReplacementNamed(context, '/booking-details'),
+                Navigator.pushReplacementNamed(context, '/driver-ride-history'),
           ),
-          // Notifications
+          // Notifications → driver notifications
           _DockIcon(
             icon: Icons.notifications_none_rounded,
-            selected: _currentRoute == '/notifications',
-            onTap: () =>
-                Navigator.pushReplacementNamed(context, '/notifications'),
+            selected: _currentRoute == '/driver-notifications',
+            onTap: () => Navigator.pushReplacementNamed(
+              context,
+              '/driver-notifications',
+            ),
           ),
-          // Profile (current screen)
+          // Profile → driver profile
           _DockIcon(
             icon: Icons.person_rounded,
-            selected: _currentRoute == '/dashboard' ||
-                _currentRoute == '/edit-profile',
+            selected: _currentRoute == '/driver-profile',
             onTap: () =>
-                Navigator.pushReplacementNamed(context, '/dashboard'),
+                Navigator.pushReplacementNamed(context, '/driver-profile'),
           ),
         ],
       ),
@@ -68,11 +65,7 @@ class _DashboardBottomDockState extends State<DashboardBottomDock> {
 }
 
 class _DockIcon extends StatelessWidget {
-  const _DockIcon({
-    required this.icon,
-    this.selected = false,
-    this.onTap,
-  });
+  const _DockIcon({required this.icon, this.selected = false, this.onTap});
 
   final IconData icon;
   final bool selected;

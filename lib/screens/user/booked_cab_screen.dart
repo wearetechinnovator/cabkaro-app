@@ -2,7 +2,7 @@ import 'package:cabkaro/widgets/listing/listing_bottom_dock.dart';
 import 'package:cabkaro/widgets/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../widgets/listing/listing_header.dart';
+import 'user_listing_header.dart';
 // import '../../widgets/cabslider/cabslider.dart';
 import '../../widgets/cabslider/cabdata.dart';
 import 'grayed_cab_card.dart';
@@ -35,7 +35,7 @@ class _BookedCabScreenState extends State<BookedCabScreen> {
             ListView(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
               children: [
-                ListingHeader(),
+                UserListingHeader(),
                 SizedBox(height: 24),
                 Searchcard(onSubmit: () {}),
                 SizedBox(height: 14),

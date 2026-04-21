@@ -1,16 +1,15 @@
 import 'dart:convert';
-import 'package:cabkaro/screens/user/otp_screen.dart';
+import 'package:cabkaro/screens/driver/driver_otp_screen.dart';
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/constants.dart' as constant;
 
-class LoginController extends ChangeNotifier {
+class DriverSigninController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _isLoading = false;
-
   bool get isLoading => _isLoading;
 
   @override
@@ -30,7 +29,7 @@ class LoginController extends ChangeNotifier {
         "phone": phoneController.text.trim(),
         "password": passwordController.text.trim(),
       };
-      Uri url = Uri.parse("${constant.apiUrl}/user/login");
+      Uri url = Uri.parse("${constant.apiUrl}/driver/login");
       var req = await http.post(
         url,
         body: jsonEncode(data),
@@ -54,17 +53,14 @@ class LoginController extends ChangeNotifier {
         Navigator.pushReplacement(
           ctx,
           MaterialPageRoute(
-            builder: (context) => OTPScreen(phone: phone),
+            builder: (context) => DriverOtpScreen(phone: phone),
           ),
         );
-
-        
       } else {
         if (!ctx.mounted) return;
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
       }
     } catch (e) {
-      print(e);
       if (!ctx.mounted) return;
       ToastWidget.show(
         ctx,

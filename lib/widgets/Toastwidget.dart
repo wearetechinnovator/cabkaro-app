@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 enum ToastType { success, error, info, warning }
 
 class ToastWidget {
+  static final List<OverlayEntry> _activeToasts = [];
+
   static void show(
     BuildContext context, {
     required String message,
@@ -14,6 +16,8 @@ class ToastWidget {
     // Colors per type
     final config = _toastConfig(type);
 
+    final index = _activeToasts.length;
+
     final overlayEntry = OverlayEntry(
       builder: (context) => _ToastOverlay(
         message: message,
@@ -21,13 +25,16 @@ class ToastWidget {
         backgroundColor: config['backgroundColor'] as Color,
         textColor: config['textColor'] as Color,
         iconColor: config['iconColor'] as Color,
+        index: index, // 👈 added
       ),
     );
 
+    _activeToasts.add(overlayEntry);
     overlay.insert(overlayEntry);
 
     Future.delayed(duration, () {
       overlayEntry.remove();
+      _activeToasts.remove(overlayEntry);
     });
   }
 
@@ -71,6 +78,7 @@ class _ToastOverlay extends StatefulWidget {
   final Color backgroundColor;
   final Color textColor;
   final Color iconColor;
+  final int index; // 👈 added
 
   const _ToastOverlay({
     required this.message,
@@ -78,6 +86,7 @@ class _ToastOverlay extends StatefulWidget {
     required this.backgroundColor,
     required this.textColor,
     required this.iconColor,
+    required this.index,
   });
 
   @override
@@ -122,8 +131,11 @@ class _ToastOverlayState extends State<_ToastOverlay>
 
   @override
   Widget build(BuildContext context) {
+    final baseTop = MediaQuery.of(context).size.height * 0.07;
+    const spacing = 70.0; // 👈 spacing between toasts
+
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.07,
+      top: baseTop + (widget.index * spacing), // 👈 stacked position
       left: 24,
       right: 24,
       child: FadeTransition(

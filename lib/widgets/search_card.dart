@@ -1,34 +1,69 @@
+import 'package:cabkaro/controllers/user/ride_controller.dart';
+import 'package:cabkaro/screens/user/map_picker_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dashed_border/dashed_border.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/providers/location_provider.dart';
-import 'location_picker_modal.dart';
+// import 'location_picker_modal.dart';
 
 class Searchcard extends StatefulWidget {
   const Searchcard({super.key, required this.onSubmit});
-
+  
   final GestureTapCallback onSubmit;
 
   @override
   State<Searchcard> createState() => _SearchcardState();
 }
 
-class _SearchcardState extends State<Searchcard> {
+class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateMixin {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
+  late AnimationController _bounceController;
+  late Animation<double> _bounceAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _bounceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    // Bouncy top-down animation: moves down by 12px, then bounces back to 0
+    _bounceAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 12.0)
+            .chain(CurveTween(curve: Curves.easeOutQuad)),
+        weight: 30,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 12.0, end: 0.0)
+            .chain(CurveTween(curve: Curves.bounceOut)),
+        weight: 70,
+      ),
+    ]).animate(_bounceController);
+  }
+
+  @override
+  void dispose() {
+    _bounceController.dispose();
+    super.dispose();
+  }
+
   String get _dateText {
-    if (_selectedDate == null) return '';
-    final d = _selectedDate!;
+    final d = context.watch<RideController>().selectedDate;
+    if (d == null) return '';
+
     return '${d.day.toString().padLeft(2, '0')}/'
         '${d.month.toString().padLeft(2, '0')}/'
         '${d.year}';
   }
 
   String get _timeText {
-    if (_selectedTime == null) return '';
-    final t = _selectedTime!;
+    final t = context.watch<RideController>().selectedTime;
+    if (t == null) return '';
+
     final hour = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
     final minute = t.minute.toString().padLeft(2, '0');
     final period = t.period == DayPeriod.am ? 'AM' : 'PM';
@@ -55,7 +90,11 @@ class _SearchcardState extends State<Searchcard> {
         );
       },
     );
-    if (picked != null) setState(() => _selectedDate = picked);
+    if (picked != null) {
+      setState(() {
+        Provider.of<RideController>(context, listen: false).setDate(picked);
+      });
+    }
   }
 
   Future<void> _pickTime() async {
@@ -75,18 +114,12 @@ class _SearchcardState extends State<Searchcard> {
         );
       },
     );
-    if (picked != null) setState(() => _selectedTime = picked);
-  }
 
-  void _openModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => const LocationPickerModal(),
-    );
+    if (picked != null) {
+      setState(() {
+        Provider.of<RideController>(context, listen: false).setTime(picked);
+      });
+    }
   }
 
   @override
@@ -112,21 +145,31 @@ class _SearchcardState extends State<Searchcard> {
             child: Column(
               children: [
                 const SizedBox(height: 35),
-
-                // Pickup field
                 _LocationField(
                   hint: "Pickup Location",
                   value: locationProvider.pickupLocation,
-                  onTap: () => _openModal(context),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MapPickerScreen(isPickup: true),
+                      ),
+                    );
+                  },
                   height: 45,
                 ),
                 const SizedBox(height: 10),
-
-                // Drop field
                 _LocationField(
                   hint: "Drop Location",
                   value: locationProvider.dropLocation,
-                  onTap: () => _openModal(context),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MapPickerScreen(isPickup: false),
+                      ),
+                    );
+                  },
                   height: 40,
                 ),
                 const SizedBox(height: 10),
@@ -139,6 +182,10 @@ class _SearchcardState extends State<Searchcard> {
                       child: _InputField(
                         hint: "Price",
                         icon: Icons.currency_rupee_outlined,
+                        textController: Provider.of<RideController>(
+                          context,
+                          listen: false,
+                        ).price,
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -169,16 +216,18 @@ class _SearchcardState extends State<Searchcard> {
                 const SizedBox(height: 16),
 
                 // Submit button
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: GestureDetector(
-                    onTap: widget.onSubmit,
+                GestureDetector(
+                  onTap: () {
+                    widget.onSubmit();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     child: Center(
                       child: Text(
                         "Submit",
@@ -219,8 +268,19 @@ class _SearchcardState extends State<Searchcard> {
                 provider.setPickupLocation(drop ?? '');
                 provider.setDropLocation(pickup ?? '');
               }
+              // Trigger the animation
+              _bounceController.forward(from: 0.0);
             },
-            child: Image.asset('assets/icons/upndownicon.png', width: 30),
+            child: AnimatedBuilder(
+              animation: _bounceAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, _bounceAnimation.value),
+                  child: child,
+                );
+              },
+              child: Image.asset('assets/icons/upndownicon.png', width: 30),
+            ),
           ),
         ),
       ],
@@ -230,7 +290,6 @@ class _SearchcardState extends State<Searchcard> {
 
 class _LocationField extends StatefulWidget {
   const _LocationField({
-    super.key,
     required this.hint,
     required this.value,
     required this.onTap,
@@ -286,11 +345,9 @@ class _LocationFieldState extends State<_LocationField> {
   }
 }
 
-
 // Tappable date/time display field
 class _TappableField extends StatefulWidget {
   const _TappableField({
-    super.key,
     required this.hint,
     required this.value,
     required this.icon,
@@ -356,15 +413,15 @@ class _TappableFieldState extends State<_TappableField> {
 
 // Free-text input field (Price only)
 class _InputField extends StatefulWidget {
-  const _InputField({
-    super.key,
-    required this.hint,
-    required this.icon,
-  });
-
   final String hint;
   final IconData icon;
+  final TextEditingController textController;
 
+  const _InputField({
+    required this.hint,
+    required this.icon,
+    required this.textController,
+  });
   @override
   State<_InputField> createState() => _InputFieldState();
 }
@@ -399,7 +456,7 @@ class _InputFieldState extends State<_InputField> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
-        controller: _controller,
+        controller: widget.textController,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           hintStyle: GoogleFonts.oswald(),

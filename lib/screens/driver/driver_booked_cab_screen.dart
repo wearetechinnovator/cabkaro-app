@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/listing/listing_bottom_dock.dart';
+import '../../widgets/driver/driver_bottom_dock.dart';
 
 class DriverBookedCabScreen extends StatefulWidget {
   const DriverBookedCabScreen({super.key});
@@ -93,7 +93,7 @@ class _DriverBookedCabScreenState extends State<DriverBookedCabScreen> {
               left: screenWidth * 0.07,
               right: screenWidth * 0.07,
               bottom: 16,
-              child: const ListingBottomDock(),
+              child: const DriverBottomDock(),
             ),
           ],
         ),

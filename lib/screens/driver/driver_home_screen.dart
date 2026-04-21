@@ -1,7 +1,9 @@
+import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
+import 'package:cabkaro/screens/driver/driver_listing_header.dart';
+import 'package:cabkaro/widgets/driver/driver_side_bar.dart';
 import 'package:flutter/material.dart';
-
-import 'driver_booked_cab_screen.dart';
-import '../../widgets/listing/listing_bottom_dock.dart';
+import 'package:provider/provider.dart';
+import 'package:cabkaro/widgets/driver/driver_bottom_dock.dart';
 
 class DriverHomeScreen extends StatefulWidget {
   const DriverHomeScreen({super.key});
@@ -12,111 +14,63 @@ class DriverHomeScreen extends StatefulWidget {
 
 class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
+  initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DriverRideController>().getRide(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
+    List<dynamic> availableRides = context
+        .watch<DriverRideController>()
+        .availableRides;
 
     return Scaffold(
+      drawer: const DriverSidebar(),
       backgroundColor: const Color(0xFFE8E8E8),
       body: SafeArea(
         child: Stack(
           children: [
-            ListView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
-              children: const [
-                _DriverHeader(),
-                SizedBox(height: 24),
-                Text(
-                  'Driver Dashboard',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F1F1F),
-                    height: 1,
+            RefreshIndicator(
+              onRefresh: () =>
+                  context.read<DriverRideController>().refreshRides(context),
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
+                children: [
+                  DriverListingHeader(),
+                  SizedBox(height: 24),
+                  Text(
+                    'Driver Dashboard',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1F1F1F),
+                      height: 1,
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-                SizedBox(height: 14),
-                _RequestCard(),
-              ],
+                  SizedBox(height: 16),
+                  ...List.generate(
+                    availableRides.length,
+                    (index) => Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: _RequestCard(rideData: availableRides[index]),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Positioned(
               left: screenWidth * 0.07,
               right: screenWidth * 0.07,
               bottom: 16,
-              child: const ListingBottomDock(),
+              child: const DriverBottomDock(),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Header
-// ─────────────────────────────────────────────
-
-class _DriverHeader extends StatefulWidget {
-  const _DriverHeader();
-
-  @override
-  State<_DriverHeader> createState() => _DriverHeaderState();
-}
-
-class _DriverHeaderState extends State<_DriverHeader> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const _HeaderCircle(icon: Icons.grid_view_rounded),
-        const Spacer(),
-        _HeaderCircle(
-          icon: Icons.notifications_none_rounded,
-          onTap: () => Navigator.pushNamed(context, '/notifications'),
-        ),
-        const SizedBox(width: 12),
-        const CircleAvatar(
-          radius: 20,
-          backgroundColor: Color(0xFFD24A61),
-          child: Text(
-            'M',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HeaderCircle extends StatefulWidget {
-  const _HeaderCircle({required this.icon, this.onTap});
-
-  final IconData icon;
-  final VoidCallback? onTap;
-
-  @override
-  State<_HeaderCircle> createState() => _HeaderCircleState();
-}
-
-class _HeaderCircleState extends State<_HeaderCircle> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(20),
-      onTap: widget.onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
-        ),
-        child: Icon(widget.icon, size: 20, color: const Color(0xFF2D2F35)),
       ),
     );
   }
@@ -127,7 +81,8 @@ class _HeaderCircleState extends State<_HeaderCircle> {
 // ─────────────────────────────────────────────
 
 class _RequestCard extends StatefulWidget {
-  const _RequestCard();
+  final dynamic rideData;
+  const _RequestCard({required this.rideData});
 
   @override
   State<_RequestCard> createState() => _RequestCardState();
@@ -137,6 +92,7 @@ class _RequestCardState extends State<_RequestCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      
       decoration: BoxDecoration(
         color: const Color(0xFFF4E5B0),
         borderRadius: BorderRadius.circular(20),
@@ -162,8 +118,10 @@ class _RequestCardState extends State<_RequestCard> {
                           color: Color(0xFFE6A64E),
                         ),
                         alignment: Alignment.center,
-                        child: const Text(
-                          'J',
+                        child: Text(
+                          widget.rideData['user']['name'] != null
+                              ? widget.rideData['user']['name'][0].toUpperCase()
+                              : 'U',
                           style: TextStyle(
                             color: Color(0xFF2D2F35),
                             fontWeight: FontWeight.w700,
@@ -171,12 +129,15 @@ class _RequestCardState extends State<_RequestCard> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      const Text(
-                        'Jeena',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF1F1F1F),
+                      Expanded(
+                        child: Text(
+                          overflow: TextOverflow.ellipsis,
+                          widget.rideData['user']['name'] ?? 'Unknown User',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF1F1F1F),
+                          ),
                         ),
                       ),
                     ],
@@ -197,13 +158,13 @@ class _RequestCardState extends State<_RequestCard> {
                   ),
                 ),
                 transform: Matrix4.translationValues(0, -9, 0),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(Icons.access_time_rounded, size: 18),
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '30 Dec\n9:30 A.M',
+                        '${widget.rideData['pickup_date'].split("T")[0] ?? 'Unknown Date'}\n${widget.rideData['pickup_time'] ?? 'Unknown Time'}',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -223,20 +184,49 @@ class _RequestCardState extends State<_RequestCard> {
               children: [
                 Expanded(
                   child: Column(
-                    children: const [
+                    children: [
                       _PriceInput(),
                       SizedBox(height: 8),
                       _TimePickerChip(),
                       SizedBox(height: 10),
-                      _AcceptButton(),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: () {
+                            context.read<DriverRideController>().acceptRide(
+                              context,
+                              widget.rideData,
+                            );
+                          },
+                          child: Container(
+                            height: 36,
+                            width: 86,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF8C100),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            alignment: Alignment.center,
+                            child: const Text(
+                              'Accept',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 12),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    _FarePill(fare: '800 /-'),
+                    _FarePill(
+                      fare: '${widget.rideData['price'] ?? 'Unknown Fare'} /-',
+                    ),
                     SizedBox(height: 20),
                     _RouteLine(),
                   ],
@@ -251,22 +241,19 @@ class _RequestCardState extends State<_RequestCard> {
 }
 
 // ─────────────────────────────────────────────
-// Price Input 
+// Price Input
 // ─────────────────────────────────────────────
 
 class _PriceInput extends StatefulWidget {
   const _PriceInput();
-
   @override
   State<_PriceInput> createState() => _PriceInputState();
 }
 
 class _PriceInputState extends State<_PriceInput> {
-  final TextEditingController _controller = TextEditingController();
-
   @override
   void dispose() {
-    _controller.dispose();
+    context.read<DriverRideController>().rideNegoPrice.dispose();
     super.dispose();
   }
 
@@ -290,7 +277,7 @@ class _PriceInputState extends State<_PriceInput> {
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
-              controller: _controller,
+              controller: context.read<DriverRideController>().rideNegoPrice,
               keyboardType: TextInputType.number,
               style: const TextStyle(
                 fontSize: 15,
@@ -328,12 +315,11 @@ class _TimePickerChip extends StatefulWidget {
 }
 
 class _TimePickerChipState extends State<_TimePickerChip> {
-  TimeOfDay? _selectedTime;
-
   Future<void> _pickTime() async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: _selectedTime ?? TimeOfDay.now(),
+      initialTime:
+          context.watch<DriverRideController>().rideNegoTime ?? TimeOfDay.now(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -349,19 +335,33 @@ class _TimePickerChipState extends State<_TimePickerChip> {
     );
 
     if (picked != null) {
-      setState(() => _selectedTime = picked);
+      context.read<DriverRideController>().setRideNegoTime(picked);
     }
   }
 
   String get _label {
-    if (_selectedTime == null) return 'Estimate Time';
-    final hour = _selectedTime!.hourOfPeriod == 0 ? 12 : _selectedTime!.hourOfPeriod;
-    final minute = _selectedTime!.minute.toString().padLeft(2, '0');
-    final period = _selectedTime!.period == DayPeriod.am ? 'AM' : 'PM';
+    if (context.watch<DriverRideController>().rideNegoTime == null)
+      return 'Estimate Time';
+    final hour =
+        context.watch<DriverRideController>().rideNegoTime!.hourOfPeriod == 0
+        ? 12
+        : context.watch<DriverRideController>().rideNegoTime!.hourOfPeriod;
+    final minute = context
+        .watch<DriverRideController>()
+        .rideNegoTime!
+        .minute
+        .toString()
+        .padLeft(2, '0');
+    final period =
+        context.watch<DriverRideController>().rideNegoTime!.period ==
+            DayPeriod.am
+        ? 'AM'
+        : 'PM';
     return '$hour:$minute $period';
   }
 
-  bool get _hasSelection => _selectedTime != null;
+  bool get _hasSelection =>
+      context.watch<DriverRideController>().rideNegoTime != null;
 
   @override
   Widget build(BuildContext context) {
@@ -393,58 +393,11 @@ class _TimePickerChipState extends State<_TimePickerChip> {
                   color: _hasSelection
                       ? const Color(0xFF2F2F2F)
                       : const Color.fromARGB(255, 0, 0, 0),
-                  fontWeight: _hasSelection
-                      ? FontWeight.w500
-                      : FontWeight.w400,
+                  fontWeight: _hasSelection ? FontWeight.w500 : FontWeight.w400,
                 ),
               ),
             ),
-
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────
-// Accept Button
-// ─────────────────────────────────────────────
-
-class _AcceptButton extends StatefulWidget {
-  const _AcceptButton();
-
-  @override
-  State<_AcceptButton> createState() => _AcceptButtonState();
-}
-
-class _AcceptButtonState extends State<_AcceptButton> {
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const DriverBookedCabScreen(),
-            ),
-          );
-        },
-        child: Container(
-          height: 36,
-          width: 86,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8C100),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          alignment: Alignment.center,
-          child: const Text(
-            'Accept',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-          ),
         ),
       ),
     );

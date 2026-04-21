@@ -7,11 +7,15 @@ class DashboardActionCard extends StatelessWidget {
     required this.userName,
     this.onEditProfileTap,
     this.onLastRideTap,
+    this.editLabel = 'Edit Profile', // default for user
+    this.lastRideLabel = 'Last Ride',
   });
 
   final String userName;
   final VoidCallback? onEditProfileTap;
   final VoidCallback? onLastRideTap;
+  final String editLabel;
+  final String lastRideLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,10 @@ class DashboardActionCard extends StatelessWidget {
               GestureDetector(
                 onTap: onEditProfileTap,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF2D2F35),
                     borderRadius: BorderRadius.circular(20),

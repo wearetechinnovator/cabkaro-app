@@ -1,30 +1,36 @@
+import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
+import 'package:cabkaro/screens/user/user_ride_history_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ListingHeader extends StatelessWidget {
-  const ListingHeader({super.key});
+class UserListingHeader extends StatelessWidget {
+  const UserListingHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const _IconCircle(icon: Icons.grid_view_rounded),
+        const _ProfileAvatar(),
         const Spacer(),
         _IconCircle(
           icon: Icons.notifications_none_rounded,
           onTap: () => Navigator.pushNamed(context, '/notifications'),
         ),
         const SizedBox(width: 12),
-        const _ProfileAvatar(),
+        _IconCircle(
+          icon: Icons.history_outlined,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const UserRideHistoryScreen()),
+          ),
+        ),
       ],
     );
   }
 }
 
 class _IconCircle extends StatelessWidget {
-  const _IconCircle({
-    required this.icon,
-    this.onTap,
-  });
+  const _IconCircle({required this.icon, this.onTap});
 
   final IconData icon;
   final VoidCallback? onTap;
@@ -52,6 +58,16 @@ class _ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<EditProfileController>();
+    String name = controller.userData?['name'] ?? '';
+    final parts = name.trim().split(" ").where((e) => e.isNotEmpty).toList();
+
+    final initials = parts.isEmpty
+        ? '?'
+        : parts.length == 1
+        ? parts[0][0]
+        : parts[0][0] + parts[1][0];
+
     return InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: () => Navigator.pushNamed(context, '/dashboard'),
@@ -65,12 +81,12 @@ class _ProfileAvatar extends StatelessWidget {
           ),
         ),
         alignment: Alignment.center,
-        child: const Text(
-          'JM',
+        child: Text(
+          initials,
           style: TextStyle(
             color: Color(0xFF1F1F1F),
             fontWeight: FontWeight.w700,
-            fontSize: 12,
+            fontSize: 18,
           ),
         ),
       ),

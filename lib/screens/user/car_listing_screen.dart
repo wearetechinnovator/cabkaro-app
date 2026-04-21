@@ -1,3 +1,5 @@
+import 'package:cabkaro/controllers/user/ride_controller.dart';
+import 'package:cabkaro/screens/user/user_listing_header.dart';
 import 'package:flutter/material.dart';
 import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/screens/user/user_listing_dock.dart';
@@ -5,7 +7,6 @@ import 'package:cabkaro/widgets/reviewslider/review_slider.dart';
 import 'package:cabkaro/screens/user/available_cabs_screen.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/listing/listing_dot_indicator.dart';
-import '../../widgets/listing/listing_header.dart';
 import '../../widgets/listing/recent_booking_card.dart';
 import '../../widgets/listing/section_title.dart';
 import '../../widgets/search_card.dart';
@@ -23,7 +24,6 @@ class _CarListingScreenState extends State<CarListingScreen> {
   int _cabIndex = 0;
   int _reviewIndex = 0;
 
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -36,16 +36,22 @@ class _CarListingScreenState extends State<CarListingScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 120.0),
                 children: [
-                  const ListingHeader(),
+                  const UserListingHeader(),
                   const SizedBox(height: 24.0),
                   const GreetingBlock(),
                   const SizedBox(height: 14.0),
                   Searchcard(
                     onSubmit: () {
+                      Provider.of<RideController>(
+                        context,
+                        listen: false,
+                      ).postRide(context);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AvailableCabsScreen(),
+                          builder: (context) =>
+                              const AvailableCabsScreen(rideId: "120"),
                         ),
                       );
                     },
@@ -57,7 +63,10 @@ class _CarListingScreenState extends State<CarListingScreen> {
                     onPageChanged: (i) => setState(() => _cabIndex = i),
                   ),
                   const SizedBox(height: 12.0),
-                  ListingDotIndicator(activeIndex: _cabIndex, count: CabSlider.count),
+                  ListingDotIndicator(
+                    activeIndex: _cabIndex,
+                    count: CabSlider.count,
+                  ),
                   const SizedBox(height: 22.0),
                   const SectionTitle(title: 'Recent Booking'),
                   const SizedBox(height: 12.0),
@@ -69,8 +78,10 @@ class _CarListingScreenState extends State<CarListingScreen> {
                     driverId: 'driver_123',
                     rideId: 'ride_456',
                     onReviewSubmit: (rating, review) {
-                      Provider.of<ReviewController>(context, listen: false)
-                          .submitReview(
+                      Provider.of<ReviewController>(
+                        context,
+                        listen: false,
+                      ).submitReview(
                         context: context,
                         driverId: 'driver_123',
                         rideId: 'ride_456',
@@ -87,7 +98,10 @@ class _CarListingScreenState extends State<CarListingScreen> {
 
                   ),
                   const SizedBox(height: 8.0),
-                  ListingDotIndicator(activeIndex: _reviewIndex, count: ReviewSlider.count),
+                  ListingDotIndicator(
+                    activeIndex: _reviewIndex,
+                    count: ReviewSlider.count,
+                  ),
                 ],
               ),
             ),

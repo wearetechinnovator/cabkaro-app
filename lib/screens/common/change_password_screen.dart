@@ -1,4 +1,6 @@
+import 'package:cabkaro/controllers/auth_check_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 // ─────────────────────────────────────────────
 // Change Password Screen
 // ─────────────────────────────────────────────
@@ -11,34 +13,22 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _currentPassCtrl = TextEditingController();
-  final _newPassCtrl = TextEditingController();
-  final _retypePassCtrl = TextEditingController();
-
   bool _obscureCurrent = true;
   bool _obscureNew = true;
   bool _obscureRetype = true;
 
   @override
   void dispose() {
-    _currentPassCtrl.dispose();
-    _newPassCtrl.dispose();
-    _retypePassCtrl.dispose();
+    context
+        .read<AuthCheckController>()
+        .currentPasswordController
+        .dispose();
+    context.read<AuthCheckController>().newPasswordController.dispose();
+    context
+        .read<AuthCheckController>()
+        .confirmPasswordController
+        .dispose();
     super.dispose();
-  }
-
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password changed successfully!'),
-          backgroundColor: Color(0xFF2D2F35),
-        ),
-      );
-      Navigator.pop(context);
-    }
   }
 
   @override
@@ -62,46 +52,27 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
-          key: _formKey,
+          key: context.
+          read<AuthCheckController>().formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 12),
 
-              // Info card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8C100).withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFF8C100), width: 1.2),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.info_outline, color: Color(0xFFF8C100), size: 20),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Password must be at least 8 characters and include a number.',
-                        style: TextStyle(fontSize: 13, color: Color(0xFF2D2F35)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 28),
-
               // Field label + field
               _buildFieldLabel('Current Password'),
               const SizedBox(height: 6),
               _PasswordField(
-                controller: _currentPassCtrl,
+                controller: context
+                    .read<AuthCheckController>()
+                    .currentPasswordController,
                 hint: 'Enter your current password',
                 obscure: _obscureCurrent,
-                onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
+                onToggle: () =>
+                    setState(() => _obscureCurrent = !_obscureCurrent),
                 validator: (val) {
-                  if (val == null || val.isEmpty) return 'Please enter your current password';
+                  if (val == null || val.isEmpty)
+                    return 'Please enter your current password';
                   return null;
                 },
               ),
@@ -111,15 +82,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               _buildFieldLabel('New Password'),
               const SizedBox(height: 6),
               _PasswordField(
-                controller: _newPassCtrl,
+                controller: context
+                    .read<AuthCheckController>()
+                    .newPasswordController,
                 hint: 'Enter your new password',
                 obscure: _obscureNew,
                 onToggle: () => setState(() => _obscureNew = !_obscureNew),
                 validator: (val) {
-                  if (val == null || val.isEmpty) return 'Please enter a new password';
-                  if (val.length < 8) return 'Password must be at least 8 characters';
-                  if (!RegExp(r'[0-9]').hasMatch(val)) return 'Must contain at least one number';
-                  if (val == _currentPassCtrl.text) return 'New password must differ from current';
+                  if (val == null || val.isEmpty)
+                    return 'Please enter a new password';
+                  if (val.length < 8)
+                    return 'Password must be at least 8 characters';
+                  if (!RegExp(r'[0-9]').hasMatch(val))
+                    return 'Must contain at least one number';
+                  if (val ==
+                      context
+                          .read<AuthCheckController>()
+                          .currentPasswordController
+                          .text)
+                    return 'New password must differ from current';
                   return null;
                 },
               ),
@@ -129,13 +110,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               _buildFieldLabel('Retype New Password'),
               const SizedBox(height: 6),
               _PasswordField(
-                controller: _retypePassCtrl,
+                controller: context
+                    .read<AuthCheckController>()
+                    .confirmPasswordController,
                 hint: 'Confirm your new password',
                 obscure: _obscureRetype,
-                onToggle: () => setState(() => _obscureRetype = !_obscureRetype),
+                onToggle: () =>
+                    setState(() => _obscureRetype = !_obscureRetype),
                 validator: (val) {
-                  if (val == null || val.isEmpty) return 'Please confirm your new password';
-                  if (val != _newPassCtrl.text) return 'Passwords do not match';
+                  if (val == null || val.isEmpty)
+                    return 'Please confirm your new password';
+                  if (val !=
+                      context
+                          .read<AuthCheckController>()
+                          .newPasswordController
+                          .text)
+                    return 'Passwords do not match';
                   return null;
                 },
               ),
@@ -146,7 +136,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               SizedBox(
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: _submit,
+                  onPressed: () {
+                    if (context
+                        .read<AuthCheckController>()
+                        .formKey
+                        .currentState!
+                        .validate()) {
+                      context.read<AuthCheckController>().changePassword(
+                        context,
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2D2F35),
                     foregroundColor: Colors.white,
@@ -203,7 +203,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 class _PasswordField extends StatelessWidget {
   const _PasswordField({
     required this.controller,
-    required this.hint,       // ← hint instead of label
+    required this.hint, // ← hint instead of label
     required this.obscure,
     required this.onToggle,
     required this.validator,
@@ -226,7 +226,11 @@ class _PasswordField extends StatelessWidget {
         // ✅ hintText instead of labelText — no floating label
         hintText: hint,
         hintStyle: const TextStyle(color: Color(0xFFAAAAAA), fontSize: 14),
-        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF2D2F35), size: 20),
+        prefixIcon: const Icon(
+          Icons.lock_outline,
+          color: Color(0xFF2D2F35),
+          size: 20,
+        ),
         suffixIcon: IconButton(
           icon: Icon(
             obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
@@ -237,7 +241,10 @@ class _PasswordField extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
