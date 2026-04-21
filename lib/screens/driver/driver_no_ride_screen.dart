@@ -724,7 +724,7 @@ class _TipsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Pro Tips ',
+          'Pro Tips',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
