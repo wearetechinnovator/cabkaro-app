@@ -1,4 +1,5 @@
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/screens/driver/driver_profile_screen.dart';
 import 'package:cabkaro/screens/driver/driver_ride_history_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,22 @@ class DriverListingHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const _ProfileAvatar(),
+        // Menu button to reliably open the Scaffold drawer when tapped.
+        InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => Scaffold.of(context).openDrawer(),
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF2D2F35), width: 1.2),
+            ),
+            child: const Icon(Icons.menu, size: 20, color: Color(0xFF2D2F35)),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // const _ProfileAvatar(),
         const Spacer(),
         _IconCircle(
           icon: Icons.notifications_none_rounded,
@@ -76,7 +92,10 @@ class _ProfileAvatar extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(20),
-      onTap: () => Navigator.pushNamed(context, '/dashboard'),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const DriverProfileScreen()),
+      ),
       child: Container(
         width: 40,
         height: 40,

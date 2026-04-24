@@ -1,6 +1,7 @@
 import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
 import 'package:cabkaro/helper/extract_city.dart';
 import 'package:cabkaro/screens/driver/driver_listing_header.dart';
+import 'package:cabkaro/widgets/driver/driver_side_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/widgets/driver/driver_bottom_dock.dart';
@@ -33,6 +34,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         .availableRides;
 
     return Scaffold(
+      drawer: const DriverSidebar(),
       backgroundColor: const Color(0xFFE8E8E8),
       body: SafeArea(
         child: Stack(
@@ -94,6 +96,7 @@ class _RequestCardState extends State<_RequestCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      
       decoration: BoxDecoration(
         color: const Color(0xFFF4E5B0),
         borderRadius: BorderRadius.circular(20),

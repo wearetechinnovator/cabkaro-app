@@ -1,4 +1,9 @@
+
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/screens/driver/driver_listing_header.dart';
+import 'package:cabkaro/screens/user/user_listing_header.dart';
+import 'package:cabkaro/widgets/driver/driver_side_bar.dart';
+
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cabkaro/widgets/dashboard/dashboard_action_card.dart';
@@ -32,13 +37,15 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
+      
+      
       body: SafeArea(
         child: Stack(
           children: [
             ListView(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
               children: [
-                DashboardHeader(onBack: () => Navigator.pop(context)),
+                const DriverListingHeader(),
                 const SizedBox(height: 24),
                 DashboardGreeting(name: userData['name']),
                 const SizedBox(height: 18),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cabkaro/screens/user/driver_searching_screen.dart';
 
 class UserListingDock extends StatefulWidget {
   const UserListingDock({super.key});
@@ -8,7 +9,7 @@ class UserListingDock extends StatefulWidget {
 }
 
 class _UserListingDockState extends State<UserListingDock> {
-  String _currentRoute = '/listing'; // set your default
+  String _currentRoute = '/listing';
 
   @override
   void didChangeDependencies() {
@@ -36,19 +37,81 @@ class _UserListingDockState extends State<UserListingDock> {
           _DockIcon(
             icon: Icons.bar_chart_rounded,
             selected: _currentRoute == '/booking-details',
-            onTap: () => Navigator.pushReplacementNamed(context, '/booking-details'),
+            onTap: () =>
+                Navigator.pushReplacementNamed(context, '/booking-details'),
           ),
+
+          // ── Ride / Driver Search shortcut ─────────────────────────────
+          _RideSearchDockButton(
+            selected: _currentRoute == '/driver-searching',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const DriverSearchingScreen(),
+                  settings: const RouteSettings(name: '/driver-searching'),
+                ),
+              );
+            },
+          ),
+          // ─────────────────────────────────────────────────────────────
+
           _DockIcon(
             icon: Icons.notifications_none_rounded,
             selected: _currentRoute == '/notifications',
-            onTap: () => Navigator.pushReplacementNamed(context, '/notifications'),
+            onTap: () =>
+                Navigator.pushReplacementNamed(context, '/notifications'),
           ),
           _DockIcon(
             icon: Icons.person_rounded,
             selected: _currentRoute == '/dashboard',
-            onTap: () => Navigator.pushReplacementNamed(context, '/dashboard'),
+            onTap: () =>
+                Navigator.pushReplacementNamed(context, '/dashboard'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Highlighted "create ride → search screen" button in the dock.
+class _RideSearchDockButton extends StatelessWidget {
+  const _RideSearchDockButton({required this.onTap, this.selected = false});
+
+  final VoidCallback onTap;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 48,
+        height: 38,
+        decoration: BoxDecoration(
+          color: selected
+              ? const Color(0xFFF8C100)
+              : const Color(0xFFF8C100).withOpacity(0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFFF8C100),
+            width: 1.5,
+          ),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFFF8C100).withOpacity(0.35),
+                    blurRadius: 12,
+                    spreadRadius: 2,
+                  )
+                ]
+              : [],
+        ),
+        child: Icon(
+          Icons.local_taxi_rounded,
+          color: selected ? const Color(0xFF1A1C21) : const Color(0xFFF8C100),
+          size: 22,
+        ),
       ),
     );
   }

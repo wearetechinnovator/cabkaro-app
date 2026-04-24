@@ -1,21 +1,23 @@
 import 'package:cabkaro/controllers/driver/driver_signin_controller.dart';
+import 'package:cabkaro/screens/common/otp_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/widgets/action_button.dart';
 import 'package:cabkaro/widgets/gradient_background.dart';
 import 'package:cabkaro/widgets/signup_input.dart';
-import 'package:cabkaro/screens/driver/driver_signup_screen.dart';
 
-class DriverSigninScreen extends StatefulWidget {
-  const DriverSigninScreen({super.key});
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<DriverSigninScreen> createState() => _DriverSigninScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _DriverSigninScreenState extends State<DriverSigninScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -54,16 +56,22 @@ class _DriverSigninScreenState extends State<DriverSigninScreen> {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
-                Center(
-                  child: Image.asset(
-                    'assets/images/authImage.png',
-                    height: screenHeight * 0.3,
-                    fit: BoxFit.contain,
-                  ),
+
+                // Center(
+                //   child: Lottie.asset(
+                //     'assets/images/authImage.png',
+                //     height: screenHeight * 0.3,
+                //     fit: BoxFit.contain,
+                //   ),
+                // ),
+                Builder(
+                  builder: (context) =>
+                      Lottie.asset("assets/animations/car_animation.json"),
                 ),
+
                 SizedBox(height: screenHeight * 0.01),
                 Text(
-                  'Sign In',
+                  'Enter your number',
                   style: TextStyle(
                     fontSize: screenHeight * 0.027,
                     fontWeight: FontWeight.w500,
@@ -107,31 +115,12 @@ class _DriverSigninScreenState extends State<DriverSigninScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
-                      SignupInput(
-                        hint: 'Password',
-                        icon: Icons.lock,
-                        controller: Provider.of<DriverSigninController>(
-                          context,
-                          listen: false,
-                        ).passwordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Password is required',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          return null;
-                        },
-                      ),
+                      SizedBox(height: screenHeight * 0.01),
                     ],
                   ),
                 ),
 
-                SizedBox(height: screenHeight * 0.18),
+                SizedBox(height: screenHeight * 0.17),
                 Consumer<DriverSigninController>(
                   builder: (context, controller, _) {
                     return ActionButton(
@@ -141,30 +130,17 @@ class _DriverSigninScreenState extends State<DriverSigninScreen> {
                       borderColor: const Color(0xFF1F1F1F),
                       isLoading: controller.isLoading,
                       onTap: () {
-                        Provider.of<DriverSigninController>(
-                          context,
-                          listen: false,
-                        ).login(context);
+                       Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OtpScreen(phone: '9064701142',),
+                      ),
+                    );
                       },
                     );
                   },
                 ),
                 SizedBox(height: screenHeight * 0.015),
-                ActionButton(
-                  label: 'Sign up',
-                  backgroundColor: const Color(0xFF2D2F35),
-                  textColor: Colors.white,
-                  borderColor: const Color(0xFF2D2F35),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DriverSignupScreen(),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: screenHeight * 0.03),
               ],
             ),
           ),

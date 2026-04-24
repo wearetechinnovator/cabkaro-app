@@ -52,7 +52,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
-          key: context.read<AuthCheckController>().formKey,
+          key: context.
+          read<AuthCheckController>().formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

@@ -95,6 +95,7 @@ class _CarListingScreenState extends State<CarListingScreen> {
                   const SizedBox(height: 12.0),
                   ReviewSlider(
                     onPageChanged: (i) => setState(() => _reviewIndex = i),
+
                   ),
                   const SizedBox(height: 8.0),
                   ListingDotIndicator(

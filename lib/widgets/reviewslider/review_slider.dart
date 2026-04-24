@@ -17,7 +17,7 @@ class ReviewData {
   });
 }
 
-// File-level reviews so other widgets can read the current count.
+
 const List<ReviewData> _reviews = [
   ReviewData(
     image: "assets/images/avatarimg.png",
@@ -43,13 +43,21 @@ const List<ReviewData> _reviews = [
     comment:
         'Booking was quick and transparent. I liked the route update and the comfort level during peak traffic.',
   ),
+  ReviewData(
+    image: "assets/images/avatarimg.png",
+    name: 'Ava',
+    role: 'Founder',
+    rating: '4.6',
+    comment:
+        'Booking was quick and transparent. I liked the route update and the comfort level during peak traffic.',
+  ),
 ];
 
 class ReviewSlider extends StatefulWidget {
   const ReviewSlider({super.key, required this.onPageChanged});
   final ValueChanged<int> onPageChanged;
 
-  // Expose the number of reviews so other widgets can react to the data length.
+
   static int get count => _reviews.length;
 
   @override
