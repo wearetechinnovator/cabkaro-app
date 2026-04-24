@@ -109,25 +109,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         },
                       ),
                       SizedBox(height: 16),
-                      SignupInput(
-                        hint: 'Password',
-                        icon: Icons.password_rounded,
-                        controller: Provider.of<LoginController>(
-                          context,
-                          listen: false,
-                        ).passwordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            ToastWidget.show(
-                              context,
-                              message: 'Password is required',
-                              type: ToastType.error,
-                            );
-                            return '';
-                          }
-                          return null;
-                        },
-                      ),
+                      
                     ],
                   ),
                 ),

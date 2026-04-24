@@ -1,5 +1,6 @@
 import 'package:cabkaro/controllers/user/ride_controller.dart';
 import 'package:cabkaro/screens/user/user_listing_header.dart';
+import 'package:cabkaro/widgets/current_location_slider/current_location_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/screens/user/user_listing_dock.dart';
@@ -57,9 +58,12 @@ class _CarListingScreenState extends State<CarListingScreen> {
                     },
                   ),
                   const SizedBox(height: 26.0),
-                  const SectionTitle(title: 'Available Cabs'),
+                  const SectionTitle(title: 'Nearby Cabs'),
                   const SizedBox(height: 12.0),
-                  CabSlider(
+                  // CabSlider(
+                  //   onPageChanged: (i) => setState(() => _cabIndex = i),
+                  // ),
+                  CurrentLocationSlider(
                     onPageChanged: (i) => setState(() => _cabIndex = i),
                   ),
                   const SizedBox(height: 12.0),
@@ -95,7 +99,6 @@ class _CarListingScreenState extends State<CarListingScreen> {
                   const SizedBox(height: 12.0),
                   ReviewSlider(
                     onPageChanged: (i) => setState(() => _reviewIndex = i),
-
                   ),
                   const SizedBox(height: 8.0),
                   ListingDotIndicator(

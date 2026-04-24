@@ -1,4 +1,5 @@
 import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
+import 'package:cabkaro/controllers/vendor_controller.dart';
 import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
 import 'package:cabkaro/widgets/otp_field.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +20,14 @@ class OtpScreen extends StatefulWidget {
 
 class _DriverOtpScreenState extends State<OtpScreen> {
   // Cache the controller reference so it's safe to use in dispose()
-  late DriverVerifyOtpController _otpController;
+  late VendorController _otpController;
 
   bool _initialized = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _otpController = Provider.of<DriverVerifyOtpController>(
+    _otpController = Provider.of<VendorController>(
       context,
       listen: false,
     );
@@ -247,7 +248,7 @@ class _DriverOtpScreenState extends State<OtpScreen> {
                     ),
                     SizedBox(width: screenWidth * 0.08),
                     Expanded(
-                      child: Consumer<DriverVerifyOtpController>(
+                      child: Consumer<VendorController>(
                         builder: (context, otpController, _) {
                           return ActionButton(
                             label: 'Verify',

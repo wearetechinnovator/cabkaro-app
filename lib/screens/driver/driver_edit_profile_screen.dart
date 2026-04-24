@@ -1,10 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:cabkaro/controllers/driver/driver_signup_controller.dart';
 import 'package:cabkaro/providers/location_provider.dart';
 import 'package:cabkaro/screens/user/map_picker_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
-import 'package:dashed_border/dashed_border.dart';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -110,21 +110,6 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
   }
 
   // ── Dashed container (matches signup screen style) ─────────
-  Widget _dashedContainer({required Widget child}) {
-    return Container(
-      padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        border: DashedBorder(
-          color: const Color(0xFFCCCCCC),
-          width: 1.2,
-          dashLength: 4.0,
-          dashGap: 4.0,
-        ),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: child,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +183,7 @@ class _DriverEditProfileScreenState extends State<DriverEditProfileScreen> {
                                 : Image.asset(
                                     'assets/images/avatar.png',
                                     fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => Container(
+                                    errorBuilder: (_, _, _) => Container(
                                       color: const Color(0xFFF0F0F0),
                                       child: const Icon(Icons.person,
                                           size: 80, color: Color(0xFF2D2F35)),
@@ -573,6 +558,7 @@ class _SourceOption extends StatelessWidget {
               color: const Color(0xFFFFF8E1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
+                  // ignore: deprecated_member_use
                   color: const Color(0xFFF8C100).withOpacity(0.4), width: 1.5),
             ),
             child: Icon(icon, size: 32, color: const Color(0xFFF8C100)),

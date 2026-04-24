@@ -5,20 +5,28 @@ import 'package:dashed_border/dashed_border.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cabkaro/providers/location_provider.dart';
-// import 'location_picker_modal.dart';
 
 class Searchcard extends StatefulWidget {
   const Searchcard({super.key, required this.onSubmit});
-  
+
   final GestureTapCallback onSubmit;
 
   @override
   State<Searchcard> createState() => _SearchcardState();
 }
 
-class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateMixin {
+class _SearchcardState extends State<Searchcard>
+    with SingleTickerProviderStateMixin {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+
+  // New field values
+  String? _selectedSeater;
+  String? _selectedAC;
+  String? _selectedSOS;
+  String? _selectedFirstAid;
+  final TextEditingController _otherFacilitiesController =
+      TextEditingController();
 
   late AnimationController _bounceController;
   late Animation<double> _bounceAnimation;
@@ -30,7 +38,6 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    // Bouncy top-down animation: moves down by 12px, then bounces back to 0
     _bounceAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(begin: 0.0, end: 12.0)
@@ -48,13 +55,13 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
   @override
   void dispose() {
     _bounceController.dispose();
+    _otherFacilitiesController.dispose();
     super.dispose();
   }
 
   String get _dateText {
     final d = context.watch<RideController>().selectedDate;
     if (d == null) return '';
-
     return '${d.day.toString().padLeft(2, '0')}/'
         '${d.month.toString().padLeft(2, '0')}/'
         '${d.year}';
@@ -63,7 +70,6 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
   String get _timeText {
     final t = context.watch<RideController>().selectedTime;
     if (t == null) return '';
-
     final hour = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
     final minute = t.minute.toString().padLeft(2, '0');
     final period = t.period == DayPeriod.am ? 'AM' : 'PM';
@@ -114,7 +120,6 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
         );
       },
     );
-
     if (picked != null) {
       setState(() {
         Provider.of<RideController>(context, listen: false).setTime(picked);
@@ -145,31 +150,29 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
             child: Column(
               children: [
                 const SizedBox(height: 35),
+
+                // Pickup
                 _LocationField(
                   hint: "Pickup Location",
                   value: locationProvider.pickupLocation,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => MapPickerScreen(isPickup: true),
-                      ),
-                    );
-                  },
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => MapPickerScreen(isPickup: true)),
+                  ),
                   height: 45,
                 ),
                 const SizedBox(height: 10),
+
+                // Drop
                 _LocationField(
                   hint: "Drop Location",
                   value: locationProvider.dropLocation,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => MapPickerScreen(isPickup: false),
-                      ),
-                    );
-                  },
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => MapPickerScreen(isPickup: false)),
+                  ),
                   height: 40,
                 ),
                 const SizedBox(height: 10),
@@ -177,20 +180,16 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
                 // Price / Date / Time row
                 Row(
                   children: [
-                    // Price — still a free text field
                     Expanded(
                       child: _InputField(
                         hint: "Price",
                         icon: Icons.currency_rupee_outlined,
-                        textController: Provider.of<RideController>(
-                          context,
-                          listen: false,
-                        ).price,
+                        textController:
+                            Provider.of<RideController>(context, listen: false)
+                                .price,
                       ),
                     ),
                     const SizedBox(width: 5),
-
-                    // Date — tappable picker
                     Expanded(
                       child: _TappableField(
                         hint: "Date",
@@ -200,8 +199,6 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
                       ),
                     ),
                     const SizedBox(width: 5),
-
-                    // Time — tappable picker
                     Expanded(
                       child: _TappableField(
                         hint: "Time",
@@ -212,14 +209,71 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
 
+                // Seater / AC row
+                Row(
+                  children: [
+                    Expanded(
+                      child: _DropdownField(
+                        hint: "Seater",
+                        icon: Icons.event_seat_rounded,
+                        value: _selectedSeater,
+                        items: const ['2', '4', '6', '7', '8', '10', '12+'],
+                        onChanged: (v) => setState(() => _selectedSeater = v),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: _DropdownField(
+                        hint: "AC",
+                        icon: Icons.ac_unit_rounded,
+                        value: _selectedAC,
+                        items: const ['AC', 'Non-AC'],
+                        onChanged: (v) => setState(() => _selectedAC = v),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // SOS / First Aid row
+                Row(
+                  children: [
+                    Expanded(
+                      child: _DropdownField(
+                        hint: "SOS",
+                        icon: Icons.sos_outlined,
+                        value: _selectedSOS,
+                        items: const ['SOS', 'Non-SOS'],
+                        onChanged: (v) => setState(() => _selectedSOS = v),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: _DropdownField(
+                        hint: "First Aid",
+                        icon: Icons.medical_services_outlined,
+                        value: _selectedFirstAid,
+                        items: const ['First Aid Box', 'No First Aid Box'],
+                        onChanged: (v) => setState(() => _selectedFirstAid = v),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Other Facilities text field
+                _InputField(
+                  hint: "Other Facilities (e.g. WiFi, USB charging...)",
+                  icon: Icons.star_border_outlined,
+                  textController: _otherFacilitiesController,
+                ),
                 const SizedBox(height: 16),
 
-                // Submit button
+                // Submit
                 GestureDetector(
-                  onTap: () {
-                    widget.onSubmit();
-                  },
+                  onTap: widget.onSubmit,
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     width: double.infinity,
@@ -244,6 +298,8 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
             ),
           ),
         ),
+
+        // Decorative images (unchanged)
         Positioned(
           left: -3,
           child: Image.asset('assets/images/Rectangle8.png', width: 74),
@@ -256,6 +312,8 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
           left: -3,
           child: Image.asset('assets/images/Rectangle10.png', width: 74),
         ),
+
+        // Swap icon
         Positioned(
           right: 45,
           top: 72,
@@ -268,17 +326,14 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
                 provider.setPickupLocation(drop ?? '');
                 provider.setDropLocation(pickup ?? '');
               }
-              // Trigger the animation
               _bounceController.forward(from: 0.0);
             },
             child: AnimatedBuilder(
               animation: _bounceAnimation,
-              builder: (context, child) {
-                return Transform.translate(
-                  offset: Offset(0, _bounceAnimation.value),
-                  child: child,
-                );
-              },
+              builder: (context, child) => Transform.translate(
+                offset: Offset(0, _bounceAnimation.value),
+                child: child,
+              ),
               child: Image.asset('assets/icons/upndownicon.png', width: 30),
             ),
           ),
@@ -287,6 +342,91 @@ class _SearchcardState extends State<Searchcard> with SingleTickerProviderStateM
     );
   }
 }
+
+// ── NEW: Dropdown field ───────────────────────────────────────────────────────
+
+class _DropdownField extends StatelessWidget {
+  const _DropdownField({
+    required this.hint,
+    required this.icon,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+  });
+
+  final String hint;
+  final IconData icon;
+  final String? value;
+  final List<String> items;
+  final ValueChanged<String?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      height: 40,
+      decoration: BoxDecoration(
+        border: const DashedBorder(
+          color: Color.fromARGB(255, 0, 0, 0),
+          width: 1.1,
+          dashLength: 4.0,
+          dashGap: 4.0,
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: value,
+          isExpanded: true,
+          isDense: true,
+          icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+          hint: Row(
+            children: [
+              Icon(icon, size: 16, color: Colors.black),
+              const SizedBox(width: 4),
+              Text(
+                hint,
+                style: GoogleFonts.oswald(fontSize: 11, color: Colors.black),
+              ),
+            ],
+          ),
+          items: items
+              .map(
+                (item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: GoogleFonts.oswald(fontSize: 11, color: Colors.black),
+                  ),
+                ),
+              )
+              .toList(),
+          onChanged: onChanged,
+          selectedItemBuilder: (context) => items
+              .map(
+                (item) => Row(
+                  children: [
+                    Icon(icon, size: 16, color: Colors.black),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        item,
+                        style: GoogleFonts.oswald(
+                            fontSize: 11, color: Colors.black),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Existing widgets (unchanged) ──────────────────────────────────────────────
 
 class _LocationField extends StatefulWidget {
   const _LocationField({
@@ -325,14 +465,13 @@ class _LocationFieldState extends State<_LocationField> {
         child: Row(
           children: [
             const Icon(Icons.my_location_outlined, size: 20),
+
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 widget.value ?? widget.hint,
                 style: GoogleFonts.oswald(
-                  color: widget.value != null
-                      ? const Color.fromARGB(255, 0, 0, 0)
-                      : const Color.fromARGB(255, 1, 1, 1),
+                  color: const Color.fromARGB(255, 0, 0, 0),
                   fontSize: 14,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -345,8 +484,7 @@ class _LocationFieldState extends State<_LocationField> {
   }
 }
 
-// Tappable date/time display field
-class _TappableField extends StatefulWidget {
+class _TappableField extends StatelessWidget {
   const _TappableField({
     required this.hint,
     required this.value,
@@ -360,16 +498,10 @@ class _TappableField extends StatefulWidget {
   final VoidCallback onTap;
 
   @override
-  State<_TappableField> createState() => _TappableFieldState();
-}
-
-class _TappableFieldState extends State<_TappableField> {
-  @override
   Widget build(BuildContext context) {
-    final hasValue = widget.value.isNotEmpty;
-
+    final hasValue = value.isNotEmpty;
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         height: 40,
@@ -384,23 +516,12 @@ class _TappableFieldState extends State<_TappableField> {
         ),
         child: Row(
           children: [
-            Icon(
-              widget.icon,
-              size: 16,
-              color: hasValue
-                  ? const Color.fromARGB(255, 0, 0, 0)
-                  : const Color.fromARGB(255, 0, 0, 0),
-            ),
+            Icon(icon, size: 16, color: Colors.black),
             const SizedBox(width: 3),
             Expanded(
               child: Text(
-                hasValue ? widget.value : widget.hint,
-                style: GoogleFonts.oswald(
-                  color: hasValue
-                      ? const Color.fromARGB(255, 0, 0, 0)
-                      : const Color.fromARGB(255, 4, 4, 4),
-                  fontSize: 11,
-                ),
+                hasValue ? value : hint,
+                style: GoogleFonts.oswald(fontSize: 11, color: Colors.black),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -411,35 +532,16 @@ class _TappableFieldState extends State<_TappableField> {
   }
 }
 
-// Free-text input field (Price only)
-class _InputField extends StatefulWidget {
-  final String hint;
-  final IconData icon;
-  final TextEditingController textController;
-
+class _InputField extends StatelessWidget {
   const _InputField({
     required this.hint,
     required this.icon,
     required this.textController,
   });
-  @override
-  State<_InputField> createState() => _InputFieldState();
-}
 
-class _InputFieldState extends State<_InputField> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose(); // important cleanup
-    super.dispose();
-  }
+  final String hint;
+  final IconData icon;
+  final TextEditingController textController;
 
   @override
   Widget build(BuildContext context) {
@@ -456,19 +558,17 @@ class _InputFieldState extends State<_InputField> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
-        controller: widget.textController,
+        controller: textController,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-          hintStyle: GoogleFonts.oswald(),
-          hintText: widget.hint,
+          hintText: hint,
+          hintStyle: GoogleFonts.oswald(fontSize: 11),
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           isDense: true,
-          prefixIcon: Icon(widget.icon),
-          prefixIconConstraints: const BoxConstraints(
-            minWidth: 5,
-            minHeight: 0,
-          ),
+          prefixIcon: Icon(icon, size: 16),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 28, minHeight: 0),
         ),
       ),
     );

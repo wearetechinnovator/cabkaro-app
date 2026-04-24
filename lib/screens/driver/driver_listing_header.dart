@@ -75,6 +75,8 @@ class _IconCircle extends StatelessWidget {
   }
 }
 
+
+// ignore: unused_element
 class _ProfileAvatar extends StatelessWidget {
   const _ProfileAvatar();
 

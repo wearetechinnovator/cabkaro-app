@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
 import 'package:cabkaro/helper/extract_city.dart';
 import 'package:cabkaro/screens/driver/driver_listing_header.dart';
@@ -347,6 +349,10 @@ class _TimePickerChipState extends State<_TimePickerChip> {
 
     if (picked != null) {
       controller.setRideNegoTime(picked);
+
+      // ignore: use_build_context_synchronously
+      context.read<DriverRideController>().setRideNegoTime(picked);
+
     }
   }
 

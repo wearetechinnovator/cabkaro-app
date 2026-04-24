@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
+import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -63,6 +66,8 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
         border: Border.all(color: Colors.black12),
         boxShadow: [
           BoxShadow(
+            // ignore: duplicate_ignore
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -188,8 +193,6 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                 ),
                 child: Row(
                   children: [
-                    
-                    
                     Expanded(
                       child: ActionButton(
                         label: 'Save All Details',
@@ -200,7 +203,7 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const DriverDetailsScreen(),
+                                  builder: (context) => const DriverHomeScreen(),
                                 ),
                               );
                             },

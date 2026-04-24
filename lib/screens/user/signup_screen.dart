@@ -218,18 +218,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ).phoneValidate(value, context),
                       ),
                       SizedBox(height: screenHeight * 0.015),
-                      SignupInput(
-                        hint: 'Password',
-                        icon: Icons.email,
-                        controller: Provider.of<SignupController>(
-                          context,
-                          listen: true,
-                        ).passwordController,
-                        validator: (value) => Provider.of<SignupController>(
-                          context,
-                          listen: false,
-                        ).passwordValidate(value, context),
-                      ),
+                      
                     ],
                   ),
                 ),

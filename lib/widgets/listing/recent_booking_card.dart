@@ -63,7 +63,8 @@ class _RecentBookingCardState extends State<RecentBookingCard> {
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            top: 0, right: 0,
+            top: 0,
+            right: 0,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
@@ -80,7 +81,13 @@ class _RecentBookingCardState extends State<RecentBookingCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("30 Mins", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                      Text(
+                        "30 Mins",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -89,18 +96,33 @@ class _RecentBookingCardState extends State<RecentBookingCard> {
           ),
 
           Positioned(
-            top: 12, left: 12,
+            top: 12,
+            left: 12,
             child: Row(
               children: [
                 ClipOval(
-                  child: Image.asset("assets/images/avatarimg.png", width: 52, height: 52, fit: BoxFit.cover),
+                  child: Image.asset(
+                    "assets/images/avatarimg.png",
+                    width: 52,
+                    height: 52,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Mark", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-                    Text("Sedan A1234XG", style: TextStyle(fontSize: 13, color: Color(0xFF3E3E3E))),
+                    Text(
+                      "Mark",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      "Sedan A1234XG",
+                      style: TextStyle(fontSize: 13, color: Color(0xFF3E3E3E)),
+                    ),
                   ],
                 ),
               ],
@@ -108,7 +130,8 @@ class _RecentBookingCardState extends State<RecentBookingCard> {
           ),
 
           Positioned(
-            bottom: 7, left: 12,
+            bottom: 7,
+            left: 12,
             child: GestureDetector(
               onTap: _showReviewModal,
               child: Container(
@@ -141,32 +164,57 @@ class _RecentBookingCardState extends State<RecentBookingCard> {
             ),
           ),
           Positioned(
-            top: 77, left: 49,
-            child: Text("Contai", style: TextStyle(fontWeight: FontWeight.w700))
+            top: 77,
+            left: 49,
+            child: Text(
+              "Contai",
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
           Positioned(
-            top: 137, left: 49,
-            child: Text("Digha", style: TextStyle(fontWeight: FontWeight.w700))
+            bottom: 67,
+            left: 49,
+            child: Text("Digha", style: TextStyle(fontWeight: FontWeight.w700)),
           ),
           Positioned(
-            top: 80, left: 30,
-            child: Image.asset("assets/icons/Ellipse.png", width: 14, fit: BoxFit.contain),
+            top: 80,
+            left: 30,
+            child: Image.asset(
+              "assets/icons/Ellipse.png",
+              width: 14,
+              fit: BoxFit.contain,
+            ),
           ),
           Positioned(
-            top: 92, left: 30,
-            child: Image.asset("assets/icons/Line.png", width: 14, height: 49, fit: BoxFit.contain),
+            top: 92,
+            left: 30,
+            child: Image.asset(
+              "assets/icons/Line.png",
+              width: 14,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
           ),
           Positioned(
-            top: 140, left: 30,
-            child: Image.asset("assets/icons/Ellipse.png", width: 14, fit: BoxFit.contain),
+            bottom: 70,
+            left: 30,
+            child: Image.asset(
+              "assets/icons/Ellipse.png",
+              width: 14,
+              fit: BoxFit.contain,
+            ),
           ),
           Positioned(
-            top: 70, right: 0,
-            child: Image.asset("assets/images/carimg.png", width: 174, fit: BoxFit.contain),
+            top: 70,
+            right: 0,
+            child: Image.asset(
+              "assets/images/carimg.png",
+              width: 174,
+              fit: BoxFit.contain,
+            ),
           ),
         ],
       ),
     );
   }
 }
-

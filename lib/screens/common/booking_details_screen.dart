@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+import 'package:cabkaro/screens/driver/ongoing_rides_screen.dart';
 import 'package:cabkaro/widgets/listing/listing_bottom_dock.dart';
 import 'package:cabkaro/widgets/modals/review_rating_modal.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,12 @@ import '../../widgets/listing/section_title.dart';
 class BookingDetailsScreen extends StatelessWidget {
   const BookingDetailsScreen({super.key});
 
+  get _statusColors => {
+  'Completed': const Color(0xFF1DA20B),
+  'In Progress': const Color(0xFFF8C100),
+  'Cancelled': const Color(0xFFE53935),
+  'Pending': const Color(0xFF1565C0),
+};
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -252,33 +260,45 @@ class BookingDetailsScreen extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.w700),
                           ),
                         ),
+                        // At the top of booking_details_screen.dart, import the notifier:
+
+                        // Replace the static green circle Positioned widget with this:
                         Positioned(
                           top: 80,
                           left: 130,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Container(
-                              width: 70,
-                              height: 70,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF1DA20B),
-                                shape: BoxShape.circle,
-                              ),
-                              alignment: Alignment.center,
-                              child: Transform.rotate(
-                                angle: -0.35,
-                                child: Text(
-                                  "Ride\nBooked",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.oswald(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w800,
-                                    height: 1.1,
+                          child: AnimatedBuilder(
+                            animation: globalRideStatus,
+                            builder: (context, _) {
+                              final status = globalRideStatus.status;
+                              final color =
+                                  _statusColors[status] ??
+                                  const Color(0xFF1DA20B);
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Container(
+                                  width: 70,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Transform.rotate(
+                                    angle: -0.35,
+                                    child: Text(
+                                      status.replaceAll(' ', '\n'),
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.oswald(
+                                        color: Colors.white,
+                                        fontSize: status.length > 8 ? 9 : 13,
+                                        fontWeight: FontWeight.w800,
+                                        height: 1.1,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         ),
                         Positioned(
@@ -320,7 +340,7 @@ class BookingDetailsScreen extends StatelessWidget {
               left: screenWidth * 0.07,
               right: screenWidth * 0.07,
               bottom: 16,
-              child:  ListingBottomDock(),
+              child: ListingBottomDock(),
             ),
           ],
         ),

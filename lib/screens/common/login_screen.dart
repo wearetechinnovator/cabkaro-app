@@ -1,4 +1,4 @@
-import 'package:cabkaro/controllers/driver/driver_signin_controller.dart';
+import 'package:cabkaro/controllers/vendor_controller.dart';
 import 'package:cabkaro/screens/common/otp_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,6 @@ import 'package:cabkaro/widgets/action_button.dart';
 import 'package:cabkaro/widgets/gradient_background.dart';
 import 'package:cabkaro/widgets/signup_input.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -18,6 +17,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void dispose() {
+    Provider.of<VendorController>(
+      context,
+      listen: false,
+    ).phoneController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -73,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Form(
-                  key: Provider.of<DriverSigninController>(
+                  key: Provider.of<VendorController>(
                     context,
                     listen: false,
                   ).formKey,
@@ -82,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SignupInput(
                         hint: 'Phone',
                         icon: Icons.call,
-                        controller: Provider.of<DriverSigninController>(
+                        controller: Provider.of<VendorController>(
                           context,
                           listen: false,
                         ).phoneController,
@@ -113,21 +122,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 SizedBox(height: screenHeight * 0.17),
-                Consumer<DriverSigninController>(
+                Consumer<VendorController>(
                   builder: (context, controller, _) {
                     return ActionButton(
                       label: 'Submit',
                       backgroundColor: const Color.fromARGB(255, 242, 202, 42),
-                      textColor: Colors.black,
+                      textColor: const Color.fromARGB(255, 105, 76, 76),
                       borderColor: const Color(0xFF1F1F1F),
                       isLoading: controller.isLoading,
                       onTap: () {
-                       Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const OtpScreen(phone: '9064701142',),
-                      ),
-                    );
+                        controller.login(context);
                       },
                     );
                   },
