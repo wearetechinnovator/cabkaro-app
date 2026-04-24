@@ -1,7 +1,7 @@
+import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cabkaro/controllers/user/edit_profile_controller.dart';
 
 class DriverSidebar extends StatelessWidget {
   const DriverSidebar({super.key});

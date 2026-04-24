@@ -56,14 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
-
-                // Center(
-                //   child: Lottie.asset(
-                //     'assets/images/authImage.png',
-                //     height: screenHeight * 0.3,
-                //     fit: BoxFit.contain,
-                //   ),
-                // ),
                 Builder(
                   builder: (context) =>
                       Lottie.asset("assets/animations/car_animation.json"),
