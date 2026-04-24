@@ -154,7 +154,7 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
       ],
     );
   }
-
+  
   Widget _buildCarCard(int index) {
     final car = _cars[index];
     return Container(

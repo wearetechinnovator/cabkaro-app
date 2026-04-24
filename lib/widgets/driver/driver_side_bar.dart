@@ -16,34 +16,47 @@ class DriverSidebar extends StatelessWidget {
       backgroundColor: const Color(0xFFE8E8E8),
       child: Column(
         children: [
-          // Header Section
-          UserAccountsDrawerHeader(
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 0),
             decoration: const BoxDecoration(color: Color(0xFFF8C100)),
-            currentAccountPicture: const CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Color(0xFF1F1F1F), size: 40),
-            ),
-            accountName: Text(
-              name,
-              style: GoogleFonts.oswald(
-                color: const Color(0xFF1F1F1F),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            accountEmail: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/driver-edit-profile'),
-              child: const Text(
-                "Edit Profile",
-                style: TextStyle(
-                  color: Colors.black54,
-                  decoration: TextDecoration.underline,
-                ),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, color: Color(0xFF1F1F1F), size: 45),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    name,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.oswald(
+                      color: const Color(0xFF1F1F1F),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/driver-edit-profile'),
+                    child: const Text(
+                      "Edit Profile",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 14,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
 
-          // Menu Items
           _DrawerTile(
             icon: Icons.route_outlined,
             label: "Ongoing Rides",
@@ -55,11 +68,6 @@ class DriverSidebar extends StatelessWidget {
             onTap: () => Navigator.pushNamed(context, '/driver-ride-history'),
           ),
           _DrawerTile(
-            icon: Icons.lock_outline_rounded,
-            label: "Change Password",
-            onTap: () => Navigator.pushNamed(context, '/change-password'),
-          ),
-          _DrawerTile(
             icon: Icons.directions_car_filled_rounded,
             label: "Car Details",
             onTap: () => Navigator.pushNamed(context, '/car-details'),
@@ -67,14 +75,12 @@ class DriverSidebar extends StatelessWidget {
           _DrawerTile(
             icon: Icons.badge_outlined,
             label: "Driver Details",
-            onTap: () =>
-                Navigator.pushNamed(context, '/driver-details-listing'),
+            onTap: () => Navigator.pushNamed(context, '/driver-details-listing'),
           ),
 
           const Spacer(),
           const Divider(),
 
-          // Logout Item
           _DrawerTile(
             icon: Icons.logout_rounded,
             label: "Logout",
