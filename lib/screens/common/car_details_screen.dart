@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:io';
 import 'package:cabkaro/screens/common/driver_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class CarDetailsScreen {
   String isAc = "No";
   String isSos = "No";
   String isFirstAid = "No";
+  String? seaterCount;
 
   void dispose() {
     carNumberController.dispose();
@@ -97,6 +99,62 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
     );
   }
 
+
+  Widget _buildSeaterSelector(int index) {
+    final car = _cars[index];
+    final options = ['2', '4', '5', '6', '7', '8', '10', '12+'];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Number of Seats",
+          style: GoogleFonts.nunitoSans(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: options.map((seat) {
+            final isSelected = car.seaterCount == seat;
+            return GestureDetector(
+              onTap: () => setState(() => car.seaterCount = seat),
+              child: Container(
+                width: 52,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFFF2CA2A)
+                      : const Color.fromARGB(25, 242, 202, 42),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isSelected ? Colors.black : Colors.grey[300]!,
+                    width: isSelected ? 1.5 : 1,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    seat,
+                    style: GoogleFonts.oswald(
+                      fontSize: 14,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
   Widget _buildCarCard(int index) {
     final car = _cars[index];
     return Container(
@@ -129,10 +187,7 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
               ),
               if (_cars.length > 1)
                 IconButton(
-                  icon: const Icon(
-                    Icons.delete_forever,
-                    color: Colors.redAccent,
-                  ),
+                  icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
                   onPressed: () => _removeCar(index),
                 ),
             ],
@@ -145,6 +200,11 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
             controller: car.carNumberController,
           ),
           const SizedBox(height: 20),
+
+
+          _buildSeaterSelector(index),
+          const SizedBox(height: 20),
+
           Text(
             "Car Image",
             style: GoogleFonts.nunitoSans(
@@ -275,8 +335,6 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
                 ),
                 child: Row(
                   children: [
-                    
-                    
                     Expanded(
                       child: ActionButton(
                         label: 'Save All Vehicles',
@@ -284,13 +342,13 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
                         textColor: Colors.white,
                         borderColor: const Color(0xFF1F1F1F),
                         onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const DriverDetailsScreen(),
-                                ),
-                              );
-                            },
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DriverDetailsScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(width: 15),
@@ -303,11 +361,7 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(color: Colors.black, width: 1.5),
                         ),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 28,
-                        ),
+                        child: const Icon(Icons.add, color: Colors.black, size: 28),
                       ),
                     ),
                   ],

@@ -103,7 +103,7 @@ class _DriverBookedCabScreenState extends State<DriverBookedCabScreen> {
 }
 
 class _DriverHeader extends StatefulWidget {
-  const _DriverHeader({super.key});
+  const _DriverHeader();
 
   @override
   State<_DriverHeader> createState() => _DriverHeaderState();

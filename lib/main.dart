@@ -11,7 +11,11 @@ import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
 import 'package:cabkaro/providers/socket_provider.dart';
 import 'package:cabkaro/screens/common/booking_details_screen.dart';
+import 'package:cabkaro/screens/common/car_details_screen.dart';
 import 'package:cabkaro/screens/common/change_password_screen.dart';
+import 'package:cabkaro/screens/common/driver_details_screen.dart';
+import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
+import 'package:cabkaro/screens/common/landing_screen.dart';
 import 'package:cabkaro/screens/common/login_screen.dart';
 import 'package:cabkaro/screens/driver/driver_edit_profile_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
@@ -20,6 +24,8 @@ import 'package:cabkaro/screens/driver/driver_profile_screen.dart';
 import 'package:cabkaro/screens/driver/driver_ride_history_screen.dart';
 import 'package:cabkaro/screens/driver/gov_details_screen.dart';
 import 'package:cabkaro/screens/driver/listed_car_deatils_screen.dart';
+import 'package:cabkaro/screens/driver/listed_driver_details_screen.dart';
+import 'package:cabkaro/screens/driver/ongoing_rides_screen.dart';
 import 'package:cabkaro/screens/driver/photo_upload_screen.dart';
 import 'package:cabkaro/screens/user/car_listing_screen.dart';
 import 'package:cabkaro/screens/user/notifications_screen.dart';
@@ -74,7 +80,9 @@ class _MyAppState extends State<MyApp> {
         // home: LoginScreen(),
         // home: DriverNoRidesScreen(),
         home: DriverHomeScreen(),
-
+        // home: CarDetailsScreenScreen(),
+        // home: CarListingScreen(),
+        // home: BookingDetailsScreen(),
         routes: {
           '/signup': (context) => const SignupScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
@@ -93,9 +101,12 @@ class _MyAppState extends State<MyApp> {
           '/edit-profile': (context) => const EditProfileScreen(),
           '/driver-notification': (context) =>
               const DriverNotificationsScreen(),
-          '/driver-edit-profile':(context) => const DriverEditProfileScreen(),
-          '/change-password':(context) => const ChangePasswordScreen(),
-          '/car-details':(context) => const ListedCarDetailsScreen(),
+          '/driver-edit-profile': (context) => const DriverEditProfileScreen(),
+          '/change-password': (context) => const ChangePasswordScreen(),
+          '/car-details': (context) => const ListedCarDetailsScreen(),
+          '/driver-details-listing': (context) =>
+              const ListedDriverDetailsScreen(),
+          '/ongoing-rides': (context) => const OngoingRidesScreen()
         },
       ),
     );

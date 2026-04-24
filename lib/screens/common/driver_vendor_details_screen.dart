@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:cabkaro/screens/common/car_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -90,46 +92,6 @@ class _DriverVendorDetailsScreenState extends State<DriverVendorDetailsScreen> {
     );
   }
 
-  Widget _buildRadioButton(
-    String title,
-    String currentVal,
-    Function(String?) onChange,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: GoogleFonts.nunitoSans(
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-          ),
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: RadioListTile<String>(
-                title: const Text("Yes"),
-                value: "Yes",
-                groupValue: currentVal,
-                activeColor: const Color(0xFFF2CA2A),
-                onChanged: onChange,
-              ),
-            ),
-            Expanded(
-              child: RadioListTile<String>(
-                title: const Text("No"),
-                value: "No",
-                groupValue: currentVal,
-                activeColor: const Color(0xFFF2CA2A),
-                onChanged: onChange,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

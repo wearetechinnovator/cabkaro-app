@@ -71,8 +71,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 onToggle: () =>
                     setState(() => _obscureCurrent = !_obscureCurrent),
                 validator: (val) {
-                  if (val == null || val.isEmpty)
+                  if (val == null || val.isEmpty){
                     return 'Please enter your current password';
+                  }
                   return null;
                 },
               ),
@@ -89,18 +90,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 obscure: _obscureNew,
                 onToggle: () => setState(() => _obscureNew = !_obscureNew),
                 validator: (val) {
-                  if (val == null || val.isEmpty)
+                  if (val == null || val.isEmpty) {
                     return 'Please enter a new password';
-                  if (val.length < 8)
+                  }
+                  if (val.length < 8) {
                     return 'Password must be at least 8 characters';
-                  if (!RegExp(r'[0-9]').hasMatch(val))
+                  }
+                  if (!RegExp(r'[0-9]').hasMatch(val)) {
                     return 'Must contain at least one number';
+                  }
                   if (val ==
                       context
                           .read<AuthCheckController>()
                           .currentPasswordController
-                          .text)
+                          .text) {
                     return 'New password must differ from current';
+                  }
                   return null;
                 },
               ),
@@ -118,14 +123,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 onToggle: () =>
                     setState(() => _obscureRetype = !_obscureRetype),
                 validator: (val) {
-                  if (val == null || val.isEmpty)
+                  if (val == null || val.isEmpty) {
                     return 'Please confirm your new password';
+                  }
                   if (val !=
                       context
                           .read<AuthCheckController>()
                           .newPasswordController
-                          .text)
+                          .text) {
                     return 'Passwords do not match';
+                  }
                   return null;
                 },
               ),

@@ -45,6 +45,11 @@ class DriverSidebar extends StatelessWidget {
 
           // Menu Items
           _DrawerTile(
+            icon: Icons.route_outlined,
+            label: "Ongoing Rides",
+            onTap: () => Navigator.pushNamed(context, '/ongoing-rides'),
+          ),
+          _DrawerTile(
             icon: Icons.history_rounded,
             label: "Last Ride",
             onTap: () => Navigator.pushNamed(context, '/driver-ride-history'),
@@ -62,7 +67,8 @@ class DriverSidebar extends StatelessWidget {
           _DrawerTile(
             icon: Icons.badge_outlined,
             label: "Driver Details",
-            onTap: () => Navigator.pushNamed(context, '/driver-details-listing'),
+            onTap: () =>
+                Navigator.pushNamed(context, '/driver-details-listing'),
           ),
 
           const Spacer(),

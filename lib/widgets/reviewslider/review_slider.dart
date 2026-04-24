@@ -76,7 +76,7 @@ class _ReviewSliderState extends State<ReviewSlider> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 180,
+      height: 150,
       width: double.infinity,
       child: PageView.builder(
         padEnds: false,

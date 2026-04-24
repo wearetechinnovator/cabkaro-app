@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -63,6 +65,8 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
         border: Border.all(color: Colors.black12),
         boxShadow: [
           BoxShadow(
+            // ignore: duplicate_ignore
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
