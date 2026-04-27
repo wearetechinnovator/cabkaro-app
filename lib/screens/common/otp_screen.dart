@@ -1,6 +1,4 @@
-import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
 import 'package:cabkaro/controllers/vendor_controller.dart';
-import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
 import 'package:cabkaro/widgets/otp_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -201,6 +199,7 @@ class _DriverOtpScreenState extends State<OtpScreen> {
                           SizedBox(width: screenWidth * 0.172),
                           GestureDetector(
                             onTap: () {
+                              _otpController.login(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: const Text('OTP resent'),
@@ -256,17 +255,17 @@ class _DriverOtpScreenState extends State<OtpScreen> {
                             textColor: Colors.white,
                             borderColor: const Color(0xFF2D2F35),
                             isLoading: otpController.isLoading,
-                            // onTap: () {
-                            //   _otpController.verifyOtp(widget.phone, context);
-                            // },
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const DriverVendorDetailsScreen(),
-                                ),
-                              );
+                              _otpController.verifyOtp(widget.phone, context);
                             },
+                            // onTap: () {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => const DriverVendorDetailsScreen(),
+                            //     ),
+                            //   );
+                            // },
                           );
                         },
                       ),

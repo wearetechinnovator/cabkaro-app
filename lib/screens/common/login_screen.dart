@@ -1,5 +1,4 @@
 import 'package:cabkaro/controllers/vendor_controller.dart';
-import 'package:cabkaro/screens/common/otp_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

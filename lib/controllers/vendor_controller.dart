@@ -1,25 +1,33 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:cabkaro/screens/common/car_details_screen.dart';
+import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
 import 'package:cabkaro/screens/common/otp_screen.dart';
-import 'package:cabkaro/screens/driver/driver_home_screen.dart';
+import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../utils/constants.dart' as constant;
-
+import 'package:cabkaro/utils/constants.dart' as constant;
+import 'package:image_picker/image_picker.dart';
 
 class VendorController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
+  final vendorDetailsformKey = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
   bool _isLoading = false;
   String otp = '';
   late List<TextEditingController> controllers;
   late List<FocusNode> focusNodes;
+  String vendorRole = "Individual"; // Default role
+  final TextEditingController nameController = TextEditingController();
+  File? profileImage;
+  late String profileImageBase64;
 
   bool get isLoading => _isLoading;
 
   // =======================================
-  //Login Screen code
+  // Login Screen code
   // =======================================
   Future<void> login(BuildContext ctx) async {
     if (!formKey.currentState!.validate()) {
@@ -37,7 +45,6 @@ class VendorController extends ChangeNotifier {
 
       var res = jsonDecode(req.body);
       if (req.statusCode == 200) {
-        print(res);
         if (!ctx.mounted) return;
         ToastWidget.show(
           ctx,
@@ -57,6 +64,7 @@ class VendorController extends ChangeNotifier {
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
       }
     } catch (e) {
+      print("Error in login: $e");
       if (!ctx.mounted) return;
       ToastWidget.show(
         ctx,
@@ -115,15 +123,23 @@ class VendorController extends ChangeNotifier {
 
       var res = jsonDecode(req.body);
 
-      print("==================");
-      print(res);
       if (req.statusCode == 200) {
         pref.setString(constant.cabToken, res['token']);
-        pref.setString("user-data", jsonEncode(res['data']));
-        Navigator.pushReplacement(
-          ctx,
-          MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
-        );
+        pref.setString("data", jsonEncode(res['data']));
+
+        if (res['data']['profile_completed'] == false) {
+          Navigator.pushReplacement(
+            ctx,
+            MaterialPageRoute(
+              builder: (context) => const DriverVendorDetailsScreen(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            ctx,
+            MaterialPageRoute(builder: (context) => const VendorHomeScreen()),
+          );
+        }
       } else {
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
       }
@@ -131,7 +147,7 @@ class VendorController extends ChangeNotifier {
       if (!ctx.mounted) return;
       ToastWidget.show(
         ctx,
-        message: 'Something went wrong.',
+        message: 'Something went wrong. $e',
         type: ToastType.error,
       );
     } finally {
@@ -149,5 +165,107 @@ class VendorController extends ChangeNotifier {
       node.dispose();
     }
     super.dispose();
+  }
+
+  // =====================================
+  // Update Vendor Details Screen code
+  // =====================================
+  void setVendorRole(String role) {
+    vendorRole = role;
+    notifyListeners();
+  }
+
+  Future<void> pickImage(bool isProfile) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      profileImage = File(pickedFile.path);
+      final bytes = await profileImage!.readAsBytes();
+      final base64 = base64Encode(bytes);
+      profileImageBase64 = "data:image/jpeg;base64,$base64";
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateVendorDetails(BuildContext ctx) async {
+    if (!vendorDetailsformKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString(constant.cabToken);
+
+      Map<String, String> data = {
+        "vendor_name": nameController.text.trim(),
+        "vendor_phone": phoneController.text.trim(),
+        "vendor_img": profileImageBase64,
+        "vendor_type": vendorRole.toLowerCase() == "individual" ? "1" : "2",
+        "token": token!,
+      };
+      Uri url = Uri.parse("${constant.apiUrl}/vendor/update-profile");
+
+      var req = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+
+      var res = jsonDecode(req.body);
+      if (req.statusCode != 200) {
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
+      } else {
+        if (!ctx.mounted) return;
+        ToastWidget.show(
+          ctx,
+          message: 'Profile updated successfully',
+          type: ToastType.success,
+        );
+        Navigator.push(
+          ctx,
+          MaterialPageRoute(builder: (context) => CarDetailsScreenScreen()),
+        );
+      }
+    } catch (e) {
+      if (!ctx.mounted) return;
+      ToastWidget.show(
+        ctx,
+        message: 'Something went wrong.',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  // ===============================
+  // Get Vendor Profile Details;
+  // ===============================
+  Future<void> getVendorDetails(BuildContext ctx) async {
+    try {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString(constant.cabToken);
+
+      Uri url = Uri.parse("${constant.apiUrl}/vendor/get-profile");
+      var req = await http.get(url, headers: {"x-cab-token": token!});
+
+      var res = jsonDecode(req.body);
+      if (req.statusCode != 200) {
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
+      } else {
+        nameController.text = res['data']['vendor_name'];
+        phoneController.text = res['data']['vendor_phone'];
+        profileImageBase64 = res['data']['vendor_img'];
+
+        notifyListeners();
+      }
+    } catch (e) {
+      if (!ctx.mounted) return;
+      ToastWidget.show(
+        ctx,
+        message: 'Something went wrong.',
+        type: ToastType.error,
+      );
+    }
   }
 }

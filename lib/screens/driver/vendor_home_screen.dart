@@ -11,14 +11,14 @@ import 'package:cabkaro/widgets/driver/driver_bottom_dock.dart';
 
 
 
-class DriverHomeScreen extends StatefulWidget {
-  const DriverHomeScreen({super.key});
+class VendorHomeScreen extends StatefulWidget {
+  const VendorHomeScreen({super.key});
 
   @override
-  State<DriverHomeScreen> createState() => _DriverHomeScreenState();
+  State<VendorHomeScreen> createState() => _VendorHomeScreenState();
 }
 
-class _DriverHomeScreenState extends State<DriverHomeScreen> {
+class _VendorHomeScreenState extends State<VendorHomeScreen> {
   @override
   initState() {
     super.initState();

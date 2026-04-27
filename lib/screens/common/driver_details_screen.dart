@@ -1,24 +1,10 @@
-// ignore_for_file: deprecated_member_use
-
-import 'dart:io';
-import 'package:cabkaro/screens/driver/driver_home_screen.dart';
+import 'package:cabkaro/controllers/driver_details_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../widgets/gradient_background.dart';
-import '../../widgets/action_button.dart';
-import '../../widgets/signup_input.dart';
-
-class DriverData {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  File? driverImage;
-
-  void dispose() {
-    nameController.dispose();
-    phoneController.dispose();
-  }
-}
+import 'package:provider/provider.dart';
+import 'package:cabkaro/widgets/gradient_background.dart';
+import 'package:cabkaro/widgets/action_button.dart';
+import 'package:cabkaro/widgets/signup_input.dart';
 
 class DriverDetailsScreen extends StatefulWidget {
   const DriverDetailsScreen({super.key});
@@ -28,35 +14,11 @@ class DriverDetailsScreen extends StatefulWidget {
 }
 
 class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
-  final List<DriverData> _drivers = [DriverData()];
-
-  void _addNewDriver() {
-    setState(() {
-      _drivers.add(DriverData());
-    });
-  }
-
-  void _removeDriver(int index) {
-    if (_drivers.length > 1) {
-      setState(() {
-        _drivers[index].dispose();
-        _drivers.removeAt(index);
-      });
-    }
-  }
-
-  Future<void> _pickImage(int index) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _drivers[index].driverImage = File(pickedFile.path);
-      });
-    }
-  }
-
   Widget _buildDriverCard(int index) {
-    final driver = _drivers[index];
+    final driver = Provider.of<DriverDetailsController>(
+      context,
+      listen: false,
+    ).drivers[index];
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -71,7 +33,7 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -87,10 +49,20 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              if (_drivers.length > 1)
+              if (Provider.of<DriverDetailsController>(
+                    context,
+                    listen: true,
+                  ).drivers.length >
+                  1)
                 IconButton(
-                  icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
-                  onPressed: () => _removeDriver(index),
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: () => Provider.of<DriverDetailsController>(
+                    context,
+                    listen: false,
+                  ).removeDriver(index),
                 ),
             ],
           ),
@@ -98,7 +70,10 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
           const SizedBox(height: 15),
           Center(
             child: GestureDetector(
-              onTap: () => _pickImage(index),
+              onTap: () => Provider.of<DriverDetailsController>(
+                context,
+                listen: false,
+              ).pickImage(index),
               child: Stack(
                 children: [
                   CircleAvatar(
@@ -108,7 +83,11 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                         ? FileImage(driver.driverImage!)
                         : null,
                     child: driver.driverImage == null
-                        ? const Icon(Icons.person, size: 50, color: Colors.black54)
+                        ? const Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.black54,
+                          )
                         : null,
                   ),
                   Positioned(
@@ -120,7 +99,11 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                         color: Color(0xFFF2CA2A),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.camera_alt, size: 20, color: Colors.black),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        size: 20,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -147,7 +130,6 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: GradientBackground(
         showGlow: false,
@@ -175,7 +157,10 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: _drivers.length,
+                  itemCount: Provider.of<DriverDetailsController>(
+                    context,
+                    listen: true,
+                  ).drivers.length,
                   itemBuilder: (context, index) => _buildDriverCard(index),
                 ),
               ),
@@ -188,7 +173,7 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 10,
                       offset: const Offset(0, -5),
-                    )
+                    ),
                   ],
                 ),
                 child: Row(
@@ -200,18 +185,19 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                         textColor: Colors.white,
                         borderColor: const Color(0xFF1F1F1F),
                         onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const DriverHomeScreen(),
-                                ),
-                              );
-                            },
+                          Provider.of<DriverDetailsController>(
+                            context,
+                            listen: false,
+                          ).saveDriver(context);
+                        },
                       ),
                     ),
                     const SizedBox(width: 15),
                     GestureDetector(
-                      onTap: _addNewDriver,
+                      onTap: Provider.of<DriverDetailsController>(
+                        context,
+                        listen: false,
+                      ).addNewDriver,
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -238,7 +224,10 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
 
   @override
   void dispose() {
-    for (var driver in _drivers) {
+    for (var driver in Provider.of<DriverDetailsController>(
+      context,
+      listen: false,
+    ).drivers) {
       driver.dispose();
     }
     super.dispose();

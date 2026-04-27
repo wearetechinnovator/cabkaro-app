@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:cabkaro/providers/socket_provider.dart';
+import 'package:cabkaro/screens/common/car_details_screen.dart';
+import 'package:cabkaro/screens/common/driver_details_screen.dart';
+import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
+import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cabkaro/screens/common/landing_screen.dart';
-import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:cabkaro/screens/user/car_listing_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cabkaro/utils/constants.dart' as constant;
 import 'package:http/http.dart' as http;
-import 'package:cabkaro/widgets/Toastwidget.dart';
 
 class AuthCheckController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -35,19 +37,36 @@ class AuthCheckController extends ChangeNotifier {
         );
 
         if (req.statusCode == 200) {
+          if (!context.mounted) return;
           final socketProvider = Provider.of<SocketProvider>(
             context,
             listen: false,
           );
-          if (role == "driver") {
-            nextScreen = DriverHomeScreen();
-            await socketProvider.connect();
+          if (role == "vendor") {
+            final vendorReq = await http.get(
+              Uri.parse("${constant.apiUrl}/vendor/get-profile"),
+              headers: {"x-cab-token": token},
+            );
+            var vendorRes = jsonDecode(vendorReq.body);
 
-            if (!context.mounted) return;
-            Provider.of<EditProfileController>(
-              context,
-              listen: false,
-            ).getUserData();
+            if (vendorReq.statusCode != 200) {
+              pref.remove("role");
+              pref.remove(constant.cabToken);
+              nextScreen = LandingScreen();
+            } else {
+              if (vendorRes['data']['profile_step'] == "0") {
+                nextScreen = DriverVendorDetailsScreen();
+              } else if (vendorRes['data']['profile_step'] == "1") {
+                nextScreen = CarDetailsScreenScreen();
+              } else if (vendorRes['data']['profile_step'] == "2") {
+                nextScreen = DriverDetailsScreen();
+              } else if (vendorRes['data']['profile_step'] == "3") {
+                nextScreen = VendorHomeScreen();
+              } else {
+                nextScreen = DriverVendorDetailsScreen();
+              }
+            }
+            await socketProvider.connect();
           } else if (role == "user") {
             nextScreen = CarListingScreen();
             await socketProvider.connect();
@@ -73,55 +92,5 @@ class AuthCheckController extends ChangeNotifier {
       context,
       MaterialPageRoute(builder: (_) => nextScreen),
     );
-  }
-
-  Future<void> changePassword(BuildContext ctx) async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
-
-    try {
-      final SharedPreferences pref = await SharedPreferences.getInstance();
-      final String token = pref.getString(constant.cabToken)!;
-      final String role = pref.getString("role")!;
-      late Uri url;
-
-      if (role == "driver") {
-        url = Uri.parse("${constant.apiUrl}/driver/change-password");
-      } else if (role == "user") {
-        url = Uri.parse("${constant.apiUrl}/user/change-password");
-      }
-
-      Map<String, dynamic> data = {
-        "token": token,
-        "currentPass": currentPasswordController.text.trim(),
-        "newPass": newPasswordController.text.trim(),
-      };
-
-      var req = await http.patch(
-        url,
-        body: jsonEncode(data),
-        headers: {"Content-Type": "application/json"},
-      );
-      var res = jsonDecode(req.body);
-      if (req.statusCode != 200) {
-        print(res);
-        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
-        return;
-      }
-
-      ToastWidget.show(ctx, message: res['msg'], type: ToastType.success);
-
-      // Clear the text fields after successful password change
-      currentPasswordController.clear();
-      newPasswordController.clear();
-      confirmPasswordController.clear();
-    } catch (er) {
-      ToastWidget.show(
-        ctx,
-        message: "An error occurred while changing the password",
-        type: ToastType.error,
-      );
-    }
   }
 }

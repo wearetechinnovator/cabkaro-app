@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:cabkaro/screens/driver/driver_home_screen.dart';
+import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:file_picker/file_picker.dart';
@@ -428,7 +428,7 @@ class _GOVDetailsScreenState extends State<GOVDetailsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const DriverHomeScreen(),
+                        builder: (context) => const VendorHomeScreen(),
                       ),
                     );
                   },

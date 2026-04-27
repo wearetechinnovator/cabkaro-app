@@ -1,7 +1,9 @@
 import 'package:cabkaro/controllers/auth_check_controller.dart';
+import 'package:cabkaro/controllers/car_details_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_ride_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_signup_controller.dart';
 import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
+import 'package:cabkaro/controllers/driver_details_controller.dart';
 import 'package:cabkaro/controllers/user/change_password_controller.dart';
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:cabkaro/controllers/user/login_controller.dart';
@@ -16,7 +18,7 @@ import 'package:cabkaro/screens/common/change_password_screen.dart';
 import 'package:cabkaro/screens/common/login_screen.dart';
 import 'package:cabkaro/screens/common/splash_screen.dart';
 import 'package:cabkaro/screens/driver/driver_edit_profile_screen.dart';
-import 'package:cabkaro/screens/driver/driver_home_screen.dart';
+import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
 import 'package:cabkaro/screens/driver/driver_notifications_screen.dart';
 import 'package:cabkaro/screens/driver/driver_profile_screen.dart';
 import 'package:cabkaro/screens/driver/driver_ride_history_screen.dart';
@@ -70,6 +72,8 @@ class _MyAppState extends State<MyApp> {
 
         ChangeNotifierProvider(create: (_) => AuthCheckController()),
         ChangeNotifierProvider(create: (_) => VendorController()),
+        ChangeNotifierProvider(create: (_) => CarDetailsController()),
+        ChangeNotifierProvider(create: (_) => DriverDetailsController()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',
@@ -83,7 +87,7 @@ class _MyAppState extends State<MyApp> {
           '/signup': (context) => const SignupScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
           '/driver': (context) => const LoginScreen(),
-          '/driver-home': (context) => const DriverHomeScreen(),
+          '/driver-home': (context) => const VendorHomeScreen(),
           '/driver-ride-history': (context) => const RideHistoryScreen(),
           '/driver-notifications': (context) =>
               const DriverNotificationsScreen(),

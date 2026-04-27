@@ -141,15 +141,14 @@ class _LandingScreenState extends State<LandingScreen> {
                   textColor: const Color.fromARGB(255, 255, 255, 255),
                   borderColor: const Color(0xFF1F1F1F),
                   onTap: () async {
-                    final SharedPreferences pref =
-                        await SharedPreferences.getInstance();
-                    pref.setString("role", "driver");
+                    final SharedPreferences pref = await SharedPreferences.getInstance();
+                    pref.setString("role", "vendor");
 
                     if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LoginScreen() ,
+                        builder: (context) => const LoginScreen(),
                       ),
                     );
                   },
