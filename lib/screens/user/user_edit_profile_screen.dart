@@ -43,7 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<bool> _requestGalleryPermission() async {
-    // Android 13+ uses READ_MEDIA_IMAGES; older uses READ_EXTERNAL_STORAGE
+
     final Permission permission = Platform.isAndroid
         ? Permission.photos
         : Permission.photos;

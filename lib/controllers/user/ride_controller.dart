@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:cabkaro/providers/location_provider.dart';
 import 'package:cabkaro/providers/socket_provider.dart';
@@ -16,6 +18,13 @@ class RideController extends ChangeNotifier {
   TextEditingController price = TextEditingController();
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+  
+  // New fields for ride preferences
+  String? selectedSeater;
+  String? selectedAC;
+  String? selectedSOS;
+  String? selectedFirstAid;
+  String? otherFacilities;
 
   void setDate(DateTime date) {
     selectedDate = date;
@@ -24,6 +33,36 @@ class RideController extends ChangeNotifier {
 
   void setTime(TimeOfDay time) {
     selectedTime = time;
+    notifyListeners();
+  }
+
+  void setSeater(String? seater) {
+    selectedSeater = seater;
+    notifyListeners();
+  }
+
+  void setAC(String? ac) {
+    selectedAC = ac;
+    notifyListeners();
+  }
+
+  void setSOS(String? sos) {
+    selectedSOS = sos;
+    notifyListeners();
+  }
+
+  void setFirstAid(String? firstAid) {
+    selectedFirstAid = firstAid;
+    notifyListeners();
+  }
+
+  void setOtherFacilities(String? facilities) {
+    otherFacilities = facilities;
+    notifyListeners();
+  }
+
+  void setPrice(String priceValue) {
+    price.text = priceValue;
     notifyListeners();
   }
 
@@ -39,6 +78,7 @@ class RideController extends ChangeNotifier {
     String ridePrice = price.text.trim();
     DateTime? rideDate = selectedDate;
     TimeOfDay? rideTime = selectedTime;
+<<<<<<< HEAD
     LatLng pickupPosition = locationProvider.pickupLatLng;
     LatLng dropPosition = locationProvider.dropLatLng;
     String token = pref.getString(constant.cabToken)!;
@@ -49,13 +89,23 @@ class RideController extends ChangeNotifier {
     print(dropString);
 
     notifyListeners();
+=======
+    LatLng? pickupPosition = locationProvider.pickupLatLng;
+    LatLng? dropPosition = locationProvider.dropLatLng;
+    String? token = pref.getString(constant.cabToken);
+    
+    // Debug logging
+    print("DEBUG postRide: price='$ridePrice', date=$rideDate, time=$rideTime, pickup=$pickupPosition, drop=$dropPosition, token=$token");
+    print("DEBUG: seater=$selectedSeater, ac=$selectedAC, sos=$selectedSOS, firstAid=$selectedFirstAid");
+>>>>>>> 5c2a44a (minor changes)
 
-    if (ridePrice.isEmpty || rideTime == null || rideDate == null) {
+    if (ridePrice.isEmpty || rideTime == null || rideDate == null || pickupPosition == null || dropPosition == null || token == null) {
       ToastWidget.show(
         context,
         message: "Enter all ride details",
         type: ToastType.error,
       );
+      print("DEBUG: Validation failed - missing: price=$ridePrice, time=$rideTime, date=$rideDate, pickup=$pickupPosition, drop=$dropPosition, token=$token");
       return;
     }
 
@@ -73,8 +123,16 @@ class RideController extends ChangeNotifier {
         "pickup_date": rideDate.toIso8601String(),
         "pickup_time": "${rideTime.hour}:${rideTime.minute}",
         "token": token,
+<<<<<<< HEAD
         "pickup_city": pickupString,
         "drop_city": dropString,
+=======
+        "seater": selectedSeater,
+        "ac": selectedAC,
+        "sos": selectedSOS,
+        "first_aid": selectedFirstAid,
+        "other_facilities": otherFacilities,
+>>>>>>> 5c2a44a (minor changes)
       };
       Uri url = Uri.parse("${constant.apiUrl}/ride/create-ride");
       var req = await http.post(
@@ -126,13 +184,13 @@ class RideController extends ChangeNotifier {
     String ridePrice = price.text.trim();
     DateTime? rideDate = selectedDate;
     TimeOfDay? rideTime = selectedTime;
-    LatLng pickupPosition = locationProvider.pickupLatLng;
-    LatLng dropPosition = locationProvider.dropLatLng;
-    String token = pref.getString(constant.cabToken)!;
+    LatLng? pickupPosition = locationProvider.pickupLatLng;
+    LatLng? dropPosition = locationProvider.dropLatLng;
+    String? token = pref.getString(constant.cabToken);
     // Socket emit send
     notifyListeners();
 
-    if (ridePrice.isEmpty || rideTime == null || rideDate == null) {
+    if (ridePrice.isEmpty || rideTime == null || rideDate == null || pickupPosition == null || dropPosition == null || token == null) {
       ToastWidget.show(
         context,
         message: "Enter all ride details",
@@ -156,6 +214,11 @@ class RideController extends ChangeNotifier {
         "pickup_time": "${rideTime.hour}:${rideTime.minute}",
         "token": token,
         "rideId": rideId,
+        "seater": selectedSeater,
+        "ac": selectedAC,
+        "sos": selectedSOS,
+        "first_aid": selectedFirstAid,
+        "other_facilities": otherFacilities,
       };
       Uri url = Uri.parse("${constant.apiUrl}/ride/edit-ride");
       var req = await http.patch(

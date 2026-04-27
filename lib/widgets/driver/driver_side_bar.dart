@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DriverSidebar extends StatelessWidget {
-  const DriverSidebar({super.key});
+  const DriverSidebar();
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<EditProfileController>();
+    final controller = context.read<EditProfileController>();
     final userData = controller.userData;
     final String name = userData?['name'] ?? 'User';
 

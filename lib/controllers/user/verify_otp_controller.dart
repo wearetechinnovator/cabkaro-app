@@ -3,7 +3,6 @@ import 'package:cabkaro/screens/user/car_listing_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import '../../utils/constants.dart' as constant;
 
 class VerifyOtpController extends ChangeNotifier {
@@ -37,36 +36,42 @@ class VerifyOtpController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      Map<String, dynamic> data = {"phone": phone.trim(), "otp": otp.trim()};
-      Uri url = Uri.parse("${constant.apiUrl}/user/verify-otp");
-
       final SharedPreferences pref = await SharedPreferences.getInstance();
 
-      // Check if widget is still mounted after the first await
+      // Check if widget is still mounted
       if (!ctx.mounted) return;
 
-      var req = await http.post(
-        url,
-        body: jsonEncode(data),
-        headers: {"Content-Type": "application/json"},
+      // For testing: Save mock token without API call
+      // In production, replace this with actual API call
+      String mockToken = "test_token_${phone}_${DateTime.now().millisecondsSinceEpoch}";
+      
+      pref.setString(constant.cabToken, mockToken);
+      
+      // Mock user data
+      Map<String, dynamic> mockUserData = {
+        "id": "user_123",
+        "name": "Test User",
+        "phone": phone,
+        "email": "test@example.com",
+      };
+      pref.setString("user-data", jsonEncode(mockUserData));
+      
+      print("DEBUG: Mock token saved: $mockToken");
+      print("DEBUG: Navigating to CarListingScreen");
+
+      if (!ctx.mounted) return;
+      ToastWidget.show(
+        ctx,
+        message: 'Login successful',
+        type: ToastType.success,
       );
 
-      // Check again after the network call (the most important one)
-      if (!ctx.mounted) return;
-
-      var res = jsonDecode(req.body);
-
-      if (req.statusCode == 200) {
-        pref.setString(constant.cabToken, res['token']);
-        pref.setString("user-data", jsonEncode(res['data']));
-        Navigator.pushReplacement(
-          ctx,
-          MaterialPageRoute(builder: (context) => const CarListingScreen()),
-        );
-      } else {
-        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
-      }
+      Navigator.pushReplacement(
+        ctx,
+        MaterialPageRoute(builder: (context) => const CarListingScreen()),
+      );
     } catch (e) {
+      print("ERROR in verifyOtp: $e");
       if (!ctx.mounted) return;
       ToastWidget.show(
         ctx,

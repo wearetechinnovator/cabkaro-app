@@ -17,6 +17,7 @@ import 'package:cabkaro/screens/common/login_screen.dart';
 import 'package:cabkaro/screens/common/splash_screen.dart';
 import 'package:cabkaro/screens/driver/driver_edit_profile_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
+import 'package:cabkaro/screens/driver/driver_no_ride_screen.dart';
 import 'package:cabkaro/screens/driver/driver_notifications_screen.dart';
 import 'package:cabkaro/screens/driver/driver_profile_screen.dart';
 import 'package:cabkaro/screens/driver/driver_ride_history_screen.dart';
@@ -26,18 +27,25 @@ import 'package:cabkaro/screens/driver/listed_driver_details_screen.dart';
 import 'package:cabkaro/screens/driver/ongoing_rides_screen.dart';
 import 'package:cabkaro/screens/driver/photo_upload_screen.dart';
 import 'package:cabkaro/screens/user/car_listing_screen.dart';
+import 'package:cabkaro/screens/user/driver_searching_screen.dart';
 import 'package:cabkaro/screens/user/notifications_screen.dart';
 import 'package:cabkaro/screens/user/user_profile_screen.dart';
-import 'package:cabkaro/screens/user/signup_screen.dart';
+
 import 'package:cabkaro/screens/user/signin_screen.dart';
 import 'package:cabkaro/screens/user/user_edit_profile_screen.dart';
 import 'package:cabkaro/providers/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+<<<<<<< HEAD
 // ===================================================
 // ============[🙌🏻 JAY JAGANNATH 0!!0 🙏🏻]============
 // ===================================================
+=======
+// ========================================================
+// ===============[🙏🏻 JAY JAGANNATH 0!!0 🙏🏻]==============
+// ========================================================
+>>>>>>> 5c2a44a (minor changes)
 
 void main() {
   runApp(const MyApp());
@@ -77,10 +85,22 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         ),
+<<<<<<< HEAD
 
         home: const SplashScreen(),
+=======
+        // home: LoginScreen(),
+        // home: DriverNoRidesScreen(),
+        // home: DriverHomeScreen(),
+        // home: CarDetailsScreenScreen(),
+        // home: CarListingScreen(),
+        // home: BookingDetailsScreen(),
+        // home: DriverSearchingScreen(),
+        // home: SplashScreen(),
+        home: DriverNoRidesScreen(),
+>>>>>>> 5c2a44a (minor changes)
         routes: {
-          '/signup': (context) => const SignupScreen(),
+
           '/booking-details': (context) => const BookingDetailsScreen(),
           '/driver': (context) => const LoginScreen(),
           '/driver-home': (context) => const DriverHomeScreen(),

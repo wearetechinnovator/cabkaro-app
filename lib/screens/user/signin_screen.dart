@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/gradient_background.dart';
 import '../../widgets/signup_input.dart';
-import './signup_screen.dart';
+
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -133,21 +133,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   },
                 ),
                 SizedBox(height: screenHeight * 0.015),
-                ActionButton(
-                  label: 'Sign up',
-                  backgroundColor: const Color(0xFF2D2F35),
-                  textColor: Colors.white,
-                  borderColor: const Color(0xFF2D2F35),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: screenHeight * 0.03),
+                
               ],
             ),
           ),

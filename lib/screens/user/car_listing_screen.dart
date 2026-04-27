@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/screens/user/user_listing_dock.dart';
 import 'package:cabkaro/widgets/reviewslider/review_slider.dart';
-import 'package:cabkaro/screens/user/available_cabs_screen.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/listing/listing_dot_indicator.dart';
 import '../../widgets/listing/recent_booking_card.dart';
@@ -42,19 +41,12 @@ class _CarListingScreenState extends State<CarListingScreen> {
                   const GreetingBlock(),
                   const SizedBox(height: 14.0),
                   Searchcard(
-                    onSubmit: () {
-                      Provider.of<RideController>(
+                    onSubmit: () async {
+                      await Provider.of<RideController>(
                         context,
                         listen: false,
                       ).postRide(context);
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const AvailableCabsScreen(rideId: "120"),
-                        ),
-                      );
+                      // Navigation will be handled inside postRide() on success
                     },
                   ),
                   const SizedBox(height: 26.0),

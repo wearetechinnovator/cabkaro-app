@@ -19,6 +19,7 @@ class DriverHomeScreen extends StatefulWidget {
 }
 
 class _DriverHomeScreenState extends State<DriverHomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); 
   @override
   initState() {
     super.initState();
@@ -36,6 +37,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         .availableRides;
 
     return Scaffold(
+      key: _scaffoldKey,   
       drawer: const DriverSidebar(),
       backgroundColor: const Color(0xFFE8E8E8),
       body: SafeArea(
@@ -47,7 +49,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
                 children: [
-                  DriverListingHeader(),
+                  DriverListingHeader(scaffoldKey: _scaffoldKey),
                   SizedBox(height: 24),
                   Text(
                     'Driver Dashboard',

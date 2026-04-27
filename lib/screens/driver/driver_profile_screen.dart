@@ -22,6 +22,7 @@ class DriverProfileScreen extends StatefulWidget {
 }
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); 
   @override
   void initState() {
     super.initState();
@@ -45,7 +46,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             ListView(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
               children: [
-                const DriverListingHeader(),
+               DriverListingHeader(scaffoldKey: _scaffoldKey),
                 const SizedBox(height: 24),
                 DashboardGreeting(name: userData['name']),
                 const SizedBox(height: 18),

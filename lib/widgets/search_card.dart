@@ -273,7 +273,23 @@ class _SearchcardState extends State<Searchcard>
 
                 // Submit
                 GestureDetector(
-                  onTap: widget.onSubmit,
+                  onTap: () {
+                    final controller = Provider.of<RideController>(context, listen: false);
+                    // Get price from the local price field
+                    final priceText = Provider.of<RideController>(context, listen: false).price.text.trim();
+                    
+                    // Set all preferences
+                    controller.setSeater(_selectedSeater);
+                    controller.setAC(_selectedAC);
+                    controller.setSOS(_selectedSOS);
+                    controller.setFirstAid(_selectedFirstAid);
+                    controller.setOtherFacilities(_otherFacilitiesController.text.trim());
+                    
+                    // Debug
+                    print("DEBUG search_card submit: price='$priceText', seater='$_selectedSeater', ac='$_selectedAC'");
+                    
+                    widget.onSubmit();
+                  },
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     width: double.infinity,
