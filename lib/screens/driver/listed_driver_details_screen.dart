@@ -1,18 +1,16 @@
-// ignore_for_file: duplicate_ignore, deprecated_member_use
-
+import 'dart:convert';
 import 'dart:io';
 import 'package:cabkaro/controllers/driver_details_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/gradient_background.dart';
-import '../../widgets/action_button.dart';
-import '../../widgets/signup_input.dart';
+import 'package:cabkaro/widgets/gradient_background.dart';
+import 'package:cabkaro/widgets/action_button.dart';
+import 'package:cabkaro/widgets/signup_input.dart';
 import 'package:cabkaro/utils/constants.dart' as constant;
 
 // ── Data model ───────────────────────────────────────────────────────────────
-
 class DriverListData {
   String id;
   String name;
@@ -30,7 +28,6 @@ class DriverListData {
 }
 
 // ── Listed Drivers Screen ────────────────────────────────────────────────────
-
 class ListedDriverDetailsScreen extends StatefulWidget {
   const ListedDriverDetailsScreen({super.key});
 
@@ -40,31 +37,27 @@ class ListedDriverDetailsScreen extends StatefulWidget {
 }
 
 class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
-  final List<DriverListData> _drivers = [
-    DriverListData(
-      id: '1',
-      name: 'Rajesh Kumar',
-      phone: '+91 98765 43210',
-      isActive: true,
-    ),
-    DriverListData(id: '2', name: 'Amit Sharma', phone: '+91 91234 56789'),
-  ];
-
   // ── Add / Edit modal ─────────────────────────────────────────────────────
-
-  void _showDriverFormModal({DriverListData? existingDriver, int? editIndex}) {
+  void _showDriverFormModal({Map<String, dynamic>? existingDriver}) {
     final isNew = existingDriver == null;
+    // if null -> Add;
+    // if not null -> Edit;
+    final driverData = DriverData();
 
-    // Local controllers for the modal
-    final nameCtrl = TextEditingController(
-      text: isNew ? '' : existingDriver.name,
-    );
-    final phoneCtrl = TextEditingController(
-      text: isNew ? '' : existingDriver.phone,
-    );
+    if (!isNew) {
+      driverData.id = existingDriver['_id'] ?? '';
+      driverData.nameController.text = existingDriver['driver_name'] ?? '';
+      driverData.phoneController.text =
+          existingDriver['driver_phone']?.toString() ?? '';
 
-    // Mutable local state inside modal
-    File? driverImage = existingDriver?.driverImage;
+      Provider.of<DriverDetailsController>(
+        context,
+        listen: false,
+      ).drivers.add(driverData);
+    }
+
+    // Separate variable for existing network image string
+    String? existingNetworkImage = isNew ? null : existingDriver['driver_img'];
 
     showModalBottomSheet(
       context: context,
@@ -76,6 +69,36 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
+            // Build the avatar widget based on what image state we have
+            Widget buildAvatar() {
+              if (driverData.driverImage != null) {
+                // Newly picked local file
+                return CircleAvatar(
+                  radius: 52,
+                  backgroundImage: FileImage(driverData.driverImage!),
+                );
+              } else if (existingNetworkImage != null) {
+                // Existing driver's network image
+                return CircleAvatar(
+                  radius: 52,
+                  backgroundImage: NetworkImage(
+                    "${constant.imgUrl}/$existingNetworkImage",
+                  ),
+                );
+              } else {
+                // No image yet
+                return CircleAvatar(
+                  radius: 52,
+                  backgroundColor: const Color.fromARGB(25, 242, 202, 42),
+                  child: const Icon(
+                    Icons.person,
+                    size: 52,
+                    color: Colors.black54,
+                  ),
+                );
+              }
+            }
+
             return DraggableScrollableSheet(
               initialChildSize: 0.75,
               minChildSize: 0.5,
@@ -113,7 +136,10 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                           const Spacer(),
                           IconButton(
                             icon: const Icon(Icons.close),
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () {
+                              driverData.dispose();
+                              Navigator.pop(context);
+                            },
                           ),
                         ],
                       ),
@@ -135,34 +161,25 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                                   final picker = ImagePicker();
                                   final picked = await picker.pickImage(
                                     source: ImageSource.gallery,
+                                    imageQuality:
+                                        70, // compress a bit for base64
                                   );
                                   if (picked != null) {
-                                    setModalState(
-                                      () => driverImage = File(picked.path),
-                                    );
+                                    final file = File(picked.path);
+                                    final bytes = await file.readAsBytes();
+                                    final base64Str = base64Encode(bytes);
+                                    setModalState(() {
+                                      driverData.driverImage = file;
+                                      driverData.base64Img =
+                                          "data:image/jpeg;base64,$base64Str";
+                                      existingNetworkImage =
+                                          null; // clear old image
+                                    });
                                   }
                                 },
                                 child: Stack(
                                   children: [
-                                    CircleAvatar(
-                                      radius: 52,
-                                      backgroundColor: const Color.fromARGB(
-                                        25,
-                                        242,
-                                        202,
-                                        42,
-                                      ),
-                                      backgroundImage: driverImage != null
-                                          ? FileImage(driverImage!)
-                                          : null,
-                                      child: driverImage == null
-                                          ? const Icon(
-                                              Icons.person,
-                                              size: 52,
-                                              color: Colors.black54,
-                                            )
-                                          : null,
-                                    ),
+                                    buildAvatar(),
                                     Positioned(
                                       bottom: 0,
                                       right: 0,
@@ -189,7 +206,7 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                             SignupInput(
                               hint: 'Driver Name',
                               icon: Icons.person_outline,
-                              controller: nameCtrl,
+                              controller: driverData.nameController,
                             ),
                             const SizedBox(height: 16),
 
@@ -197,7 +214,7 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                             SignupInput(
                               hint: 'Phone Number',
                               icon: Icons.phone_android,
-                              controller: phoneCtrl,
+                              controller: driverData.phoneController,
                               keyboardType: TextInputType.phone,
                             ),
                             const SizedBox(height: 8),
@@ -208,7 +225,12 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
 
                     // Save button
                     Container(
-                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                      padding: EdgeInsets.fromLTRB(
+                        20,
+                        12,
+                        20,
+                        24 + MediaQuery.of(context).padding.bottom,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border(
@@ -220,8 +242,9 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                         backgroundColor: const Color(0xFFF2CA2A),
                         textColor: Colors.black,
                         borderColor: Colors.transparent,
-                        onTap: () {
-                          if (nameCtrl.text.trim().isEmpty) {
+                        onTap: () async {
+                          // Validate
+                          if (driverData.nameController.text.trim().isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Please enter a driver name'),
@@ -229,7 +252,7 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                             );
                             return;
                           }
-                          if (phoneCtrl.text.trim().isEmpty) {
+                          if (driverData.phoneController.text.trim().isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Please enter a phone number'),
@@ -237,25 +260,33 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                             );
                             return;
                           }
-                          setState(() {
-                            if (isNew) {
-                              _drivers.add(
-                                DriverListData(
-                                  id: DateTime.now().millisecondsSinceEpoch
-                                      .toString(),
-                                  name: nameCtrl.text.trim(),
-                                  phone: phoneCtrl.text.trim(),
-                                  driverImage: driverImage,
-                                ),
-                              );
-                            } else if (editIndex != null) {
-                              _drivers[editIndex]
-                                ..name = nameCtrl.text.trim()
-                                ..phone = phoneCtrl.text.trim()
-                                ..driverImage = driverImage;
+
+                          // Get the controller that holds the drivers list
+                          final ctrl = Provider.of<DriverDetailsController>(
+                            context,
+                            listen: false,
+                          );
+
+                          if (isNew) {
+                            ctrl.addDriver(driverData);
+                          } else {
+                            // Pass existing image path if no new image was picked
+                            if (driverData.driverImage == null &&
+                                existingNetworkImage != null) {
+                              driverData.base64Img = existingNetworkImage;
                             }
-                          });
-                          Navigator.pop(context);
+
+                            ctrl.updateDriver(
+                              existingDriver['_id'],
+                              driverData,
+                            );
+                          }
+
+                          // Call the API
+                          await ctrl.saveDriver(context, isNew: true);
+
+                          if (context.mounted) Navigator.pop(context);
+                          driverData.dispose();
                         },
                       ),
                     ),
@@ -268,11 +299,10 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
       },
     );
   }
-
+  
   // ── Detail bottom sheet ──────────────────────────────────────────────────
-
-  void _showDriverDetail(int index) {
-    final driver = _drivers[index];
+  void _showDriverDetail(Map<String, dynamic> driverData) {
+    final driver = driverData;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -282,9 +312,9 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
       ),
       builder: (context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.55,
-          minChildSize: 0.4,
-          maxChildSize: 0.85,
+          initialChildSize: 0.30,
+          minChildSize: 0.20,
+          maxChildSize: 0.30,
           expand: false,
           builder: (context, scrollController) {
             return Column(
@@ -308,6 +338,7 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 8),
                         Row(
                           children: [
                             CircleAvatar(
@@ -315,81 +346,46 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                               backgroundColor: const Color(
                                 0xFFF2CA2A,
                               ).withOpacity(0.2),
-                              backgroundImage: driver.driverImage != null
-                                  ? FileImage(driver.driverImage!)
-                                  : null,
-                              child: driver.driverImage == null
-                                  ? const Icon(
-                                      Icons.person,
-                                      size: 36,
-                                      color: Color(0xFFDDA200),
-                                    )
-                                  : null,
+                              child: const Icon(
+                                Icons.person,
+                                size: 36,
+                                color: Color(0xFFDDA200),
+                              ),
                             ),
                             const SizedBox(width: 14),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  driver.name,
+                                  driver['driver_name'],
                                   style: GoogleFonts.oswald(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  driver.phone,
+                                  driver['driver_phone'].toString(),
                                   style: TextStyle(color: Colors.grey[600]),
                                 ),
                               ],
                             ),
-                            const Spacer(),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: driver.isActive
-                                    ? Colors.green.withOpacity(0.1)
-                                    : Colors.grey.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                driver.isActive ? 'Active' : 'Inactive',
-                                style: TextStyle(
-                                  color: driver.isActive
-                                      ? Colors.green
-                                      : Colors.grey[600],
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        const Divider(),
                         const SizedBox(height: 16),
-                        _detailRow('Name', driver.name, Icons.person_outline),
-                        _detailRow('Phone', driver.phone, Icons.phone_android),
-                        _detailRow(
-                          'Status',
-                          driver.isActive ? 'Online' : 'Offline',
-                          Icons.circle,
-                          valueColor: driver.isActive
-                              ? Colors.green
-                              : Colors.grey,
-                        ),
-                        const SizedBox(height: 8),
+                        // Add more scrollable content here if needed
                       ],
                     ),
                   ),
                 ),
 
-                // Bottom action buttons
+                // Bottom action buttons — pinned, respects nav bar
                 Container(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    12,
+                    20,
+                    24 + MediaQuery.of(context).padding.bottom,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border(
@@ -403,7 +399,7 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
-                            _showDeleteConfirm(index);
+                            _showDeleteConfirm(driver);
                           },
                           child: Container(
                             height: 48,
@@ -440,11 +436,8 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pop(context);
-                            _showDriverFormModal(
-                              existingDriver: _drivers[index],
-                              editIndex: index,
-                            );
+                            // Navigator.pop(context);
+                            _showDriverFormModal(existingDriver: driver);
                           },
                           child: Container(
                             height: 48,
@@ -484,56 +477,15 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
     );
   }
 
-  Widget _detailRow(
-    String label,
-    String value,
-    IconData icon, {
-    Color? valueColor,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF2CA2A).withOpacity(0.12),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, size: 18, color: const Color(0xFFDDA200)),
-          ),
-          const SizedBox(width: 14),
-          Text(
-            label,
-            style: GoogleFonts.nunitoSans(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
-          ),
-          const Spacer(),
-          Text(
-            value,
-            style: GoogleFonts.nunitoSans(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: valueColor ?? Colors.black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ── Delete confirm ─────────────────────────────────────────────────────────
-
-  void _showDeleteConfirm(int index) {
+  void _showDeleteConfirm(Map<String, dynamic> driver) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text("Delete Driver?", style: GoogleFonts.oswald()),
         content: Text(
-          "Remove ${_drivers[index].name} from your listed drivers? This cannot be undone.",
+          "Remove ${driver["driver_name"]} from your listed drivers? This cannot be undone.",
         ),
         actions: [
           TextButton(
@@ -542,7 +494,10 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
           ),
           TextButton(
             onPressed: () {
-              setState(() => _drivers.removeAt(index));
+              Provider.of<DriverDetailsController>(
+                context,
+                listen: false,
+              ).deleteDriver(context, driver['_id']);
               Navigator.pop(context);
             },
             child: const Text("Delete", style: TextStyle(color: Colors.red)),
@@ -598,7 +553,11 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                   ),
                 ),
                 Expanded(
-                  child: _drivers.isEmpty
+                  child:
+                      Provider.of<DriverDetailsController>(
+                        context,
+                        listen: true,
+                      ).listedDrivers.isEmpty
                       ? Center(
                           child: Text(
                             "No drivers listed yet.",
@@ -620,7 +579,7 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                               listen: true,
                             ).listedDrivers[index];
                             return GestureDetector(
-                              onTap: () => _showDriverDetail(index),
+                              onTap: () => _showDriverDetail(driver),
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 8),
                                 padding: const EdgeInsets.all(16),
@@ -689,43 +648,18 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
                           },
                         ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        // Opens the add modal
-                        onTap: () => _showDriverFormModal(),
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF2CA2A),
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(color: Colors.black, width: 1.5),
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.black,
-                            size: 28,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: ActionButton(
-                          label: 'Refresh',
-                          backgroundColor: const Color(0xFF1F1F1F),
-                          textColor: Colors.white,
-                          borderColor: const Color(0xFF1F1F1F),
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showDriverFormModal();
+        },
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          child: const Icon(Icons.add, color: Colors.black, size: 28),
         ),
       ),
     );

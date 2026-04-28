@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:cabkaro/screens/common/landing_screen.dart';
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,23 +30,6 @@ class EditProfileController extends ChangeNotifier {
       nameController.text = userData!['name'];
       phoneController.text = userData!['phone'].toString();
     }
-  }
-
-  void logout(BuildContext ctx) async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.remove(constant.cabToken);
-    pref.remove("role");
-    pref.remove("user-data");
-
-    if (!ctx.mounted) return;
-    Navigator.push(
-      ctx,
-      MaterialPageRoute(
-        builder: (context) {
-          return LandingScreen();
-        },
-      ),
-    );
   }
 
   void update(BuildContext ctx) async {

@@ -14,6 +14,7 @@ class DriverData {
   File? driverImage;
   String? base64Img;
   bool loading = false;
+  String? id;
 
   void dispose() {
     nameController.dispose();
@@ -26,15 +27,17 @@ class DriverData {
       "driver_name": nameController.text.trim(),
       "driver_phone": phoneController.text.trim(),
       "driver_img": base64Img,
+      "_id": id,
     };
   }
 }
 
 // Controller here;
 class DriverDetailsController extends ChangeNotifier {
-  final List<DriverData> drivers = [DriverData()];
+  final List<DriverData> drivers = [];
   List<dynamic> listedDrivers = [];
 
+  // Add new Blank Form set when Vendor register;
   void addNewDriver() {
     drivers.add(DriverData());
     notifyListeners();
@@ -44,6 +47,19 @@ class DriverDetailsController extends ChangeNotifier {
     if (drivers.length > 1) {
       drivers[index].dispose();
       drivers.removeAt(index);
+      notifyListeners();
+    }
+  }
+
+  void addDriver(DriverData data) {
+    drivers.add(data);
+    notifyListeners();
+  }
+
+  void updateDriver(dynamic id, DriverData data) {
+    final index = drivers.indexWhere((d) => d.toJson()['_id'] == id);
+    if (index != -1) {
+      drivers[index] = data;
       notifyListeners();
     }
   }
@@ -62,13 +78,13 @@ class DriverDetailsController extends ChangeNotifier {
     }
   }
 
-  Future<void> saveDriver(BuildContext ctx) async {
+  Future<void> saveDriver(BuildContext ctx, {isNew = false}) async {
     try {
       final pref = await SharedPreferences.getInstance();
       final token = pref.getString(constant.cabToken);
 
       final List<Map<String, dynamic>> driverData = drivers
-          .map((car) => car.toJson())
+          .map((dd) => dd.toJson())
           .toList();
 
       final req = await http.post(
@@ -82,12 +98,20 @@ class DriverDetailsController extends ChangeNotifier {
         if (!ctx.mounted) return;
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
       } else {
+        drivers.clear();
         if (!ctx.mounted) return;
-        ToastWidget.show(ctx, message: res['msg'], type: ToastType.error);
-        Navigator.push(
-          ctx,
-          MaterialPageRoute(builder: (context) => const VendorHomeScreen()),
-        );
+        ToastWidget.show(ctx, message: res['msg'], type: ToastType.success);
+
+        if (isNew == true) {
+          Navigator.pop(ctx);
+          getVendorDrivers(ctx);
+        }
+        if (isNew == false) {
+          Navigator.push(
+            ctx,
+            MaterialPageRoute(builder: (context) => const VendorHomeScreen()),
+          );
+        }
       }
     } catch (err) {
       if (!ctx.mounted) return;
@@ -114,17 +138,45 @@ class DriverDetailsController extends ChangeNotifier {
         if (!ctx.mounted) return;
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
       } else {
-        print(res['data']);
         listedDrivers = res['data'];
         notifyListeners();
       }
     } catch (er) {
       if (!ctx.mounted) return;
-      print("-----------------Er");
-      print(er);
       ToastWidget.show(
         ctx,
         message: 'Something went wrong.',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  Future<void> deleteDriver(BuildContext ctx, String id) async {
+    try {
+      final pref = await SharedPreferences.getInstance();
+      final token = pref.getString(constant.cabToken);
+
+      final req = await http.delete(
+        Uri.parse("${constant.apiUrl}/driver/delete/$id"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"token": token}),
+      );
+
+      final res = jsonDecode(req.body);
+      if (req.statusCode != 200) {
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
+      } else {
+        listedDrivers.removeWhere((driver) => driver['_id'] == id);
+        notifyListeners();
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['msg'], type: ToastType.success);
+      }
+    } catch (e) {
+      if (!ctx.mounted) return;
+      ToastWidget.show(
+        ctx,
+        message: 'Something went wrong.$e',
         type: ToastType.error,
       );
     }

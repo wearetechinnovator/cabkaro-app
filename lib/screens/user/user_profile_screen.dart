@@ -1,4 +1,5 @@
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/vendor_controller.dart';
 import 'package:provider/provider.dart';
 import '../common/booking_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               left: 18,
               bottom: 130,
               child: DashboardLogoutButton(
-                onTap: () => Provider.of<EditProfileController>(
+                onTap: () => Provider.of<VendorController>(
                   context,
                   listen: false,
                 ).logout(context),

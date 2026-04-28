@@ -171,6 +171,12 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
             controller: car.carNumberController,
           ),
           const SizedBox(height: 20),
+          SignupInput(
+            hint: 'Car Model',
+            icon: Icons.directions_car,
+            controller: car.carModel,
+          ),
+          const SizedBox(height: 20),
 
           _buildSeaterSelector(index),
           const SizedBox(height: 20),

@@ -1,5 +1,6 @@
 
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/vendor_controller.dart';
 import 'package:cabkaro/screens/driver/driver_listing_header.dart';
 import 'package:cabkaro/screens/user/user_listing_header.dart';
 import 'package:cabkaro/widgets/driver/driver_side_bar.dart';
@@ -64,7 +65,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               left: 18,
               bottom: 130,
               child: DashboardLogoutButton(
-                onTap: () => Provider.of<EditProfileController>(
+                onTap: () => Provider.of<VendorController>(
                   context,
                   listen: false,
                 ).logout(context),

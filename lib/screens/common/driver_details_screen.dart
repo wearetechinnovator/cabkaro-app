@@ -129,6 +129,18 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DriverDetailsController>(
+        context,
+        listen: false,
+      ).addNewDriver();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GradientBackground(

@@ -1,4 +1,5 @@
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/vendor_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,11 @@ class DriverSidebar extends StatelessWidget {
                   const CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.white,
-                    child: Icon(Icons.person, color: Color(0xFF1F1F1F), size: 45),
+                    child: Icon(
+                      Icons.person,
+                      color: Color(0xFF1F1F1F),
+                      size: 45,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -39,19 +44,6 @@ class DriverSidebar extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, '/driver-edit-profile'),
-                    child: const Text(
-                      "Edit Profile",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 14,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -60,22 +52,34 @@ class DriverSidebar extends StatelessWidget {
           _DrawerTile(
             icon: Icons.route_outlined,
             label: "Ongoing Rides",
-            onTap: () => Navigator.pushNamed(context, '/ongoing-rides'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/ongoing-rides');
+            },
           ),
           _DrawerTile(
             icon: Icons.history_rounded,
             label: "Last Ride",
-            onTap: () => Navigator.pushNamed(context, '/driver-ride-history'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/driver-ride-history');
+            },
           ),
           _DrawerTile(
             icon: Icons.directions_car_filled_rounded,
             label: "Car Details",
-            onTap: () => Navigator.pushNamed(context, '/car-details'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/car-details');
+            },
           ),
           _DrawerTile(
             icon: Icons.badge_outlined,
             label: "Driver Details",
-            onTap: () => Navigator.pushNamed(context, '/driver-details-listing'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/driver-details-listing');
+            },
           ),
 
           const Spacer(),
@@ -86,9 +90,9 @@ class DriverSidebar extends StatelessWidget {
             label: "Logout",
             textColor: Colors.redAccent,
             iconColor: Colors.redAccent,
-            onTap: () => controller.logout(context),
+            onTap: () => Provider.of<VendorController>(context, listen: false).logout(context),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.07),
         ],
       ),
     );

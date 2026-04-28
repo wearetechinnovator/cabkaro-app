@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:cabkaro/screens/common/car_details_screen.dart';
 import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
+import 'package:cabkaro/screens/common/landing_screen.dart';
 import 'package:cabkaro/screens/common/otp_screen.dart';
 import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
 import 'package:cabkaro/widgets/Toastwidget.dart';
@@ -64,7 +65,6 @@ class VendorController extends ChangeNotifier {
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
       }
     } catch (e) {
-      print("Error in login: $e");
       if (!ctx.mounted) return;
       ToastWidget.show(
         ctx,
@@ -267,5 +267,22 @@ class VendorController extends ChangeNotifier {
         type: ToastType.error,
       );
     }
+  }
+
+  void logout(BuildContext ctx) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.remove(constant.cabToken);
+    pref.remove("role");
+    pref.remove("data");
+
+    if (!ctx.mounted) return;
+    Navigator.push(
+      ctx,
+      MaterialPageRoute(
+        builder: (context) {
+          return LandingScreen();
+        },
+      ),
+    );
   }
 }
