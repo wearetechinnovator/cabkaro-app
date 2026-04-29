@@ -120,10 +120,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                       )
                                     : controller.profileImage != null
                                     ? Image.file(
-                                        Provider.of<UserController>(context, listen: true).profileImage!,
+                                        controller.profileImage!,
                                         fit: BoxFit.cover,
                                         width: 120,
                                         height: 120,
+                                        cacheHeight: 120,
+                                        cacheWidth: 120,
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                               // Fallback if image fails to load

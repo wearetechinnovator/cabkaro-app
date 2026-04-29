@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 
 class ImagePickerService {
@@ -41,9 +39,7 @@ class ImagePickerService {
 
   /// Show dialog to choose between camera and gallery
   static Future<File?> showImagePickerDialog(BuildContext context) async {
-    File? selectedImage;
-
-    await showDialog<void>(
+    return await showDialog<File?>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
@@ -56,48 +52,18 @@ class ImagePickerService {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(dialogContext);
                 final image = await pickFromCamera();
-
-                if (image != null && context.mounted) {
-                  try {
-                    final bytes = await image.readAsBytes();
-                    final base64 = base64Encode(bytes);
-
-                    if (!context.mounted) return;
-                    Provider.of<UserController>(
-                      context,
-                      listen: false,
-                    ).userProfileBase64 = "data:image/jpeg;base64,$base64";
-
-                    selectedImage = image;
-                  } catch (e) {
-                    debugPrint('Error processing camera image: $e');
-                  }
+                if (dialogContext.mounted) {
+                  Navigator.pop(dialogContext, image);
                 }
               },
               child: const Text('Camera'),
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(dialogContext);
                 final image = await pickFromGallery();
-
-                if (image != null && context.mounted) {
-                  try {
-                    final bytes = await image.readAsBytes();
-                    final base64 = base64Encode(bytes);
-
-                    if (!context.mounted) return;
-                    Provider.of<UserController>(
-                      context,
-                      listen: false,
-                    ).userProfileBase64 = "data:image/jpeg;base64,$base64";
-
-                    selectedImage = image;
-                  } catch (e) {
-                    debugPrint('Error processing gallery image: $e');
-                  }
+                if (dialogContext.mounted) {
+                  Navigator.pop(dialogContext, image);
                 }
               },
               child: const Text('Gallery'),
@@ -106,8 +72,6 @@ class ImagePickerService {
         );
       },
     );
-
-    return selectedImage;
   }
 
   /// Convert file to base64 string

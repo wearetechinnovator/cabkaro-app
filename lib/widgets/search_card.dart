@@ -8,7 +8,6 @@ import 'package:cabkaro/providers/location_provider.dart';
 
 class Searchcard extends StatefulWidget {
   const Searchcard({super.key, required this.onSubmit});
-
   final GestureTapCallback onSubmit;
 
   @override
@@ -19,14 +18,6 @@ class _SearchcardState extends State<Searchcard>
     with SingleTickerProviderStateMixin {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-
-  // New field values
-  String? _selectedSeater;
-  String? _selectedAC;
-  String? _selectedSOS;
-  String? _selectedFirstAid;
-  final TextEditingController _otherFacilitiesController =
-      TextEditingController();
 
   late AnimationController _bounceController;
   late Animation<double> _bounceAnimation;
@@ -40,13 +31,17 @@ class _SearchcardState extends State<Searchcard>
     );
     _bounceAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 0.0, end: 12.0)
-            .chain(CurveTween(curve: Curves.easeOutQuad)),
+        tween: Tween<double>(
+          begin: 0.0,
+          end: 12.0,
+        ).chain(CurveTween(curve: Curves.easeOutQuad)),
         weight: 30,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 12.0, end: 0.0)
-            .chain(CurveTween(curve: Curves.bounceOut)),
+        tween: Tween<double>(
+          begin: 12.0,
+          end: 0.0,
+        ).chain(CurveTween(curve: Curves.bounceOut)),
         weight: 70,
       ),
     ]).animate(_bounceController);
@@ -55,7 +50,6 @@ class _SearchcardState extends State<Searchcard>
   @override
   void dispose() {
     _bounceController.dispose();
-    _otherFacilitiesController.dispose();
     super.dispose();
   }
 
@@ -130,6 +124,8 @@ class _SearchcardState extends State<Searchcard>
   @override
   Widget build(BuildContext context) {
     final locationProvider = context.watch<LocationProvider>();
+    final controller = Provider.of<RideController>(context, listen: false);
+    final controllerWatch = Provider.of<RideController>(context, listen: true);
 
     return Stack(
       children: [
@@ -158,7 +154,8 @@ class _SearchcardState extends State<Searchcard>
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => MapPickerScreen(isPickup: true)),
+                      builder: (_) => MapPickerScreen(isPickup: true),
+                    ),
                   ),
                   height: 45,
                 ),
@@ -171,7 +168,8 @@ class _SearchcardState extends State<Searchcard>
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => MapPickerScreen(isPickup: false)),
+                      builder: (_) => MapPickerScreen(isPickup: false),
+                    ),
                   ),
                   height: 40,
                 ),
@@ -184,9 +182,10 @@ class _SearchcardState extends State<Searchcard>
                       child: _InputField(
                         hint: "Price",
                         icon: Icons.currency_rupee_outlined,
-                        textController:
-                            Provider.of<RideController>(context, listen: false)
-                                .price,
+                        textController: Provider.of<RideController>(
+                          context,
+                          listen: false,
+                        ).price,
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -218,9 +217,11 @@ class _SearchcardState extends State<Searchcard>
                       child: _DropdownField(
                         hint: "Seater",
                         icon: Icons.event_seat_rounded,
-                        value: _selectedSeater,
+                        value: controllerWatch.selectedSeater,
                         items: const ['2', '4', '6', '7', '8', '10', '12+'],
-                        onChanged: (v) => setState(() => _selectedSeater = v),
+                        onChanged: (v) {
+                          controller.setSeater(v);
+                        },
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -228,9 +229,11 @@ class _SearchcardState extends State<Searchcard>
                       child: _DropdownField(
                         hint: "AC",
                         icon: Icons.ac_unit_rounded,
-                        value: _selectedAC,
+                        value: controllerWatch.selectedAC,
                         items: const ['AC', 'Non-AC'],
-                        onChanged: (v) => setState(() => _selectedAC = v),
+                        onChanged: (v) {
+                          controller.setAC(v!);
+                        },
                       ),
                     ),
                   ],
@@ -244,9 +247,11 @@ class _SearchcardState extends State<Searchcard>
                       child: _DropdownField(
                         hint: "SOS",
                         icon: Icons.sos_outlined,
-                        value: _selectedSOS,
+                        value: controllerWatch.selectedSOS,
                         items: const ['SOS', 'Non-SOS'],
-                        onChanged: (v) => setState(() => _selectedSOS = v),
+                        onChanged: (v) {
+                          controller.setSOS(v!);
+                        },
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -254,9 +259,11 @@ class _SearchcardState extends State<Searchcard>
                       child: _DropdownField(
                         hint: "First Aid",
                         icon: Icons.medical_services_outlined,
-                        value: _selectedFirstAid,
+                        value: controllerWatch.selectedFirstAid,
                         items: const ['First Aid Box', 'No First Aid Box'],
-                        onChanged: (v) => setState(() => _selectedFirstAid = v),
+                        onChanged: (v) {
+                          controller.setFirstAid(v!);
+                        },
                       ),
                     ),
                   ],
@@ -267,7 +274,7 @@ class _SearchcardState extends State<Searchcard>
                 _InputField(
                   hint: "Other Facilities (e.g. WiFi, USB charging...)",
                   icon: Icons.star_border_outlined,
-                  textController: _otherFacilitiesController,
+                  textController: controller.otherFacilitiesController,
                 ),
                 const SizedBox(height: 16),
 
@@ -396,7 +403,10 @@ class _DropdownField extends StatelessWidget {
                   value: item,
                   child: Text(
                     item,
-                    style: GoogleFonts.oswald(fontSize: 11, color: Colors.black),
+                    style: GoogleFonts.oswald(
+                      fontSize: 11,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               )
@@ -412,7 +422,9 @@ class _DropdownField extends StatelessWidget {
                       child: Text(
                         item,
                         style: GoogleFonts.oswald(
-                            fontSize: 11, color: Colors.black),
+                          fontSize: 11,
+                          color: Colors.black,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -567,8 +579,10 @@ class _InputField extends StatelessWidget {
           focusedBorder: InputBorder.none,
           isDense: true,
           prefixIcon: Icon(icon, size: 16),
-          prefixIconConstraints:
-              const BoxConstraints(minWidth: 28, minHeight: 0),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 28,
+            minHeight: 0,
+          ),
         ),
       ),
     );

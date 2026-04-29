@@ -208,7 +208,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             color: Colors.white,
                           ),
                           child: ClipOval(
-                            child: _profileImage !=   
+                            child: _profileImage != null
                                 ? Image.file(
                                     _profileImage!,
                                     fit: BoxFit.cover,

@@ -26,7 +26,6 @@ class UserController extends ChangeNotifier {
   // User details screen;
   final signupFormKey = GlobalKey<FormState>();
   final TextEditingController userNameController = TextEditingController();
-  final TextEditingController userPasswordController = TextEditingController();
   final TextEditingController userPhoneController = TextEditingController();
   String userProfileBase64 = "";
   File? profileImage;
@@ -397,6 +396,16 @@ class UserController extends ChangeNotifier {
     pref.remove(constant.cabToken);
     pref.remove("role");
     pref.remove("data");
+
+    // Clear Data;
+    userName = null;
+    userPhone = null;
+    userImg = null;
+    userNameController.clear();
+    userPhoneController.clear();
+    userProfileBase64 = "";
+    profileImage = null;
+
 
     if (!ctx.mounted) return;
     Navigator.push(
