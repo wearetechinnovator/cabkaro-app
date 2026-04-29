@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cabkaro/utils/constants.dart' as constant;
 import 'package:image_picker/image_picker.dart';
 
+
 class VendorController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   final vendorDetailsformKey = GlobalKey<FormState>();
@@ -24,9 +25,11 @@ class VendorController extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   File? profileImage;
   late String profileImageBase64;
-
   bool get isLoading => _isLoading;
 
+  String vendorPhone = "";
+  String vendorName = "";
+  String vendorImg = "";
   // =======================================
   // Login Screen code
   // =======================================
@@ -237,9 +240,9 @@ class VendorController extends ChangeNotifier {
     }
   }
 
-  // ===============================
+  // ============================
   // Get Vendor Profile Details;
-  // ===============================
+  // ============================
   Future<void> getVendorDetails(BuildContext ctx) async {
     try {
       final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -256,6 +259,11 @@ class VendorController extends ChangeNotifier {
         nameController.text = res['data']['vendor_name'];
         phoneController.text = res['data']['vendor_phone'];
         profileImageBase64 = res['data']['vendor_img'];
+
+        // Used anywhere in vendor profile;
+        vendorName = res['data']['vendor_name'];
+        vendorPhone = res['data']['vendor_phone'];
+        vendorImg = res['data']['vendor_img'];
 
         notifyListeners();
       }

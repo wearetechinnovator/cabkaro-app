@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cabkaro/controllers/car_details_controller.dart';
 import 'package:cabkaro/screens/driver/add_car_details.dart';
 import 'package:cabkaro/screens/driver/edit_car_details.dart';
+import 'package:cabkaro/widgets/shimmer/car_list_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,6 @@ class ListedCarDetailsScreen extends StatefulWidget {
 
 class _ListedCarDetailsScreenState extends State<ListedCarDetailsScreen> {
   final TextEditingController _locController = TextEditingController();
-  final TextEditingController _radiusController = TextEditingController();
 
   Future<List<Map<String, dynamic>>> _searchLocations(String query) async {
     if (query.trim().length < 3) return [];
@@ -282,7 +282,7 @@ class _ListedCarDetailsScreenState extends State<ListedCarDetailsScreen> {
   }
 
   // ─── Activation Modal (unchanged) When try to active Car ─────────────────────────────────────────
-  void _showActivationModal(int index) {
+  void _showActivationModal(int index, String id) {
     List<Map<String, dynamic>> suggestions = [];
     bool isSearching = false;
     bool hasSearched = false;
@@ -403,8 +403,14 @@ class _ListedCarDetailsScreenState extends State<ListedCarDetailsScreen> {
                                         hasSearched = false;
                                       });
 
-                                      print("---------------geo------------");
-                                      print(s['geoData']);
+                                      Provider.of<CarDetailsController>(
+                                        context,
+                                        listen: false,
+                                      ).setCoordinates(
+                                        s['geoData']['coordinates'][0],
+                                        s['geoData']['coordinates'][1],
+                                        s['display']!,
+                                      );
                                     },
                                   ),
                                 )
@@ -416,7 +422,10 @@ class _ListedCarDetailsScreenState extends State<ListedCarDetailsScreen> {
                     SignupInput(
                       hint: 'Service Radius (km)',
                       icon: Icons.radar,
-                      controller: _radiusController,
+                      controller: Provider.of<CarDetailsController>(
+                        context,
+                        listen: false,
+                      ).serviceRadius,
                       keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 20),
@@ -428,10 +437,12 @@ class _ListedCarDetailsScreenState extends State<ListedCarDetailsScreen> {
                         textColor: Colors.black,
                         borderColor: Colors.transparent,
                         onTap: () {
-                          if (_locController.text.isNotEmpty &&
-                              _radiusController.text.isNotEmpty) {
-                            Navigator.pop(context);
-                          }
+                          Provider.of<CarDetailsController>(
+                            context,
+                            listen: false,
+                          ).updateAvailablity(context, id);
+
+                          _locController.clear();
                         },
                       ),
                     ),
@@ -471,126 +482,152 @@ class _ListedCarDetailsScreenState extends State<ListedCarDetailsScreen> {
             ).getVendorVehicles(context);
           },
           child: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
+            child:
+                Provider.of<CarDetailsController>(
+                      context,
+                      listen: true,
+                    ).loading ==
+                    true
+                ? CarListShimmer()
+                : Column(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => Navigator.pop(context),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.arrow_back),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            Text(
+                              "My Listed Cars",
+                              style: GoogleFonts.oswald(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        "My Listed Cars",
-                        style: GoogleFonts.oswald(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          itemCount: Provider.of<CarDetailsController>(
+                            context,
+                            listen: true,
+                          ).listedVechiles.length,
+                          itemBuilder: (context, index) {
+                            final car = Provider.of<CarDetailsController>(
+                              context,
+                              listen: true,
+                            ).listedVechiles[index];
+                            return GestureDetector(
+                              onTap: () => _showCarDetailModal(car),
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.9),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: car['is_available']
+                                        ? const Color(0xFFF2CA2A)
+                                        : Colors.black12,
+                                  ),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.directions_car,
+                                          color: Color(0xFFDDA200),
+                                        ),
+                                        const SizedBox(width: 15),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                car['vehicle_number']
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                              Text(
+                                                car['vehicle_model'],
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Switch(
+                                          value: car['is_available'],
+                                          activeColor: const Color(0xFFF2CA2A),
+                                          onChanged: (val) {
+                                            Provider.of<CarDetailsController>(
+                                              context,
+                                              listen: false,
+                                            ).activeStatus = val;
+
+                                            if (val) {
+                                              _showActivationModal(
+                                                index,
+                                                car['_id'],
+                                              );
+                                            } else {
+                                              Provider.of<CarDetailsController>(
+                                                context,
+                                                listen: false,
+                                              ).updateAvailablity(
+                                                context,
+                                                car['_id'],
+                                              );
+                                              setState(
+                                                () =>
+                                                    car['is_available'] = false,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    if (car['is_available']) ...[
+                                      const Divider(height: 20),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.location_on,
+                                            size: 14,
+                                            color: Colors.green,
+                                          ),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            car['service_location_string'] ??
+                                                "",
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: Provider.of<CarDetailsController>(
-                      context,
-                      listen: true,
-                    ).listedVechiles.length,
-                    itemBuilder: (context, index) {
-                      final car = Provider.of<CarDetailsController>(
-                        context,
-                        listen: true,
-                      ).listedVechiles[index];
-                      return GestureDetector(
-                        onTap: () => _showCarDetailModal(car),
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: car['is_available']
-                                  ? const Color(0xFFF2CA2A)
-                                  : Colors.black12,
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.directions_car,
-                                    color: Color(0xFFDDA200),
-                                  ),
-                                  const SizedBox(width: 15),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          car['vehicle_number'].toString(),
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        Text(
-                                          car['vehicle_model'],
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Switch(
-                                    value: car['is_available'],
-                                    activeColor: const Color(0xFFF2CA2A),
-                                    onChanged: (val) {
-                                      if (val)
-                                        _showActivationModal(index);
-                                      else
-                                        setState(
-                                          () => car['is_available'] = false,
-                                        );
-                                    },
-                                  ),
-                                ],
-                              ),
-                              if (car['is_available']) ...[
-                                const Divider(height: 20),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.location_on,
-                                      size: 14,
-                                      color: Colors.green,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      "testtest",
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

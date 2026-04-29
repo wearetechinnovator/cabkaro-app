@@ -1,7 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
 
 class ImagePickerService {
   static final ImagePicker _imagePicker = ImagePicker();
@@ -9,8 +12,9 @@ class ImagePickerService {
   /// Pick image from camera
   static Future<File?> pickFromCamera() async {
     try {
-      final XFile? pickedFile =
-          await _imagePicker.pickImage(source: ImageSource.camera);
+      final XFile? pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+      );
       if (pickedFile != null) {
         return File(pickedFile.path);
       }
@@ -23,8 +27,9 @@ class ImagePickerService {
   /// Pick image from gallery
   static Future<File?> pickFromGallery() async {
     try {
-      final XFile? pickedFile =
-          await _imagePicker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+      );
       if (pickedFile != null) {
         return File(pickedFile.path);
       }
@@ -36,33 +41,63 @@ class ImagePickerService {
 
   /// Show dialog to choose between camera and gallery
   static Future<File?> showImagePickerDialog(BuildContext context) async {
-    return showDialog<File?>(
+    File? selectedImage;
+
+    await showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text('Choose Profile Picture'),
           content: const Text('Select the source for your profile picture'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 final image = await pickFromCamera();
-                if (context.mounted && image != null) {
-                  Navigator.pop(context, image);
+
+                if (image != null && context.mounted) {
+                  try {
+                    final bytes = await image.readAsBytes();
+                    final base64 = base64Encode(bytes);
+
+                    if (!context.mounted) return;
+                    Provider.of<UserController>(
+                      context,
+                      listen: false,
+                    ).userProfileBase64 = "data:image/jpeg;base64,$base64";
+
+                    selectedImage = image;
+                  } catch (e) {
+                    debugPrint('Error processing camera image: $e');
+                  }
                 }
               },
               child: const Text('Camera'),
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 final image = await pickFromGallery();
-                if (context.mounted && image != null) {
-                  Navigator.pop(context, image);
+
+                if (image != null && context.mounted) {
+                  try {
+                    final bytes = await image.readAsBytes();
+                    final base64 = base64Encode(bytes);
+
+                    if (!context.mounted) return;
+                    Provider.of<UserController>(
+                      context,
+                      listen: false,
+                    ).userProfileBase64 = "data:image/jpeg;base64,$base64";
+
+                    selectedImage = image;
+                  } catch (e) {
+                    debugPrint('Error processing gallery image: $e');
+                  }
                 }
               },
               child: const Text('Gallery'),
@@ -71,13 +106,16 @@ class ImagePickerService {
         );
       },
     );
+
+    return selectedImage;
   }
 
   /// Convert file to base64 string
   static Future<String> fileToBase64(File file) async {
     try {
       final bytes = await file.readAsBytes();
-      return base64Encode(bytes);
+      final base64 = base64Encode(bytes);
+      return "data:image/jpeg;base64,$base64";
     } catch (e) {
       debugPrint('Error converting file to base64: $e');
       return '';

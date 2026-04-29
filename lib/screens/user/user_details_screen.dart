@@ -1,32 +1,20 @@
-import 'package:cabkaro/controllers/user/signup_controller.dart';
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'signin_screen.dart';
-import '../../widgets/action_button.dart';
-import '../../widgets/gradient_background.dart';
-import '../../widgets/signup_input.dart';
+import 'package:cabkaro/widgets/action_button.dart';
+import 'package:cabkaro/widgets/gradient_background.dart';
+import 'package:cabkaro/widgets/signup_input.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class UserDetailsScreen extends StatefulWidget {
+  const UserDetailsScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<UserDetailsScreen> createState() => _UserDetailsScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    super.dispose();
-  }
-
+class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -74,8 +62,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 Text(
-                  'Sign Up',
-                  style: TextStyle(
+                  'Enter your details',
+                  style: GoogleFonts.oswald(
                     fontSize: screenHeight * 0.027,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF2F2F2F),
@@ -84,13 +72,13 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 // Profile Picture Picker
-                Consumer<SignupController>(
-                  builder: (context, signupController, _) {
+                Consumer<UserController>(
+                  builder: (context, controller, _) {
                     return GestureDetector(
-                      onTap: signupController.isLoadingImage
+                      onTap: controller.isLoadingImage
                           ? null
-                          : () {
-                              signupController.pickProfileImage(context);
+                          : () async {
+                              await controller.pickProfileImage(context);
                             },
                       child: Center(
                         child: Stack(
@@ -102,62 +90,97 @@ class _SignupScreenState extends State<SignupScreen> {
                                 shape: BoxShape.circle,
                                 color: Colors.grey[200],
                                 border: Border.all(
-                                  color: const Color.fromARGB(255, 242, 202, 42),
+                                  color: const Color.fromARGB(
+                                    255,
+                                    242,
+                                    202,
+                                    42,
+                                  ),
                                   width: 3,
                                 ),
                               ),
-                              child: signupController.profileImage != null
-                                  ? ClipOval(
-                                      child: Image.file(
-                                        signupController.profileImage!,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : Center(
-                                      child: signupController.isLoadingImage
-                                          ? const SizedBox(
-                                              width: 40,
-                                              height: 40,
-                                              child:
-                                                  CircularProgressIndicator(
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                        Color>(
+                              child: ClipOval(
+                                child: controller.isLoadingImage
+                                    ? Center(
+                                        child: SizedBox(
+                                          width: 40,
+                                          height: 40,
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
                                                   Color.fromARGB(
-                                                      255, 242, 202, 42),
-                                                ),
-                                              ),
-                                            )
-                                          : Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.camera_alt,
-                                                  size: 40,
-                                                  color: Colors.grey[600],
-                                                ),
-                                                SizedBox(
-                                                    height:
-                                                        screenHeight * 0.005),
-                                                Text(
-                                                  'Add Photo',
-                                                  style: TextStyle(
-                                                    color: Colors.grey[600],
-                                                    fontSize: 12,
+                                                    255,
+                                                    242,
+                                                    202,
+                                                    42,
                                                   ),
                                                 ),
-                                              ],
+                                          ),
+                                        ),
+                                      )
+                                    : controller.profileImage != null
+                                    ? Image.file(
+                                        Provider.of<UserController>(context, listen: true).profileImage!,
+                                        fit: BoxFit.cover,
+                                        width: 120,
+                                        height: 120,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              // Fallback if image fails to load
+                                              return Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.error_outline,
+                                                      size: 40,
+                                                      color: Colors.red[400],
+                                                    ),
+                                                    SizedBox(height: 4),
+                                                    Text(
+                                                      'Failed to load',
+                                                      style: TextStyle(
+                                                        color: Colors.red[400],
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                      )
+                                    : Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.camera_alt,
+                                            size: 40,
+                                            color: Colors.grey[600],
+                                          ),
+                                          SizedBox(
+                                            height: screenHeight * 0.005,
+                                          ),
+                                          Text(
+                                            'Add Photo',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 12,
                                             ),
-                                    ),
+                                          ),
+                                        ],
+                                      ),
+                              ),
                             ),
-                            if (signupController.profileImage != null)
+                            if (controller.profileImage != null &&
+                                !controller.isLoadingImage)
                               Positioned(
                                 bottom: 0,
                                 right: 0,
                                 child: GestureDetector(
                                   onTap: () {
-                                    signupController.removeProfileImage();
+                                    controller.removeProfileImage();
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -188,17 +211,17 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Form(
-                  key: Provider.of<SignupController>(context).formKey,
+                  key: Provider.of<UserController>(context).formKey,
                   child: Column(
                     children: [
                       SignupInput(
                         hint: 'Name',
                         icon: Icons.person,
-                        controller: Provider.of<SignupController>(
+                        controller: Provider.of<UserController>(
                           context,
                           listen: true,
-                        ).nameController,
-                        validator: (value) => Provider.of<SignupController>(
+                        ).userNameController,
+                        validator: (value) => Provider.of<UserController>(
                           context,
                           listen: false,
                         ).nameValidate(value, context),
@@ -207,53 +230,34 @@ class _SignupScreenState extends State<SignupScreen> {
                       SignupInput(
                         hint: 'Phone',
                         icon: Icons.call,
-                        controller: Provider.of<SignupController>(
+                        controller: Provider.of<UserController>(
                           context,
                           listen: true,
-                        ).phoneController,
+                        ).userPhoneController,
                         keyboardType: TextInputType.phone,
-                        validator: (value) => Provider.of<SignupController>(
+                        validator: (value) => Provider.of<UserController>(
                           context,
                           listen: false,
                         ).phoneValidate(value, context),
                       ),
                       SizedBox(height: screenHeight * 0.015),
-                      
                     ],
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.1),
-                Consumer<SignupController>(
-                  builder: (context, signupController, _) {
+                Consumer<UserController>(
+                  builder: (context, UserController, _) {
                     return ActionButton(
-                      label: 'Submit',
+                      label: 'Save',
                       backgroundColor: const Color.fromARGB(255, 242, 202, 42),
                       textColor: Colors.black,
                       borderColor: const Color(0xFF1F1F1F),
-                      isLoading: signupController.isLoading,
-                      onTap: () => Provider.of<SignupController>(
-                        context,
-                        listen: false,
-                      ).signup(context),
+                      isLoading: UserController.isLoading,
+                      onTap: () => UserController.signup(context),
                     );
                   },
                 ),
                 SizedBox(height: screenHeight * 0.019),
-                ActionButton(
-                  label: 'Sign in',
-                  backgroundColor: const Color(0xFF2D2F35),
-                  textColor: Colors.white,
-                  borderColor: const Color(0xFF2D2F35),
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SigninScreen(),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: screenHeight * 0.03),
               ],
             ),
           ),

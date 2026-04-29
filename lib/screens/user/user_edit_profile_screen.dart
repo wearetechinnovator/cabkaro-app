@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/dashboard/dashboard_bottom_dock.dart';
+import 'package:cabkaro/utils/constants.dart' as constant;
 
 
 
@@ -27,20 +28,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
 
-
-  // ──────────────────────────────────────────────
-  // Permission helpers
-  // ──────────────────────────────────────────────
-
-  Future<bool> _requestCameraPermission() async {
-    final status = await Permission.camera.request();
-    if (status.isPermanentlyDenied) {
-      if (!mounted) return false;
-      _showPermissionDeniedDialog('Camera');
-      return false;
-    }
-    return status.isGranted;
-  }
 
   Future<bool> _requestGalleryPermission() async {
     // Android 13+ uses READ_MEDIA_IMAGES; older uses READ_EXTERNAL_STORAGE
@@ -221,7 +208,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             color: Colors.white,
                           ),
                           child: ClipOval(
-                            child: _profileImage != null
+                            child: _profileImage !=   
                                 ? Image.file(
                                     _profileImage!,
                                     fit: BoxFit.cover,

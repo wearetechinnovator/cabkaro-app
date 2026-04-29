@@ -13,7 +13,6 @@ class DriverData {
   TextEditingController phoneController = TextEditingController();
   File? driverImage;
   String? base64Img;
-  bool loading = false;
   String? id;
 
   void dispose() {
@@ -36,6 +35,7 @@ class DriverData {
 class DriverDetailsController extends ChangeNotifier {
   final List<DriverData> drivers = [];
   List<dynamic> listedDrivers = [];
+  bool loading = false;
 
   // Add new Blank Form set when Vendor register;
   void addNewDriver() {
@@ -124,6 +124,8 @@ class DriverDetailsController extends ChangeNotifier {
   }
 
   Future<void> getVendorDrivers(BuildContext ctx) async {
+    loading = true;
+    notifyListeners();
     try {
       final pref = await SharedPreferences.getInstance();
       final token = pref.getString(constant.cabToken);
@@ -148,6 +150,9 @@ class DriverDetailsController extends ChangeNotifier {
         message: 'Something went wrong.',
         type: ToastType.error,
       );
+    }finally{
+      loading = false;
+      notifyListeners();
     }
   }
 

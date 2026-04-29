@@ -1,4 +1,3 @@
-import 'package:cabkaro/screens/common/change_password_screen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardActionCard extends StatelessWidget {
@@ -74,38 +73,24 @@ class DashboardActionCard extends StatelessWidget {
             onTap: onLastRideTap,
           ),
 
-          const Divider(color: Color(0x66FFFFFF), thickness: 1),
-
-          _ActionRow(
-            icon: Icons.lock_outline,
-            label: 'Change Password',
-            trailing: const Icon(Icons.arrow_forward, color: Color(0xFF2D2F35)),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
-              );
-            },
-          ),
-
-          const Divider(color: Color(0x66FFFFFF), thickness: 1),
-          const _ActionRow(
-            icon: Icons.location_city,
-            label: 'Nearby Hotel',
-            trailing: Text(
-              'Coming Soon',
-              style: TextStyle(fontSize: 14, color: Color(0xFF6A6A6A)),
-            ),
-          ),
-          const Divider(color: Color(0x66FFFFFF), thickness: 1),
-          const _ActionRow(
-            icon: Icons.map_outlined,
-            label: 'Offline Map',
-            trailing: Text(
-              'Coming Soon',
-              style: TextStyle(fontSize: 14, color: Color(0xFF6A6A6A)),
-            ),
-          ),
+          // const Divider(color: Color(0x66FFFFFF), thickness: 1),
+          // const _ActionRow(
+          //   icon: Icons.location_city,
+          //   label: 'Nearby Hotel',
+          //   trailing: Text(
+          //     'Coming Soon',
+          //     style: TextStyle(fontSize: 14, color: Color(0xFF6A6A6A)),
+          //   ),
+          // ),
+          // const Divider(color: Color(0x66FFFFFF), thickness: 1),
+          // const _ActionRow(
+          //   icon: Icons.map_outlined,
+          //   label: 'Offline Map',
+          //   trailing: Text(
+          //     'Coming Soon',
+          //     style: TextStyle(fontSize: 14, color: Color(0xFF6A6A6A)),
+          //   ),
+          // ),
         ],
       ),
     );

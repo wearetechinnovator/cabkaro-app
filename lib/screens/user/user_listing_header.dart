@@ -1,4 +1,4 @@
-import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:cabkaro/screens/user/user_ride_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,8 +58,8 @@ class _ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<EditProfileController>();
-    String name = controller.userData?['name'] ?? '';
+    final controller = context.watch<UserController>();
+    String name = controller.userName ?? '';
     final parts = name.trim().split(" ").where((e) => e.isNotEmpty).toList();
 
     final initials = parts.isEmpty

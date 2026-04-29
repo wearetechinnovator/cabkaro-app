@@ -9,8 +9,8 @@ import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:cabkaro/controllers/user/login_controller.dart';
 import 'package:cabkaro/controllers/user/review_controller.dart';
 import 'package:cabkaro/controllers/user/ride_controller.dart';
-import 'package:cabkaro/controllers/user/signup_controller.dart';
 import 'package:cabkaro/controllers/user/verify_otp_controller.dart';
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:cabkaro/controllers/vendor_controller.dart';
 import 'package:cabkaro/providers/socket_provider.dart';
 import 'package:cabkaro/screens/common/booking_details_screen.dart';
@@ -27,10 +27,10 @@ import 'package:cabkaro/screens/driver/listed_car_deatils_screen.dart';
 import 'package:cabkaro/screens/driver/listed_driver_details_screen.dart';
 import 'package:cabkaro/screens/driver/ongoing_rides_screen.dart';
 import 'package:cabkaro/screens/driver/photo_upload_screen.dart';
-import 'package:cabkaro/screens/user/car_listing_screen.dart';
+import 'package:cabkaro/screens/user/user_home_screen.dart';
 import 'package:cabkaro/screens/user/notifications_screen.dart';
 import 'package:cabkaro/screens/user/user_profile_screen.dart';
-import 'package:cabkaro/screens/user/signup_screen.dart';
+import 'package:cabkaro/screens/user/user_details_screen.dart';
 import 'package:cabkaro/screens/user/signin_screen.dart';
 import 'package:cabkaro/screens/user/user_edit_profile_screen.dart';
 import 'package:cabkaro/providers/location_provider.dart';
@@ -60,7 +60,6 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(create: (_) => LoginController()),
         ChangeNotifierProvider(create: (_) => VerifyOtpController()),
-        ChangeNotifierProvider(create: (_) => SignupController()),
         ChangeNotifierProvider(create: (_) => EditProfileController()),
         ChangeNotifierProvider(create: (_) => RideController()),
         ChangeNotifierProvider(create: (_) => SocketProvider()),
@@ -74,6 +73,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => VendorController()),
         ChangeNotifierProvider(create: (_) => CarDetailsController()),
         ChangeNotifierProvider(create: (_) => DriverDetailsController()),
+        ChangeNotifierProvider(create: (_) => UserController()),
       ],
       child: MaterialApp(
         title: 'Cabkaro',
@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
 
         home: const SplashScreen(),
         routes: {
-          '/signup': (context) => const SignupScreen(),
+          '/signup': (context) => const UserDetailsScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
           '/driver': (context) => const LoginScreen(),
           '/driver-home': (context) => const VendorHomeScreen(),
@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> {
           '/driver-profile': (context) => const DriverProfileScreen(),
           '/gov-details': (context) => const GOVDetailsScreen(),
           '/photo-upload': (context) => const PhotoUploadScreen(),
-          '/listing': (context) => const CarListingScreen(),
+          '/listing': (context) => const UserHomeScreen(),
           '/notifications': (context) => const NotificationsScreen(),
           '/dashboard': (context) => const UserProfileScreen(),
           '/signin': (context) => SigninScreen(),

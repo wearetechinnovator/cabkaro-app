@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:cabkaro/screens/user/car_listing_screen.dart';
+import 'package:cabkaro/screens/user/user_home_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,7 +61,7 @@ class VerifyOtpController extends ChangeNotifier {
         pref.setString("user-data", jsonEncode(res['data']));
         Navigator.pushReplacement(
           ctx,
-          MaterialPageRoute(builder: (context) => const CarListingScreen()),
+          MaterialPageRoute(builder: (context) => const UserHomeScreen()),
         );
       } else {
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);

@@ -50,6 +50,18 @@ class CarDetails {
 class CarDetailsController extends ChangeNotifier {
   final List<CarDetails> cars = [CarDetails()];
   List<dynamic> listedVechiles = [];
+  bool loading = false;
+
+  TextEditingController serviceRadius = TextEditingController();
+  Map<String, dynamic> coordinates = {};
+  String coordinateString = "";
+  bool? activeStatus;
+
+  void setCoordinates(dynamic lng, dynamic lat, String str) {
+    coordinates["longitude"] = lng;
+    coordinates["latitude"] = lat;
+    coordinateString = str;
+  }
 
   void addNewCar() {
     cars.add(CarDetails());
@@ -123,6 +135,8 @@ class CarDetailsController extends ChangeNotifier {
   }
 
   Future<void> getVendorVehicles(BuildContext ctx) async {
+    loading = true;
+    notifyListeners();
     try {
       final pref = await SharedPreferences.getInstance();
       final token = pref.getString(constant.cabToken);
@@ -147,6 +161,9 @@ class CarDetailsController extends ChangeNotifier {
         message: 'Something went wrong.',
         type: ToastType.error,
       );
+    } finally {
+      loading = false;
+      notifyListeners();
     }
   }
 
@@ -176,6 +193,73 @@ class CarDetailsController extends ChangeNotifier {
       ToastWidget.show(
         ctx,
         message: 'Something went wrong.$e',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  Future<void> updateAvailablity(BuildContext ctx, String id) async {
+    if (activeStatus == true) {
+      if (serviceRadius.text.trim().isEmpty) {
+        ToastWidget.show(
+          ctx,
+          message: "Service radius can't blank",
+          type: ToastType.error,
+        );
+        return;
+      } else if (coordinates.isEmpty) {
+        ToastWidget.show(
+          ctx,
+          message: "Please enter your service location",
+          type: ToastType.error,
+        );
+        return;
+      }
+    }
+
+    try {
+      final pref = await SharedPreferences.getInstance();
+      final token = pref.getString(constant.cabToken);
+      final Map<String, dynamic> data = {
+        "is_available": activeStatus,
+        "vehicle_id": id,
+        "service_location": coordinates,
+        "service_area": serviceRadius.text.trim(),
+        "location_string": coordinateString,
+        "token": token,
+      };
+
+      final req = await http.post(
+        Uri.parse("${constant.apiUrl}/vehicles/availability/update"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+
+      final res = jsonDecode(req.body);
+      if (req.statusCode != 200) {
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
+      } else {
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['msg'], type: ToastType.success);
+
+        if (activeStatus == true) {
+          Navigator.pop(ctx);
+        }
+
+        getVendorVehicles(ctx);
+
+        // Clear all Data
+        activeStatus = false;
+        coordinateString = "";
+        coordinates.clear();
+        serviceRadius.clear();
+      }
+    } catch (e) {
+      if (!ctx.mounted) return;
+      ToastWidget.show(
+        ctx,
+        message: 'Something went wrong',
         type: ToastType.error,
       );
     }

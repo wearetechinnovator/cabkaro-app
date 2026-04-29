@@ -1,5 +1,4 @@
-import 'package:cabkaro/controllers/edit_profile_controller.dart';
-import 'package:cabkaro/controllers/vendor_controller.dart';
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:provider/provider.dart';
 import '../common/booking_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,17 +17,9 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
-  void initState() {
-    super.initState();
-    Provider.of<EditProfileController>(context, listen: false).getUserData();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final Map<String, dynamic> userData =
-        Provider.of<EditProfileController>(context, listen: true).userData ??
-        {"name": "Loading...", "phone": "Loading..."};
+    final controller = Provider.of<UserController>(context, listen: true);
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
@@ -40,10 +31,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               children: [
                 DashboardHeader(onBack: () => Navigator.pop(context)),
                 const SizedBox(height: 24),
-                DashboardGreeting(name: userData['name']),
+                DashboardGreeting(name: controller.userName ?? ""),
                 const SizedBox(height: 18),
                 DashboardActionCard(
-                  userName: userData['name'],
+                  userName: controller.userName ?? "",
                   onEditProfileTap: () {
                     Navigator.pushNamed(context, '/edit-profile');
                   },
@@ -62,7 +53,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               left: 18,
               bottom: 130,
               child: DashboardLogoutButton(
-                onTap: () => Provider.of<VendorController>(
+                onTap: () => Provider.of<UserController>(
                   context,
                   listen: false,
                 ).logout(context),

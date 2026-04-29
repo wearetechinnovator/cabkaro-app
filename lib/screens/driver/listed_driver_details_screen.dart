@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cabkaro/controllers/driver_details_controller.dart';
+import 'package:cabkaro/widgets/shimmer/driver_list_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -299,7 +300,7 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
       },
     );
   }
-  
+
   // ── Detail bottom sheet ──────────────────────────────────────────────────
   void _showDriverDetail(Map<String, dynamic> driverData) {
     final driver = driverData;
@@ -532,124 +533,137 @@ class _ListedDriverDetailsScreenState extends State<ListedDriverDetailsScreen> {
             ).getVendorDrivers(context);
           },
           child: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
+            child:
+                Provider.of<DriverDetailsController>(
+                      context,
+                      listen: true,
+                    ).loading ==
+                    true
+                ? DriverListShimmer()
+                : Column(
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      Text(
-                        "My Listed Drivers",
-                        style: GoogleFonts.oswald(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.arrow_back),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            Text(
+                              "My Listed Drivers",
+                              style: GoogleFonts.oswald(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child:
-                      Provider.of<DriverDetailsController>(
-                        context,
-                        listen: true,
-                      ).listedDrivers.isEmpty
-                      ? Center(
-                          child: Text(
-                            "No drivers listed yet.",
-                            style: GoogleFonts.nunitoSans(
-                              color: Colors.grey,
-                              fontSize: 16,
-                            ),
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          itemCount: Provider.of<DriverDetailsController>(
-                            context,
-                            listen: true,
-                          ).listedDrivers.length,
-                          itemBuilder: (context, index) {
-                            final driver = Provider.of<DriverDetailsController>(
+                      Expanded(
+                        child:
+                            Provider.of<DriverDetailsController>(
                               context,
                               listen: true,
-                            ).listedDrivers[index];
-                            return GestureDetector(
-                              onTap: () => _showDriverDetail(driver),
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 8),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.9),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: Colors.black12,
-                                    width: 1.5,
+                            ).listedDrivers.isEmpty
+                            ? Center(
+                                child: Text(
+                                  "No drivers listed yet.",
+                                  style: GoogleFonts.nunitoSans(
+                                    color: Colors.grey,
+                                    fontSize: 16,
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.05),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
                                 ),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 24,
-                                      backgroundColor: const Color(
-                                        0xFFF2CA2A,
-                                      ).withOpacity(0.2),
-                                      backgroundImage:
-                                          driver['driver_img'] != null
-                                          ? NetworkImage(
-                                              "${constant.imgUrl}/${driver['driver_img']}",
-                                            )
-                                          : null,
-                                      child: driver['driver_img'] == null
-                                          ? const Icon(
-                                              Icons.person,
-                                              color: Color(0xFFDDA200),
-                                              size: 26,
-                                            )
-                                          : null,
-                                    ),
-                                    const SizedBox(width: 14),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            driver['driver_name'],
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                itemCount: Provider.of<DriverDetailsController>(
+                                  context,
+                                  listen: true,
+                                ).listedDrivers.length,
+                                itemBuilder: (context, index) {
+                                  final driver =
+                                      Provider.of<DriverDetailsController>(
+                                        context,
+                                        listen: true,
+                                      ).listedDrivers[index];
+                                  return GestureDetector(
+                                    onTap: () => _showDriverDetail(driver),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.9),
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: Colors.black12,
+                                          width: 1.5,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.05,
                                             ),
+                                            blurRadius: 10,
                                           ),
-                                          Text(
-                                            driver['driver_phone'].toString(),
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 13,
+                                        ],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 24,
+                                            backgroundColor: const Color(
+                                              0xFFF2CA2A,
+                                            ).withOpacity(0.2),
+                                            backgroundImage:
+                                                driver['driver_img'] != null
+                                                ? NetworkImage(
+                                                    "${constant.imgUrl}/${driver['driver_img']}",
+                                                  )
+                                                : null,
+                                            child: driver['driver_img'] == null
+                                                ? const Icon(
+                                                    Icons.person,
+                                                    color: Color(0xFFDDA200),
+                                                    size: 26,
+                                                  )
+                                                : null,
+                                          ),
+                                          const SizedBox(width: 14),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  driver['driver_name'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  driver['driver_phone']
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                ),
-              ],
-            ),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),

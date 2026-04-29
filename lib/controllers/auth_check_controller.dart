@@ -1,13 +1,14 @@
 import 'dart:convert';
-import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:cabkaro/providers/socket_provider.dart';
 import 'package:cabkaro/screens/common/car_details_screen.dart';
 import 'package:cabkaro/screens/common/driver_details_screen.dart';
 import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
 import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
+import 'package:cabkaro/screens/user/user_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cabkaro/screens/common/landing_screen.dart';
-import 'package:cabkaro/screens/user/car_listing_screen.dart';
+import 'package:cabkaro/screens/user/user_home_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cabkaro/utils/constants.dart' as constant;
@@ -67,19 +68,41 @@ class AuthCheckController extends ChangeNotifier {
               }
             }
             await socketProvider.connect();
-          } else if (role == "user") {
-            nextScreen = CarListingScreen();
-            await socketProvider.connect();
+          }
+          // User rol;
+          else if (role == "user") {
+            final userReq = await http.get(
+              Uri.parse("${constant.apiUrl}/user/get-profile"),
+              headers: {"x-cab-token": token},
+            );
+            var userRes = jsonDecode(userReq.body);
 
-            if (!context.mounted) return;
-            Provider.of<EditProfileController>(
-              context,
-              listen: false,
-            ).getUserData();
-          } else {
+            if (userReq.statusCode != 200) {
+              pref.remove("role");
+              pref.remove(constant.cabToken);
+              nextScreen = LandingScreen();
+            } else {
+              if (userRes['data']['profile_completed'] == true) {
+                nextScreen = UserHomeScreen();
+
+                if (!context.mounted) return;
+                Provider.of<UserController>(
+                  context,
+                  listen: false,
+                ).getUserDetails(context);
+              } else {
+                nextScreen = UserDetailsScreen();
+              }
+            }
+            await socketProvider.connect();
+          }
+          // No role find;
+          else {
             nextScreen = LandingScreen();
           }
-        } else {
+        }
+        // No Token found;
+        else {
           nextScreen = LandingScreen();
         }
       } catch (e) {

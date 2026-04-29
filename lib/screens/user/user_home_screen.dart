@@ -7,23 +7,24 @@ import 'package:cabkaro/screens/user/user_listing_dock.dart';
 import 'package:cabkaro/widgets/reviewslider/review_slider.dart';
 import 'package:cabkaro/screens/user/available_cabs_screen.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/listing/listing_dot_indicator.dart';
-import '../../widgets/listing/recent_booking_card.dart';
-import '../../widgets/listing/section_title.dart';
-import '../../widgets/search_card.dart';
-import '../../widgets/cabslider/cabslider.dart';
+import 'package:cabkaro/widgets/listing/listing_dot_indicator.dart';
+import 'package:cabkaro/widgets/listing/recent_booking_card.dart';
+import 'package:cabkaro/widgets/listing/section_title.dart';
+import 'package:cabkaro/widgets/search_card.dart';
+import 'package:cabkaro/widgets/cabslider/cabslider.dart';
 import 'greeting_block.dart';
 
-class CarListingScreen extends StatefulWidget {
-  const CarListingScreen({super.key});
+class UserHomeScreen extends StatefulWidget {
+  const UserHomeScreen({super.key});
 
   @override
-  State<CarListingScreen> createState() => _CarListingScreenState();
+  State<UserHomeScreen> createState() => _UserHomeScreenState();
 }
 
-class _CarListingScreenState extends State<CarListingScreen> {
+class _UserHomeScreenState extends State<UserHomeScreen> {
   int _cabIndex = 0;
   int _reviewIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,6 @@ class _CarListingScreenState extends State<CarListingScreen> {
                 padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 120.0),
                 children: [
                   const UserListingHeader(),
-                  const SizedBox(height: 24.0),
                   const GreetingBlock(),
                   const SizedBox(height: 14.0),
                   Searchcard(
