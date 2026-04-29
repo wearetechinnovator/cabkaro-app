@@ -608,12 +608,15 @@ class _ListedCarDetailsScreenState extends State<ListedCarDetailsScreen> {
                                             color: Colors.green,
                                           ),
                                           const SizedBox(width: 5),
-                                          Text(
-                                            car['service_location_string'] ??
-                                                "",
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.green,
+                                          Expanded(
+                                            child: Text(
+                                              car['service_location_string'] ??
+                                                  "",
+                                              overflow: TextOverflow.clip,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.green,
+                                              ),
                                             ),
                                           ),
                                         ],
