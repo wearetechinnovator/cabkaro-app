@@ -17,6 +17,7 @@ import 'package:cabkaro/screens/common/booking_details_screen.dart';
 import 'package:cabkaro/screens/common/change_password_screen.dart';
 import 'package:cabkaro/screens/common/login_screen.dart';
 import 'package:cabkaro/screens/common/splash_screen.dart';
+import 'package:cabkaro/screens/driver/driver_booked_cab_screen.dart';
 import 'package:cabkaro/screens/driver/driver_edit_profile_screen.dart';
 import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
 import 'package:cabkaro/screens/driver/driver_notifications_screen.dart';
@@ -27,6 +28,8 @@ import 'package:cabkaro/screens/driver/listed_car_deatils_screen.dart';
 import 'package:cabkaro/screens/driver/listed_driver_details_screen.dart';
 import 'package:cabkaro/screens/driver/ongoing_rides_screen.dart';
 import 'package:cabkaro/screens/driver/photo_upload_screen.dart';
+import 'package:cabkaro/screens/user/available_cabs_screen.dart';
+import 'package:cabkaro/screens/user/booked_cab_screen.dart';
 import 'package:cabkaro/screens/user/user_home_screen.dart';
 import 'package:cabkaro/screens/user/notifications_screen.dart';
 import 'package:cabkaro/screens/user/user_profile_screen.dart';
@@ -34,7 +37,6 @@ import 'package:cabkaro/screens/user/user_details_screen.dart';
 import 'package:cabkaro/screens/user/signin_screen.dart';
 import 'package:cabkaro/screens/user/user_edit_profile_screen.dart';
 import 'package:cabkaro/providers/location_provider.dart';
-import 'package:cabkaro/widgets/test_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -85,7 +87,9 @@ class _MyAppState extends State<MyApp> {
         ),
 
         // home: const SplashScreen(),
-        home: SplashScreen(),
+        // home: AvailableCabsScreen(rideId: '2',),
+        home: BookedCabScreen(),
+        // home: OngoingRidesScreen(),
         routes: {
           '/signup': (context) => const UserDetailsScreen(),
           '/booking-details': (context) => const BookingDetailsScreen(),
