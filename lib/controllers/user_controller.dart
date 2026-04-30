@@ -222,9 +222,9 @@ class UserController extends ChangeNotifier {
     }
   }
 
-  // =======================================
+  // =====================
   // Login Screen code
-  // =======================================
+  // =====================
   Future<void> login(BuildContext ctx) async {
     if (!formKey.currentState!.validate()) {
       return;
@@ -388,9 +388,9 @@ class UserController extends ChangeNotifier {
     }
   }
 
-  // ===============
+  // ============
   // Logout
-  // ===============
+  // ============
   void logout(BuildContext ctx) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     pref.remove(constant.cabToken);
@@ -405,7 +405,6 @@ class UserController extends ChangeNotifier {
     userPhoneController.clear();
     userProfileBase64 = "";
     profileImage = null;
-
 
     if (!ctx.mounted) return;
     Navigator.push(

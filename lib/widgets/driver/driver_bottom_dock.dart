@@ -33,20 +33,20 @@ class _DriverBottomDockState extends State<DriverBottomDock> {
             icon: Icons.home_outlined,
             selected: _currentRoute == '/driver-home',
             onTap: () =>
-                Navigator.pushReplacementNamed(context, '/driver-home'),
+                Navigator.pushNamed(context, '/driver-home'),
           ),
           // Chart → driver ride history
           _DockIcon(
             icon: Icons.bar_chart_rounded,
             selected: _currentRoute == '/driver-ride-history',
             onTap: () =>
-                Navigator.pushReplacementNamed(context, '/driver-ride-history'),
+                Navigator.pushNamed(context, '/driver-ride-history'),
           ),
           // Notifications → driver notifications
           _DockIcon(
             icon: Icons.notifications_none_rounded,
             selected: _currentRoute == '/driver-notifications',
-            onTap: () => Navigator.pushReplacementNamed(
+            onTap: () => Navigator.pushNamed(
               context,
               '/driver-notifications',
             ),
@@ -56,7 +56,7 @@ class _DriverBottomDockState extends State<DriverBottomDock> {
             icon: Icons.person_rounded,
             selected: _currentRoute == '/driver-profile',
             onTap: () =>
-                Navigator.pushReplacementNamed(context, '/driver-profile'),
+                Navigator.pushNamed(context, '/driver-profile'),
           ),
         ],
       ),

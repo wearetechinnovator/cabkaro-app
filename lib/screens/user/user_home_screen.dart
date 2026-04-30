@@ -1,4 +1,5 @@
 import 'package:cabkaro/controllers/user/ride_controller.dart';
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:cabkaro/screens/user/user_listing_header.dart';
 import 'package:cabkaro/widgets/current_location_slider/current_location_slider.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   int _cabIndex = 0;
   int _reviewIndex = 0;
 
+  @override
+  void initState(){
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      context.read<UserController>().getUserDetails(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

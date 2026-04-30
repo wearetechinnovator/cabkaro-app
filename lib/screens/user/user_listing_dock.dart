@@ -1,5 +1,6 @@
+import 'package:cabkaro/screens/user/available_cabs_screen.dart';
+import 'package:cabkaro/screens/user/user_ongoing_rides_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:cabkaro/screens/user/driver_searching_screen.dart';
 
 class UserListingDock extends StatefulWidget {
   const UserListingDock({super.key});
@@ -32,41 +33,56 @@ class _UserListingDockState extends State<UserListingDock> {
           _DockIcon(
             icon: Icons.home_outlined,
             selected: _currentRoute == '/listing',
-            onTap: () => Navigator.pushReplacementNamed(context, '/listing'),
+            onTap: () => Navigator.pushNamed(context, '/listing'),
           ),
           _DockIcon(
             icon: Icons.bar_chart_rounded,
             selected: _currentRoute == '/booking-details',
-            onTap: () =>
-                Navigator.pushReplacementNamed(context, '/booking-details'),
+            onTap: () => Navigator.pushNamed(context, '/booking-details'),
           ),
-
-          // ── Ride / Driver Search shortcut ─────────────────────────────
-          _RideSearchDockButton(
-            selected: _currentRoute == '/driver-searching',
+          _DockIcon(
+            icon: Icons.car_repair,
+            selected: _currentRoute == '/booking-details',
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const DriverSearchingScreen(),
-                  settings: const RouteSettings(name: '/driver-searching'),
+                  builder: (_) => AvailableCabsScreen(rideId: "1"),
                 ),
               );
             },
           ),
-          // ─────────────────────────────────────────────────────────────
 
+          // // ── Ride / Driver Search shortcut ─────────────────────────────
+          // _RideSearchDockButton(
+          //   selected: _currentRoute == '/driver-searching',
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (_) => const DriverSearchingScreen(),
+          //         settings: const RouteSettings(name: '/driver-searching'),
+          //       ),
+          //     );
+          //   },
+          // ),
+          // // ─────────────────────────────────────────────────────────────
           _DockIcon(
-            icon: Icons.notifications_none_rounded,
+            icon: Icons.watch_later_outlined,
             selected: _currentRoute == '/notifications',
-            onTap: () =>
-                Navigator.pushReplacementNamed(context, '/notifications'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => UserOngoingRidesScreen(),
+                ),
+              );
+            },
           ),
           _DockIcon(
             icon: Icons.person_rounded,
             selected: _currentRoute == '/dashboard',
-            onTap: () =>
-                Navigator.pushReplacementNamed(context, '/dashboard'),
+            onTap: () => Navigator.pushNamed(context, '/dashboard'),
           ),
         ],
       ),
@@ -93,17 +109,14 @@ class _RideSearchDockButton extends StatelessWidget {
               ? const Color(0xFFF8C100)
               : const Color(0xFFF8C100).withOpacity(0.15),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: const Color(0xFFF8C100),
-            width: 1.5,
-          ),
+          border: Border.all(color: const Color(0xFFF8C100), width: 1.5),
           boxShadow: selected
               ? [
                   BoxShadow(
                     color: const Color(0xFFF8C100).withOpacity(0.35),
                     blurRadius: 12,
                     spreadRadius: 2,
-                  )
+                  ),
                 ]
               : [],
         ),

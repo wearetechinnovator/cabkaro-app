@@ -25,6 +25,7 @@ class DriverRideController extends ChangeNotifier {
     try {
       await getRide(ctx);
     } catch (err) {
+      if(!ctx.mounted) return;
       ToastWidget.show(
         ctx,
         message: 'An error occurred while refreshing rides: $err',
@@ -43,12 +44,8 @@ class DriverRideController extends ChangeNotifier {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString(constant.cabToken);
-      final double latitude = 22.591610311340272;
-      final double longitude = 88.36023587733507;
 
-      Uri url = Uri.parse(
-        "${constant.apiUrl}/ride/nearest-rides?lat=$latitude&lng=$longitude",
-      );
+      Uri url = Uri.parse("${constant.apiUrl}/ride/get-ride");
       var req = await http.get(
         url,
         headers: {"Content-Type": "application/json", "x-cab-token": token!},
@@ -60,7 +57,7 @@ class DriverRideController extends ChangeNotifier {
         return;
       }
 
-      availableRides = res['rides'];
+      availableRides = res['data'];
       notifyListeners();
     } catch (err) {
       if (!ctx.mounted) return;
@@ -75,7 +72,7 @@ class DriverRideController extends ChangeNotifier {
     }
   }
 
-  Future<void> acceptRide(BuildContext ctx, dynamic rideData) async {
+  Future<void> acceptRide(BuildContext ctx, dynamic rideData, String carId) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString(constant.cabToken);
@@ -90,6 +87,7 @@ class DriverRideController extends ChangeNotifier {
             ? "${rideNegoTime!.hour}:${rideNegoTime!.minute}"
             : rideData['pickup_time'].toString(),
         "token": token!,
+        "carId":carId
       };
       var req = await http.post(
         url,
@@ -105,6 +103,12 @@ class DriverRideController extends ChangeNotifier {
 
       if (!ctx.mounted) return;
       ToastWidget.show(ctx, message: res['msg'], type: ToastType.success);
+
+      // Clear Data;
+      rideNegoPrice.clear();
+      rideNegoTime = null;
+      notifyListeners();
+      
       Navigator.push(
         ctx,
         MaterialPageRoute(builder: (context) => const DriverBookedCabScreen()),
