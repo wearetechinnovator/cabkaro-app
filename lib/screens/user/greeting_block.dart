@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
+=======
+import 'package:cabkaro/controllers/user_controller.dart';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -72,8 +76,13 @@ class _GreetingBlockState extends State<GreetingBlock>
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final controller = context.watch<EditProfileController>();
     final name = controller.userData?['name'].split(" ")[0] ?? "";
+=======
+    final controller = context.watch<UserController>();
+    final name = controller.userName?.split(" ")[0] ?? "";
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

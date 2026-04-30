@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
+=======
+import 'package:cabkaro/controllers/user_controller.dart';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 import 'package:provider/provider.dart';
 import '../common/booking_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +21,7 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
+<<<<<<< HEAD
   void initState() {
     super.initState();
     Provider.of<EditProfileController>(context, listen: false).getUserData();
@@ -28,6 +33,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final Map<String, dynamic> userData =
         Provider.of<EditProfileController>(context, listen: true).userData ??
         {"name": "Loading...", "phone": "Loading..."};
+=======
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final controller = Provider.of<UserController>(context, listen: true);
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
@@ -39,10 +49,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               children: [
                 DashboardHeader(onBack: () => Navigator.pop(context)),
                 const SizedBox(height: 24),
+<<<<<<< HEAD
                 DashboardGreeting(name: userData['name']),
                 const SizedBox(height: 18),
                 DashboardActionCard(
                   userName: userData['name'],
+=======
+                DashboardGreeting(name: controller.userName ?? ""),
+                const SizedBox(height: 18),
+                DashboardActionCard(
+                  userName: controller.userName ?? "",
+                  phone: controller.userPhone ?? "",
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   onEditProfileTap: () {
                     Navigator.pushNamed(context, '/edit-profile');
                   },
@@ -61,7 +79,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               left: 18,
               bottom: 130,
               child: DashboardLogoutButton(
+<<<<<<< HEAD
                 onTap: () => Provider.of<EditProfileController>(
+=======
+                onTap: () => Provider.of<UserController>(
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   context,
                   listen: false,
                 ).logout(context),

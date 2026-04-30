@@ -96,7 +96,11 @@ class ReviewController extends ChangeNotifier {
     }
   }
 
+<<<<<<< HEAD
   // Get driver rating summary
+=======
+  /// Get driver rating summary
+>>>>>>> a64f8e0 (Edit vendor and user profile)
   Future<Map<String, dynamic>> getDriverRatingSummary(String driverId) async {
     try {
       Uri url =

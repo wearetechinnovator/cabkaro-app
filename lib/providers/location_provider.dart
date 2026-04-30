@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class LocationProvider extends ChangeNotifier {
   String? _pickupLocation;
   String? _dropLocation;
+<<<<<<< HEAD
   LatLng? _pickupLatLng;
   LatLng? _dropLatLng;
 
@@ -14,11 +15,25 @@ class LocationProvider extends ChangeNotifier {
 
   void setPickupLatLng(LatLng position) {
     _pickupLatLng = position;
+=======
+  late LatLng pickupLatLng;
+  late LatLng dropLatLng;
+
+  String? get pickupLocation => _pickupLocation;
+  String? get dropLocation => _dropLocation;
+
+  void setPickupLatLng(LatLng position) {
+    pickupLatLng = position;
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     notifyListeners();
   }
 
   void setDropLatLng(LatLng position) {
+<<<<<<< HEAD
     _dropLatLng = position;
+=======
+    dropLatLng = position;
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     notifyListeners();
   }
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'dart:io';
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,16 @@ import 'package:provider/provider.dart';
 import '../../widgets/dashboard/dashboard_bottom_dock.dart';
 
 
+=======
+import 'dart:convert';
+import 'package:cabkaro/controllers/edit_profile_controller.dart';
+import 'package:cabkaro/controllers/user_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:cabkaro/widgets/ToastWidget.dart';
+import 'package:provider/provider.dart';
+import '../../widgets/dashboard/dashboard_bottom_dock.dart';
+import 'package:cabkaro/utils/constants.dart' as constant;
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -17,6 +28,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+<<<<<<< HEAD
 
   File? _profileImage;
   final ImagePicker _picker = ImagePicker();
@@ -133,17 +145,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // ──────────────────────────────────────────────
 
   void _showImageSourceModal() {
+=======
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<EditProfileController>(context, listen: false).getUserData();
+    });
+  }
+
+  // ──────────────────────────────────────────────
+  // Bottom sheet — delegates picking to controller
+  // ──────────────────────────────────────────────
+
+  void _showImageSourceModal(EditProfileController controller) {
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => _ImageSourceBottomSheet(
         onCameraTap: () {
           Navigator.pop(ctx);
+<<<<<<< HEAD
           _pickFromCamera();
         },
         onGalleryTap: () {
           Navigator.pop(ctx);
           _pickFromGallery();
+=======
+          controller.pickFromCamera(context);
+        },
+        onGalleryTap: () {
+          Navigator.pop(ctx);
+          controller.pickFromGallery(context);
+>>>>>>> a64f8e0 (Edit vendor and user profile)
         },
       ),
     );
@@ -156,13 +191,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+<<<<<<< HEAD
     var provider = Provider.of<EditProfileController>(context, listen: false);
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
       body: SafeArea(
         child: Stack(
           children: [
+<<<<<<< HEAD
             ListView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
               children: [
@@ -246,10 +285,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         Container(
+=======
+            Consumer<EditProfileController>(
+              builder: (context, controller, _) {
+                return ListView(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
+                  children: [
+                    // ── Back button ──
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
                             color: const Color(0xFFF8C100),
+<<<<<<< HEAD
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
@@ -313,6 +366,156 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ],
             ),
 
+=======
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          alignment: Alignment.center,
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // ── Title ──
+                    const Center(
+                      child: Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2D2F35),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // ── Avatar ──
+                    // Priority: 1) newly picked file, 2) base64 from server, 3) placeholder
+                    Center(
+                      child: GestureDetector(
+                        onTap: () => _showImageSourceModal(controller),
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Container(
+                              width: 140,
+                              height: 140,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color(0xFFF8C100),
+                                  width: 2,
+                                ),
+                                color: Colors.white,
+                              ),
+                              child: ClipOval(child: _buildAvatar(controller)),
+                            ),
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF8C100),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt,
+                                color: Color(0xFF2D2F35),
+                                size: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Center(
+                      child: Text(
+                        'Tap photo to change',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF999999),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // ── Name ──
+                    _EditProfileInput(
+                      icon: Icons.person,
+                      hintText: 'Name',
+                      controller: controller.nameController,
+                    ),
+                    const SizedBox(height: 14),
+
+                    // ── Phone ──
+                    _EditProfileInput(
+                      icon: Icons.call,
+                      hintText: 'Phone',
+                      controller: controller.phoneController,
+                    ),
+                    const SizedBox(height: 14),
+
+                    // ── Gender selector ──
+                    _GenderSelector(
+                      selected: controller.selectedGender,
+                      onChanged: controller.setGender,
+                    ),
+                    const SizedBox(height: 32),
+
+                    // ── Update button ──
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: controller.isLoading
+                            ? null
+                            : () => controller.update(context),
+                        child: Container(
+                          width: 150,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: controller.isLoading
+                                ? Colors.grey[400]
+                                : const Color(0xFF2D2F35),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          alignment: Alignment.center,
+                          child: controller.isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : const Text(
+                                  'Update Profile',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+
+            // ── Bottom dock ──
+>>>>>>> a64f8e0 (Edit vendor and user profile)
             Positioned(
               left: screenWidth * 0.07,
               right: screenWidth * 0.07,
@@ -324,10 +527,138 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+<<<<<<< HEAD
 }
 
 // ──────────────────────────────────────────────────────────────
 // Bottom Sheet Widget
+=======
+
+  // ── Avatar builder ────────────────────────────────────────────
+  // 1. Newly picked file → Image.file
+  // 2. Base64 from server → Image.memory
+  // 3. Fallback → icon placeholder
+  Widget _buildAvatar(EditProfileController controller) {
+    if (controller.profileImageFile != null) {
+      return Image.file(
+        controller.profileImageFile!,
+        fit: BoxFit.cover,
+        width: 140,
+        height: 140,
+      );
+    } else {
+      return Image.network(
+        '${constant.imgUrl}/${Provider.of<UserController>(context, listen: true).userImg}',
+        fit: BoxFit.cover,
+        width: 140,
+        height: 140,
+      );
+    }
+  }
+
+  
+}
+
+// ──────────────────────────────────────────────────────────────
+// Gender Selector Widget
+// ──────────────────────────────────────────────────────────────
+
+class _GenderSelector extends StatelessWidget {
+  const _GenderSelector({required this.selected, required this.onChanged});
+
+  final String selected;
+  final ValueChanged<String> onChanged;
+
+  static const _options = [
+    ('male', Icons.male_rounded, 'Male'),
+    ('female', Icons.female_rounded, 'Female'),
+    ('others', Icons.transgender_rounded, 'Others'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<EditProfileController>(
+      builder: (_, controller, __) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 4, bottom: 10),
+              child: Text(
+                'Gender',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF666666),
+                ),
+              ),
+            ),
+            Row(
+              children: _options.map((opt) {
+                final value = opt.$1;
+                final icon = opt.$2;
+                final label = opt.$3;
+                final isSelected = controller.selectedGender == value;
+
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => onChanged(value),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: EdgeInsets.only(
+                        right: value != 'others' ? 10 : 0,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? const Color(0xFF2D2F35)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isSelected
+                              ? const Color(0xFF2D2F35)
+                              : const Color(0xFFCCCCCC),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            icon,
+                            size: 22,
+                            color: isSelected
+                                ? const Color(0xFFF8C100)
+                                : const Color(0xFF999999),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            label,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: isSelected
+                                  ? Colors.white
+                                  : const Color(0xFF666666),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// Bottom Sheet
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 // ──────────────────────────────────────────────────────────────
 
 class _ImageSourceBottomSheet extends StatelessWidget {
@@ -350,7 +681,10 @@ class _ImageSourceBottomSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+<<<<<<< HEAD
           // Drag handle
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           const SizedBox(height: 12),
           Container(
             width: 40,
@@ -361,8 +695,11 @@ class _ImageSourceBottomSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
+<<<<<<< HEAD
 
           // Title
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           const Text(
             'Update Profile Photo',
             style: TextStyle(
@@ -373,12 +710,19 @@ class _ImageSourceBottomSheet extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           const Text(
+<<<<<<< HEAD
             'Choose how you\'d like to add your photo',
             style: TextStyle(fontSize: 13, color: Color(0xFF999999)),
           ),
           const SizedBox(height: 24),
 
           // Options row
+=======
+            "Choose how you'd like to add your photo",
+            style: TextStyle(fontSize: 13, color: Color(0xFF999999)),
+          ),
+          const SizedBox(height: 24),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Row(
@@ -398,8 +742,11 @@ class _ImageSourceBottomSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
+<<<<<<< HEAD
 
           // Cancel
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
@@ -456,11 +803,15 @@ class _SourceOption extends StatelessWidget {
                 width: 1.5,
               ),
             ),
+<<<<<<< HEAD
             child: Icon(
               icon,
               size: 32,
               color: const Color(0xFFF8C100),
             ),
+=======
+            child: Icon(icon, size: 32, color: const Color(0xFFF8C100)),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           ),
           const SizedBox(height: 8),
           Text(
@@ -478,7 +829,11 @@ class _SourceOption extends StatelessWidget {
 }
 
 // ──────────────────────────────────────────────────────────────
+<<<<<<< HEAD
 // Input Widget (unchanged)
+=======
+// Input Widget
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 // ──────────────────────────────────────────────────────────────
 
 class _EditProfileInput extends StatelessWidget {
@@ -512,4 +867,8 @@ class _EditProfileInput extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a64f8e0 (Edit vendor and user profile)

@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-import 'package:cabkaro/controllers/driver/driver_verify_otp_controller.dart';
-import 'package:cabkaro/controllers/vendor_controller.dart';
-import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
-=======
-import 'package:cabkaro/controllers/vendor_controller.dart';
->>>>>>> a64f8e0 (Edit vendor and user profile)
+import 'package:cabkaro/controllers/user_controller.dart';
 import 'package:cabkaro/widgets/otp_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,24 +8,23 @@ import 'package:cabkaro/widgets/gradient_background.dart';
 import 'package:cabkaro/widgets/action_button.dart';
 
 
-class OtpScreen extends StatefulWidget {
+class UserOtpScreen extends StatefulWidget {
   final String phone;
-  const OtpScreen({super.key, required this.phone});
+  const UserOtpScreen({super.key, required this.phone});
 
   @override
-  State<OtpScreen> createState() => _DriverOtpScreenState();
+  State<UserOtpScreen> createState() => _UserOtpScreenState();
 }
 
-class _DriverOtpScreenState extends State<OtpScreen> {
+class _UserOtpScreenState extends State<UserOtpScreen> {
   // Cache the controller reference so it's safe to use in dispose()
-  late VendorController _otpController;
-
+  late UserController _otpController;
   bool _initialized = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _otpController = Provider.of<VendorController>(
+    _otpController = Provider.of<UserController>(
       context,
       listen: false,
     );
@@ -205,10 +198,7 @@ class _DriverOtpScreenState extends State<OtpScreen> {
                           SizedBox(width: screenWidth * 0.172),
                           GestureDetector(
                             onTap: () {
-<<<<<<< HEAD
-=======
                               _otpController.login(context);
->>>>>>> a64f8e0 (Edit vendor and user profile)
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: const Text('OTP resent'),
@@ -256,7 +246,7 @@ class _DriverOtpScreenState extends State<OtpScreen> {
                     ),
                     SizedBox(width: screenWidth * 0.08),
                     Expanded(
-                      child: Consumer<VendorController>(
+                      child: Consumer<UserController>(
                         builder: (context, otpController, _) {
                           return ActionButton(
                             label: 'Verify',
@@ -264,31 +254,9 @@ class _DriverOtpScreenState extends State<OtpScreen> {
                             textColor: Colors.white,
                             borderColor: const Color(0xFF2D2F35),
                             isLoading: otpController.isLoading,
-<<<<<<< HEAD
-                            // onTap: () {
-                            //   _otpController.verifyOtp(widget.phone, context);
-                            // },
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const DriverVendorDetailsScreen(),
-                                ),
-                              );
-                            },
-=======
                             onTap: () {
                               _otpController.verifyOtp(widget.phone, context);
                             },
-                            // onTap: () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => const DriverVendorDetailsScreen(),
-                            //     ),
-                            //   );
-                            // },
->>>>>>> a64f8e0 (Edit vendor and user profile)
                           );
                         },
                       ),

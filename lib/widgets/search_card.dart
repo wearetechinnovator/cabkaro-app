@@ -273,6 +273,7 @@ class _SearchcardState extends State<Searchcard>
 
                 // Submit
                 GestureDetector(
+<<<<<<< HEAD
                   onTap: () {
                     final controller = Provider.of<RideController>(context, listen: false);
                     // Get price from the local price field
@@ -290,6 +291,9 @@ class _SearchcardState extends State<Searchcard>
                     
                     widget.onSubmit();
                   },
+=======
+                  onTap: widget.onSubmit,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     width: double.infinity,

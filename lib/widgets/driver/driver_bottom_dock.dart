@@ -33,20 +33,32 @@ class _DriverBottomDockState extends State<DriverBottomDock> {
             icon: Icons.home_outlined,
             selected: _currentRoute == '/driver-home',
             onTap: () =>
+<<<<<<< HEAD
                 Navigator.pushReplacementNamed(context, '/driver-home'),
+=======
+                Navigator.pushNamed(context, '/driver-home'),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           ),
           // Chart → driver ride history
           _DockIcon(
             icon: Icons.bar_chart_rounded,
             selected: _currentRoute == '/driver-ride-history',
             onTap: () =>
+<<<<<<< HEAD
                 Navigator.pushReplacementNamed(context, '/driver-ride-history'),
+=======
+                Navigator.pushNamed(context, '/driver-ride-history'),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           ),
           // Notifications → driver notifications
           _DockIcon(
             icon: Icons.notifications_none_rounded,
             selected: _currentRoute == '/driver-notifications',
+<<<<<<< HEAD
             onTap: () => Navigator.pushReplacementNamed(
+=======
+            onTap: () => Navigator.pushNamed(
+>>>>>>> a64f8e0 (Edit vendor and user profile)
               context,
               '/driver-notifications',
             ),
@@ -56,7 +68,11 @@ class _DriverBottomDockState extends State<DriverBottomDock> {
             icon: Icons.person_rounded,
             selected: _currentRoute == '/driver-profile',
             onTap: () =>
+<<<<<<< HEAD
                 Navigator.pushReplacementNamed(context, '/driver-profile'),
+=======
+                Navigator.pushNamed(context, '/driver-profile'),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           ),
         ],
       ),

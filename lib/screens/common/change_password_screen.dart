@@ -143,6 +143,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               SizedBox(
                 height: 52,
                 child: ElevatedButton(
+<<<<<<< HEAD
                   onPressed: () {
                     if (context
                         .read<AuthCheckController>()
@@ -154,6 +155,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       );
                     }
                   },
+=======
+                  onPressed: null,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2D2F35),
                     foregroundColor: Colors.white,

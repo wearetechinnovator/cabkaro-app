@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import 'dart:convert';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/constants.dart' as constant;
+=======
+
+import 'package:flutter/material.dart';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
 class DriverVerifyOtpController extends ChangeNotifier {
   String otp = '';
@@ -13,6 +18,7 @@ class DriverVerifyOtpController extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
  
 =======
@@ -99,4 +105,7 @@ class DriverVerifyOtpController extends ChangeNotifier {
     super.dispose();
   }
 >>>>>>> 5c2a44a (minor changes)
+=======
+ 
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 }

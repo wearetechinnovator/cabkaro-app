@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 import 'package:cabkaro/controllers/edit_profile_controller.dart';
 import 'package:cabkaro/screens/user/user_ride_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+=======
+import 'package:cabkaro/controllers/user_controller.dart';
+import 'package:cabkaro/screens/user/user_ride_history_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cabkaro/utils/constants.dart' as constant;
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
 class UserListingHeader extends StatelessWidget {
   const UserListingHeader({super.key});
@@ -58,8 +66,13 @@ class _ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final controller = context.watch<EditProfileController>();
     String name = controller.userData?['name'] ?? '';
+=======
+    final controller = context.watch<UserController>();
+    String name = controller.userName ?? '';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     final parts = name.trim().split(" ").where((e) => e.isNotEmpty).toList();
 
     final initials = parts.isEmpty
@@ -74,6 +87,7 @@ class _ProfileAvatar extends StatelessWidget {
       child: Container(
         width: 40,
         height: 40,
+<<<<<<< HEAD
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(
@@ -89,6 +103,21 @@ class _ProfileAvatar extends StatelessWidget {
             fontSize: 18,
           ),
         ),
+=======
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+
+          image: DecorationImage(
+            image: NetworkImage(
+              '${constant.imgUrl}/${Provider.of<UserController>(context, listen: true).userImg}',
+              
+            ),
+            fit: BoxFit.cover,
+
+          ),
+        ),
+        alignment: Alignment.center,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
       ),
     );
   }

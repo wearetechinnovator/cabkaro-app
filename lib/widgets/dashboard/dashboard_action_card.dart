@@ -1,10 +1,17 @@
+<<<<<<< HEAD
 import 'package:cabkaro/screens/common/change_password_screen.dart';
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 import 'package:flutter/material.dart';
 
 class DashboardActionCard extends StatelessWidget {
   const DashboardActionCard({
     super.key,
     required this.userName,
+<<<<<<< HEAD
+=======
+    required this.phone,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     this.onEditProfileTap,
     this.onLastRideTap,
     this.editLabel = 'Edit Profile', // default for user
@@ -12,6 +19,10 @@ class DashboardActionCard extends StatelessWidget {
   });
 
   final String userName;
+<<<<<<< HEAD
+=======
+  final String phone;
+>>>>>>> a64f8e0 (Edit vendor and user profile)
   final VoidCallback? onEditProfileTap;
   final VoidCallback? onLastRideTap;
   final String editLabel;
@@ -41,6 +52,10 @@ class DashboardActionCard extends StatelessWidget {
                   ),
                 ),
               ),
+<<<<<<< HEAD
+=======
+
+>>>>>>> a64f8e0 (Edit vendor and user profile)
               GestureDetector(
                 onTap: onEditProfileTap,
                 child: Container(
@@ -64,8 +79,24 @@ class DashboardActionCard extends StatelessWidget {
               ),
             ],
           ),
+<<<<<<< HEAD
           const SizedBox(height: 8),
           const Divider(color: Color(0x66FFFFFF), thickness: 1),
+=======
+          
+
+          const SizedBox(height: 8),
+          const Divider(color: Color(0x66FFFFFF), thickness: 1),
+           _ActionRow(
+            icon: Icons.phone,
+            label: 'Phone',
+            trailing: Text(
+              phone,
+              style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 0, 0, 0)),
+            ),
+          ),
+          const Divider(color: Color(0x66FFFFFF), thickness: 1),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
           _ActionRow(
             icon: Icons.history,
@@ -74,6 +105,7 @@ class DashboardActionCard extends StatelessWidget {
             onTap: onLastRideTap,
           ),
 
+<<<<<<< HEAD
           const Divider(color: Color(0x66FFFFFF), thickness: 1),
 
           _ActionRow(
@@ -106,6 +138,18 @@ class DashboardActionCard extends StatelessWidget {
               style: TextStyle(fontSize: 14, color: Color(0xFF6A6A6A)),
             ),
           ),
+=======
+          
+          // const Divider(color: Color(0x66FFFFFF), thickness: 1),
+          // const _ActionRow(
+          //   icon: Icons.map_outlined,
+          //   label: 'Offline Map',
+          //   trailing: Text(
+          //     'Coming Soon',
+          //     style: TextStyle(fontSize: 14, color: Color(0xFF6A6A6A)),
+          //   ),
+          // ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
         ],
       ),
     );

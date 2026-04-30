@@ -1,25 +1,57 @@
 import 'dart:convert';
+<<<<<<< HEAD
 import 'package:cabkaro/screens/common/otp_screen.dart';
 import 'package:cabkaro/screens/driver/driver_home_screen.dart';
+=======
+import 'dart:io';
+import 'package:cabkaro/screens/common/car_details_screen.dart';
+import 'package:cabkaro/screens/common/driver_vendor_details_screen.dart';
+import 'package:cabkaro/screens/common/landing_screen.dart';
+import 'package:cabkaro/screens/common/otp_screen.dart';
+import 'package:cabkaro/screens/driver/vendor_home_screen.dart';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 import 'package:cabkaro/widgets/Toastwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+<<<<<<< HEAD
 import '../../utils/constants.dart' as constant;
 
 
 class VendorController extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
+=======
+import 'package:cabkaro/utils/constants.dart' as constant;
+import 'package:image_picker/image_picker.dart';
+
+class VendorController extends ChangeNotifier {
+  final formKey = GlobalKey<FormState>();
+  final vendorDetailsformKey = GlobalKey<FormState>();
+>>>>>>> a64f8e0 (Edit vendor and user profile)
   final TextEditingController phoneController = TextEditingController();
   bool _isLoading = false;
   String otp = '';
   late List<TextEditingController> controllers;
   late List<FocusNode> focusNodes;
+<<<<<<< HEAD
 
   bool get isLoading => _isLoading;
 
   // =======================================
   //Login Screen code
+=======
+  String vendorRole = "Individual"; // Default role
+  final TextEditingController nameController = TextEditingController();
+  File? profileImage;
+  late String profileImageBase64;
+  bool get isLoading => _isLoading;
+
+  String vendorPhone = "";
+  String vendorName = "";
+  String vendorImg = "";
+  // =======================================
+  // Login Screen code
+>>>>>>> a64f8e0 (Edit vendor and user profile)
   // =======================================
   Future<void> login(BuildContext ctx) async {
     if (!formKey.currentState!.validate()) {
@@ -37,7 +69,10 @@ class VendorController extends ChangeNotifier {
 
       var res = jsonDecode(req.body);
       if (req.statusCode == 200) {
+<<<<<<< HEAD
         print(res);
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
         if (!ctx.mounted) return;
         ToastWidget.show(
           ctx,
@@ -115,6 +150,7 @@ class VendorController extends ChangeNotifier {
 
       var res = jsonDecode(req.body);
 
+<<<<<<< HEAD
       print("==================");
       print(res);
       if (req.statusCode == 200) {
@@ -124,6 +160,25 @@ class VendorController extends ChangeNotifier {
           ctx,
           MaterialPageRoute(builder: (context) => const DriverHomeScreen()),
         );
+=======
+      if (req.statusCode == 200) {
+        pref.setString(constant.cabToken, res['token']);
+        pref.setString("data", jsonEncode(res['data']));
+
+        if (res['data']['profile_completed'] == false) {
+          Navigator.pushReplacement(
+            ctx,
+            MaterialPageRoute(
+              builder: (context) => const DriverVendorDetailsScreen(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            ctx,
+            MaterialPageRoute(builder: (context) => const VendorHomeScreen()),
+          );
+        }
+>>>>>>> a64f8e0 (Edit vendor and user profile)
       } else {
         ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
       }
@@ -131,7 +186,11 @@ class VendorController extends ChangeNotifier {
       if (!ctx.mounted) return;
       ToastWidget.show(
         ctx,
+<<<<<<< HEAD
         message: 'Something went wrong.',
+=======
+        message: 'Something went wrong. $e',
+>>>>>>> a64f8e0 (Edit vendor and user profile)
         type: ToastType.error,
       );
     } finally {
@@ -150,4 +209,141 @@ class VendorController extends ChangeNotifier {
     }
     super.dispose();
   }
+<<<<<<< HEAD
+=======
+
+  // =====================================
+  // Update Vendor Details Screen code
+  // =====================================
+  void setVendorRole(String role) {
+    vendorRole = role;
+    notifyListeners();
+  }
+
+  Future<void> pickImage(bool isProfile) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      profileImage = File(pickedFile.path);
+      final bytes = await profileImage!.readAsBytes();
+      final base64 = base64Encode(bytes);
+      profileImageBase64 = "data:image/jpeg;base64,$base64";
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateVendorDetails(
+    BuildContext ctx, {
+    bool isEdit = false,
+  }) async {
+    if (!vendorDetailsformKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString(constant.cabToken);
+
+      Map<String, String> data = {
+        "vendor_name": nameController.text.trim(),
+        "vendor_phone": phoneController.text.trim(),
+        "vendor_img": profileImageBase64,
+        "vendor_type": vendorRole.toLowerCase() == "individual" ? "1" : "2",
+        "token": token!,
+      };
+      Uri url = Uri.parse("${constant.apiUrl}/vendor/update-profile");
+
+      var req = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+
+      var res = jsonDecode(req.body);
+      if (req.statusCode != 200) {
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
+      } else {
+        if (!ctx.mounted) return;
+        ToastWidget.show(
+          ctx,
+          message: 'Profile updated successfully',
+          type: ToastType.success,
+        );
+        if (!isEdit) {
+          Navigator.push(
+            ctx,
+            MaterialPageRoute(builder: (context) => CarDetailsScreenScreen()),
+          );
+        }
+        if (isEdit) {
+          vendorName = nameController.text.trim();
+          vendorPhone = phoneController.text.trim();
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      if (!ctx.mounted) return;
+      ToastWidget.show(
+        ctx,
+        message: 'Something went wrong.',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  // ============================
+  // Get Vendor Profile Details;
+  // ============================
+  Future<void> getVendorDetails(BuildContext ctx) async {
+    try {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      String? token = pref.getString(constant.cabToken);
+
+      Uri url = Uri.parse("${constant.apiUrl}/vendor/get-profile");
+      var req = await http.get(url, headers: {"x-cab-token": token!});
+
+      var res = jsonDecode(req.body);
+      if (req.statusCode != 200) {
+        if (!ctx.mounted) return;
+        ToastWidget.show(ctx, message: res['err'], type: ToastType.error);
+      } else {
+        nameController.text = res['data']['vendor_name'];
+        phoneController.text = res['data']['vendor_phone'];
+        profileImageBase64 = res['data']['vendor_img'];
+
+        // Used anywhere in vendor profile;
+        vendorName = res['data']['vendor_name'];
+        vendorPhone = res['data']['vendor_phone'];
+        vendorImg = res['data']['vendor_img'];
+
+        notifyListeners();
+      }
+    } catch (e) {
+      if (!ctx.mounted) return;
+      ToastWidget.show(
+        ctx,
+        message: 'Something went wrong.',
+        type: ToastType.error,
+      );
+    }
+  }
+
+  void logout(BuildContext ctx) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.remove(constant.cabToken);
+    pref.remove("role");
+    pref.remove("data");
+
+    if (!ctx.mounted) return;
+    Navigator.push(
+      ctx,
+      MaterialPageRoute(
+        builder: (context) {
+          return LandingScreen();
+        },
+      ),
+    );
+  }
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 }

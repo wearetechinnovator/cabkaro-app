@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import 'package:cabkaro/controllers/user/login_controller.dart';
+=======
+import 'package:cabkaro/controllers/user_controller.dart';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +11,10 @@ import '../../widgets/action_button.dart';
 import '../../widgets/gradient_background.dart';
 import '../../widgets/signup_input.dart';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
 
@@ -16,7 +23,10 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
+<<<<<<< HEAD
  
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -64,7 +74,11 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 Text(
+<<<<<<< HEAD
                   'Sign In',
+=======
+                  'Enter your number',
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   style: TextStyle(
                     fontSize: screenHeight * 0.027,
                     fontWeight: FontWeight.w500,
@@ -74,7 +88,11 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Form(
+<<<<<<< HEAD
                   key: Provider.of<LoginController>(
+=======
+                  key: Provider.of<UserController>(
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                     context,
                     listen: false,
                   ).formKey,
@@ -83,7 +101,11 @@ class _SigninScreenState extends State<SigninScreen> {
                       SignupInput(
                         hint: 'Phone',
                         icon: Icons.call,
+<<<<<<< HEAD
                         controller: Provider.of<LoginController>(
+=======
+                        controller: Provider.of<UserController>(
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                           context,
                           listen: false,
                         ).phoneController,
@@ -109,11 +131,15 @@ class _SigninScreenState extends State<SigninScreen> {
                         },
                       ),
                       SizedBox(height: 16),
+<<<<<<< HEAD
                       
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                     ],
                   ),
                 ),
 
+<<<<<<< HEAD
                 SizedBox(height: screenHeight * 0.18),
                 Consumer<LoginController>(
                   builder: (context, loginController, _) {
@@ -134,6 +160,22 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
                 SizedBox(height: screenHeight * 0.015),
                 
+=======
+                SizedBox(height: screenHeight * 0.25),
+                ActionButton(
+                  label: 'Submit',
+                  backgroundColor: const Color.fromARGB(255, 242, 202, 42),
+                  textColor: Colors.black,
+                  borderColor: const Color(0xFF1F1F1F),
+                  isLoading: false,
+                  onTap: () {
+                    Provider.of<UserController>(
+                      context,
+                      listen: false,
+                    ).login(context);
+                  },
+                ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
               ],
             ),
           ),

@@ -5,8 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class DriverListingHeader extends StatelessWidget {
+<<<<<<< HEAD
   const DriverListingHeader({super.key, required this.scaffoldKey});
   final GlobalKey<ScaffoldState> scaffoldKey;
+=======
+  const DriverListingHeader({super.key});
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +19,14 @@ class DriverListingHeader extends StatelessWidget {
         // Menu button to reliably open the Scaffold drawer when tapped.
         InkWell(
           borderRadius: BorderRadius.circular(20),
+<<<<<<< HEAD
           onTap: () {
             print('scaffoldKey state: ${scaffoldKey.currentState}');
             scaffoldKey.currentState?.openDrawer();
           },
+=======
+          onTap: () => Scaffold.of(context).openDrawer(),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
           child: Container(
             width: 40,
             height: 40,
@@ -79,6 +87,10 @@ class _IconCircle extends StatelessWidget {
   }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 // ignore: unused_element
 class _ProfileAvatar extends StatelessWidget {
   const _ProfileAvatar();

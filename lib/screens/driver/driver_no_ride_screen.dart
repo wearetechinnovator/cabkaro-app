@@ -1,6 +1,9 @@
 import 'dart:math' as math;
+<<<<<<< HEAD
 import 'package:cabkaro/screens/driver/driver_listing_header.dart';
 import 'package:cabkaro/widgets/driver/driver_side_bar.dart';
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 import 'package:flutter/material.dart';
 import '../../widgets/listing/listing_bottom_dock.dart';
 import '../../widgets/driver/driver_bottom_dock.dart';
@@ -13,7 +16,10 @@ class DriverNoRidesScreen extends StatefulWidget {
 }
 
 class _DriverNoRidesScreenState extends State<DriverNoRidesScreen>
+<<<<<<< HEAD
   
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     with TickerProviderStateMixin {
   late AnimationController _floatController;
   late AnimationController _radarController;
@@ -26,7 +32,11 @@ class _DriverNoRidesScreenState extends State<DriverNoRidesScreen>
   late Animation<double> _staggerAnim;
 
   bool _isOnline = true;
+<<<<<<< HEAD
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); 
+=======
+
+>>>>>>> a64f8e0 (Edit vendor and user profile)
   @override
   void initState() {
     super.initState();
@@ -85,8 +95,11 @@ class _DriverNoRidesScreenState extends State<DriverNoRidesScreen>
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8E8E8),
+<<<<<<< HEAD
       key: _scaffoldKey,
       drawer: const DriverSidebar(),
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
       body: SafeArea(
         child: Stack(
           children: [
@@ -95,7 +108,11 @@ class _DriverNoRidesScreenState extends State<DriverNoRidesScreen>
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 120),
               children: [
                 // Header
+<<<<<<< HEAD
                 DriverListingHeader(scaffoldKey: _scaffoldKey),
+=======
+                const _DriverHeader(),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                 const SizedBox(height: 24),
 
                 // Title row
@@ -121,7 +138,14 @@ class _DriverNoRidesScreenState extends State<DriverNoRidesScreen>
                 const SizedBox(height: 24),
 
                 // ── Online / Offline toggle card ──────────────────────
+<<<<<<< HEAD
                 
+=======
+                _OnlineToggleCard(
+                  isOnline: _isOnline,
+                  onToggle: (v) => setState(() => _isOnline = v),
+                ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
                 const SizedBox(height: 28),
 
@@ -175,8 +199,13 @@ class _DriverNoRidesScreenState extends State<DriverNoRidesScreen>
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // ─────────────────────────────────────────────────────────────────
 // Header  (same style as DriverHomeScreen)
+=======
+// ─────────────────────────────────────────────────────────────────
+// Header  (same style as VendorHomeScreen)
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 // ─────────────────────────────────────────────────────────────────
 
 class _DriverHeader extends StatelessWidget {
@@ -205,8 +234,11 @@ class _DriverHeader extends StatelessWidget {
     );
   }
 }
+<<<<<<< HEAD
 =======
 >>>>>>> 5c2a44a (minor changes)
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
 class _HeaderCircle extends StatelessWidget {
   const _HeaderCircle({required this.icon, this.onTap});
@@ -235,7 +267,132 @@ class _HeaderCircle extends StatelessWidget {
 // Online / Offline Toggle Card
 // ─────────────────────────────────────────────────────────────────────────────
 
+<<<<<<< HEAD
 
+=======
+class _OnlineToggleCard extends StatelessWidget {
+  const _OnlineToggleCard({required this.isOnline, required this.onToggle});
+  final bool isOnline;
+  final ValueChanged<bool> onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      decoration: BoxDecoration(
+        color: isOnline ? const Color(0xFF2D2F35) : const Color(0xFFF0F0F0),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isOnline
+              ? const Color(0xFFF8C100).withOpacity(0.4)
+              : const Color(0xFF2D2F35).withOpacity(0.15),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isOnline
+                ? const Color(0xFFF8C100).withOpacity(0.18)
+                : Colors.black.withOpacity(0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: isOnline
+                  ? const Color(0xFFF8C100)
+                  : const Color(0xFFDDDDDD),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isOnline ? Icons.wifi_rounded : Icons.wifi_off_rounded,
+              color: isOnline ? const Color(0xFF2D2F35) : const Color(0xFF888888),
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 300),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: isOnline ? Colors.white : const Color(0xFF1F1F1F),
+                  ),
+                  child: Text(isOnline ? 'You\'re Online' : 'You\'re Offline'),
+                ),
+                const SizedBox(height: 2),
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 300),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isOnline
+                        ? Colors.white.withOpacity(0.55)
+                        : const Color(0xFF888888),
+                  ),
+                  child: Text(
+                    isOnline
+                        ? 'Waiting for ride requests nearby'
+                        : 'Go online to start receiving rides',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () => onToggle(!isOnline),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              width: 52,
+              height: 28,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                color: isOnline
+                    ? const Color(0xFFF8C100)
+                    : const Color(0xFFCCCCCC),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: AnimatedAlign(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                alignment: isOnline
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: isOnline ? const Color(0xFF2D2F35) : Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Radar Illustration  (the hero empty-state graphic)

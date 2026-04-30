@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
@@ -19,6 +20,15 @@ class DriverData {
     phoneController.dispose();
   }
 }
+=======
+import 'package:cabkaro/controllers/driver_details_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:cabkaro/widgets/gradient_background.dart';
+import 'package:cabkaro/widgets/action_button.dart';
+import 'package:cabkaro/widgets/signup_input.dart';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
 class DriverDetailsScreen extends StatefulWidget {
   const DriverDetailsScreen({super.key});
@@ -28,6 +38,7 @@ class DriverDetailsScreen extends StatefulWidget {
 }
 
 class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
+<<<<<<< HEAD
   final List<DriverData> _drivers = [DriverData()];
 
   void _addNewDriver() {
@@ -57,6 +68,13 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
 
   Widget _buildDriverCard(int index) {
     final driver = _drivers[index];
+=======
+  Widget _buildDriverCard(int index) {
+    final driver = Provider.of<DriverDetailsController>(
+      context,
+      listen: false,
+    ).drivers[index];
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -71,7 +89,11 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
+<<<<<<< HEAD
           )
+=======
+          ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
         ],
       ),
       child: Column(
@@ -87,10 +109,27 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+<<<<<<< HEAD
               if (_drivers.length > 1)
                 IconButton(
                   icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
                   onPressed: () => _removeDriver(index),
+=======
+              if (Provider.of<DriverDetailsController>(
+                    context,
+                    listen: true,
+                  ).drivers.length >
+                  1)
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: () => Provider.of<DriverDetailsController>(
+                    context,
+                    listen: false,
+                  ).removeDriver(index),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                 ),
             ],
           ),
@@ -98,7 +137,14 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
           const SizedBox(height: 15),
           Center(
             child: GestureDetector(
+<<<<<<< HEAD
               onTap: () => _pickImage(index),
+=======
+              onTap: () => Provider.of<DriverDetailsController>(
+                context,
+                listen: false,
+              ).pickImage(index),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
               child: Stack(
                 children: [
                   CircleAvatar(
@@ -108,7 +154,15 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                         ? FileImage(driver.driverImage!)
                         : null,
                     child: driver.driverImage == null
+<<<<<<< HEAD
                         ? const Icon(Icons.person, size: 50, color: Colors.black54)
+=======
+                        ? const Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.black54,
+                          )
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                         : null,
                   ),
                   Positioned(
@@ -120,7 +174,15 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                         color: Color(0xFFF2CA2A),
                         shape: BoxShape.circle,
                       ),
+<<<<<<< HEAD
                       child: const Icon(Icons.camera_alt, size: 20, color: Colors.black),
+=======
+                      child: const Icon(
+                        Icons.camera_alt,
+                        size: 20,
+                        color: Colors.black,
+                      ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                     ),
                   ),
                 ],
@@ -146,8 +208,24 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
   }
 
   @override
+<<<<<<< HEAD
   Widget build(BuildContext context) {
     
+=======
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DriverDetailsController>(
+        context,
+        listen: false,
+      ).addNewDriver();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     return Scaffold(
       body: GradientBackground(
         showGlow: false,
@@ -175,7 +253,14 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
+<<<<<<< HEAD
                   itemCount: _drivers.length,
+=======
+                  itemCount: Provider.of<DriverDetailsController>(
+                    context,
+                    listen: true,
+                  ).drivers.length,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   itemBuilder: (context, index) => _buildDriverCard(index),
                 ),
               ),
@@ -188,7 +273,11 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                       color: Colors.black.withOpacity(0.05),
                       blurRadius: 10,
                       offset: const Offset(0, -5),
+<<<<<<< HEAD
                     )
+=======
+                    ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   ],
                 ),
                 child: Row(
@@ -200,6 +289,7 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                         textColor: Colors.white,
                         borderColor: const Color(0xFF1F1F1F),
                         onTap: () {
+<<<<<<< HEAD
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -207,11 +297,25 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
                                 ),
                               );
                             },
+=======
+                          Provider.of<DriverDetailsController>(
+                            context,
+                            listen: false,
+                          ).saveDriver(context);
+                        },
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                       ),
                     ),
                     const SizedBox(width: 15),
                     GestureDetector(
+<<<<<<< HEAD
                       onTap: _addNewDriver,
+=======
+                      onTap: Provider.of<DriverDetailsController>(
+                        context,
+                        listen: false,
+                      ).addNewDriver,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -238,9 +342,20 @@ class _DriverDetailsScreenState extends State<DriverDetailsScreen> {
 
   @override
   void dispose() {
+<<<<<<< HEAD
     for (var driver in _drivers) {
+=======
+    for (var driver in Provider.of<DriverDetailsController>(
+      context,
+      listen: false,
+    ).drivers) {
+>>>>>>> a64f8e0 (Edit vendor and user profile)
       driver.dispose();
     }
     super.dispose();
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a64f8e0 (Edit vendor and user profile)

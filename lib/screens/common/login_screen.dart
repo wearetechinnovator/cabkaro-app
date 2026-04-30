@@ -1,5 +1,8 @@
 import 'package:cabkaro/controllers/vendor_controller.dart';
+<<<<<<< HEAD
 import 'package:cabkaro/screens/common/otp_screen.dart';
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 import 'package:cabkaro/widgets/ToastWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

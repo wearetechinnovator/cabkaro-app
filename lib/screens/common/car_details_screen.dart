@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ignore_for_file: deprecated_member_use
 import 'dart:io';
 import 'package:cabkaro/screens/common/driver_details_screen.dart';
@@ -22,6 +23,15 @@ class CarDetailsScreen {
     facilitiesController.dispose();
   }
 }
+=======
+import 'package:cabkaro/controllers/car_details_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:cabkaro/widgets/gradient_background.dart';
+import 'package:cabkaro/widgets/action_button.dart';
+import 'package:cabkaro/widgets/signup_input.dart';
+import 'package:provider/provider.dart';
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
 class CarDetailsScreenScreen extends StatefulWidget {
   const CarDetailsScreenScreen({super.key});
@@ -31,6 +41,7 @@ class CarDetailsScreenScreen extends StatefulWidget {
 }
 
 class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
+<<<<<<< HEAD
   final List<CarDetailsScreen> _cars = [CarDetailsScreen()];
 
   void _addNewCar() {
@@ -58,6 +69,8 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
     }
   }
 
+=======
+>>>>>>> a64f8e0 (Edit vendor and user profile)
   Widget _buildRadioButton(
     String title,
     String currentVal,
@@ -99,9 +112,17 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
     );
   }
 
+<<<<<<< HEAD
 
   Widget _buildSeaterSelector(int index) {
     final car = _cars[index];
+=======
+  Widget _buildSeaterSelector(int index) {
+    final car = Provider.of<CarDetailsController>(
+      context,
+      listen: false,
+    ).cars[index];
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     final options = ['2', '4', '5', '6', '7', '8', '10', '12+'];
 
     return Column(
@@ -154,9 +175,18 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
       ],
     );
   }
+<<<<<<< HEAD
   
   Widget _buildCarCard(int index) {
     final car = _cars[index];
+=======
+
+  Widget _buildCarCard(int index) {
+    final car = Provider.of<CarDetailsController>(
+      context,
+      listen: false,
+    ).cars[index];
+>>>>>>> a64f8e0 (Edit vendor and user profile)
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -185,10 +215,27 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+<<<<<<< HEAD
               if (_cars.length > 1)
                 IconButton(
                   icon: const Icon(Icons.delete_forever, color: Colors.redAccent),
                   onPressed: () => _removeCar(index),
+=======
+              if (Provider.of<CarDetailsController>(
+                    context,
+                    listen: true,
+                  ).cars.length >
+                  1)
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: () => Provider.of<CarDetailsController>(
+                    context,
+                    listen: false,
+                  ).removeCar(index),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                 ),
             ],
           ),
@@ -200,7 +247,16 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
             controller: car.carNumberController,
           ),
           const SizedBox(height: 20),
+<<<<<<< HEAD
 
+=======
+          SignupInput(
+            hint: 'Car Model',
+            icon: Icons.directions_car,
+            controller: car.carModel,
+          ),
+          const SizedBox(height: 20),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
           _buildSeaterSelector(index),
           const SizedBox(height: 20),
@@ -214,7 +270,14 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
           ),
           const SizedBox(height: 10),
           GestureDetector(
+<<<<<<< HEAD
             onTap: () => _pickImage(index),
+=======
+            onTap: () => Provider.of<CarDetailsController>(
+              context,
+              listen: false,
+            ).pickImage(index),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
             child: Container(
               height: 160,
               width: double.infinity,
@@ -317,7 +380,14 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
+<<<<<<< HEAD
                   itemCount: _cars.length,
+=======
+                  itemCount: Provider.of<CarDetailsController>(
+                    context,
+                    listen: false,
+                  ).cars.length,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   itemBuilder: (context, index) => _buildCarCard(index),
                 ),
               ),
@@ -342,18 +412,32 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
                         textColor: Colors.white,
                         borderColor: const Color(0xFF1F1F1F),
                         onTap: () {
+<<<<<<< HEAD
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const DriverDetailsScreen(),
                             ),
                           );
+=======
+                          Provider.of<CarDetailsController>(
+                            context,
+                            listen: false,
+                          ).saveVehicle(context);
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                         },
                       ),
                     ),
                     const SizedBox(width: 15),
                     GestureDetector(
+<<<<<<< HEAD
                       onTap: _addNewCar,
+=======
+                      onTap: Provider.of<CarDetailsController>(
+                        context,
+                        listen: false,
+                      ).addNewCar,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -361,7 +445,15 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(color: Colors.black, width: 1.5),
                         ),
+<<<<<<< HEAD
                         child: const Icon(Icons.add, color: Colors.black, size: 28),
+=======
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                          size: 28,
+                        ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                       ),
                     ),
                   ],
@@ -376,9 +468,20 @@ class _CarDetailsScreenScreenState extends State<CarDetailsScreenScreen> {
 
   @override
   void dispose() {
+<<<<<<< HEAD
     for (var car in _cars) {
+=======
+    for (var car in Provider.of<CarDetailsController>(
+      context,
+      listen: false,
+    ).cars) {
+>>>>>>> a64f8e0 (Edit vendor and user profile)
       car.dispose();
     }
     super.dispose();
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a64f8e0 (Edit vendor and user profile)

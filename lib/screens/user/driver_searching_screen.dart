@@ -62,10 +62,16 @@ class _DriverSearchingScreenState extends State<DriverSearchingScreen>
       ),
     );
 
+<<<<<<< HEAD
     _rotate = Tween<double>(
       begin: 0,
       end: 2 * math.pi,
     ).animate(CurvedAnimation(parent: _rotateController, curve: Curves.linear));
+=======
+    _rotate = Tween<double>(begin: 0, end: 2 * math.pi).animate(
+      CurvedAnimation(parent: _rotateController, curve: Curves.linear),
+    );
+>>>>>>> a64f8e0 (Edit vendor and user profile)
 
     _dotFade = Tween<double>(begin: 0.0, end: 1.0).animate(_dotController);
 
@@ -103,7 +109,14 @@ class _DriverSearchingScreenState extends State<DriverSearchingScreen>
                   gradient: RadialGradient(
                     center: Alignment(0, -0.2),
                     radius: 1.2,
+<<<<<<< HEAD
                     colors: [Color(0xFF2D2F35), Color(0xFF1A1C21)],
+=======
+                    colors: [
+                      Color(0xFF2D2F35),
+                      Color(0xFF1A1C21),
+                    ],
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                   ),
                 ),
               ),
@@ -217,9 +230,13 @@ class _DriverSearchingScreenState extends State<DriverSearchingScreen>
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
+<<<<<<< HEAD
                                     color: const Color(
                                       0xFFF8C100,
                                     ).withOpacity(0.4),
+=======
+                                    color: const Color(0xFFF8C100).withOpacity(0.4),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                                     blurRadius: 20,
                                     spreadRadius: 4,
                                   ),
@@ -262,7 +279,11 @@ class _DriverSearchingScreenState extends State<DriverSearchingScreen>
                       ),
                       const SizedBox(width: 2),
                       SizedBox(
+<<<<<<< HEAD
                         width: 36,
+=======
+                        width: 28,
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                         child: Text(
                           '.' * _dotCount,
                           style: const TextStyle(
@@ -311,8 +332,25 @@ class _DriverSearchingScreenState extends State<DriverSearchingScreen>
                             label: 'Pickup',
                             value: '69 New New York, USA',
                           ),
+<<<<<<< HEAD
 
                           
+=======
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              children: List.generate(
+                                3,
+                                (i) => Container(
+                                  width: 2,
+                                  height: 5,
+                                  margin: const EdgeInsets.symmetric(vertical: 2),
+                                  color: Colors.white.withOpacity(0.2),
+                                ),
+                              ),
+                            ),
+                          ),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                           _TripPoint(
                             icon: Icons.location_on_rounded,
                             iconColor: const Color(0xFFF8C100),
@@ -330,10 +368,14 @@ class _DriverSearchingScreenState extends State<DriverSearchingScreen>
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Container(
+<<<<<<< HEAD
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 14,
                       ),
+=======
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                       decoration: BoxDecoration(
                         color: const Color(0xFFF8C100).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
@@ -381,10 +423,14 @@ class _DriverSearchingScreenState extends State<DriverSearchingScreen>
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
+<<<<<<< HEAD
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
                         vertical: 14,
                       ),
+=======
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+>>>>>>> a64f8e0 (Edit vendor and user profile)
                       decoration: BoxDecoration(
                         color: const Color(0xFF2D2F35),
                         borderRadius: BorderRadius.circular(40),
@@ -532,4 +578,8 @@ class _TripPoint extends StatelessWidget {
       ],
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> a64f8e0 (Edit vendor and user profile)
